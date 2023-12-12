@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "shopX",
-    "slug": "shopX",
+    "name": "myHPI",
+    "slug": "myhpi",
     "version": "1.0.0",
+    "scheme": "myhpi",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -21,10 +20,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.myhpi.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7d0cbaa8-facc-4397-b360-83d3bb005ec8"
+      }
     }
   }
 }
