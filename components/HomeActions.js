@@ -71,8 +71,8 @@ const HomeActions = () => {
     }
   };
 
-  const handleAskKemiPress = () => {
-    navigation.navigate("Ask Kemi", {
+  const handleAsk KeMiPress = () => {
+    navigation.navigate("Ask  KeMi", {
       screen: route.name,
     });
   };
@@ -91,12 +91,12 @@ const HomeActions = () => {
 
       <TouchableOpacity
         style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-        onPress={handleAskKemiPress}>
+        onPress={handleAsk KeMiPress}>
         <Image
           source={require("../assets/images/confusion.png")}
           style={styles.image}
         />
-        <Text style={styles.text}>Ask Kemi</Text>
+        <Text style={styles.text}>Ask  KeMi</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.box, { backgroundColor: "#EAEAEA" }]}
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    padding: 20,
+    paddingHorizontal: 20,
     position: "relative",
   },
   box: {

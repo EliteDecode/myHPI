@@ -1,57 +1,55 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
+import { TextInput } from "react-native-element-textinput";
 import * as yup from "yup";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
 import { Ionicons } from "@expo/vector-icons";
-
-const validationSchema = yup.object().shape({
-  firstName: yup.string().required("First Name is required"),
-  middleName: yup.string(),
-  lastName: yup.string().required("Last Name is required"),
-  dob: yup.string().required("DOB is required"),
-  age: yup.number().required("Age is required"),
-  sexAssignedAtBirth: yup
-    .string()
-    .required("Sex assigned at birth is required"),
-  address: yup.string().required("Address is required"),
-  mobile: yup.string().required("Mobile is required"),
-  emergencyContactName: yup
-    .string()
-    .required("Emergency contact name is required"),
-  emergencyContactMobile: yup
-    .string()
-    .required("Emergency contact mobile is required"),
-  relationshipToEmergencyContact: yup
-    .string()
-    .required("Relationship to emergency contact is required"),
-});
+import { updateProfileSchema } from "../../utils/schemas";
+import { useSelector } from "react-redux";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const UpdateProfileScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
 
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+  const [selectedDate, setSelectedDate] = useState(new Date(1598051730000));
+
+  const handleDateChange = (event, selected) => {
+    console.log(selected);
+    if (selected !== undefined) {
+      const currentDate = selectedDate;
+      setSelectedDate(currentDate);
+    }
+  };
+
+  console.log(`Selected: ${selectedDate}`);
+
   const initialValues = {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    dob: "",
-    age: "",
-    sexAssignedAtBirth: "",
-    address: "",
-    mobile: "",
-    emergencyContactName: "",
-    emergencyContactMobile: "",
-    relationshipToEmergencyContact: "",
+    Firstname: "",
+    Middlename: "",
+    Lastname: "",
+    DOB: selectedDate,
+    Age: "",
+    Sex: "",
+    Address: "",
+    Phone: "",
+    EmergencyContactName: "",
+    EmergencyContactPhone: "",
+    EmergencyContactRelationship: "",
   };
 
   const onSubmit = (values) => {
@@ -107,7 +105,7 @@ const UpdateProfileScreen = () => {
           </View>
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={updateProfileSchema}
             onSubmit={onSubmit}>
             {({ values, handleChange, handleSubmit, errors, touched }) => (
               <>
@@ -115,11 +113,20 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>First Name:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.firstName}
-                    onChangeText={handleChange("firstName")}
+                    value={user?.data?.Firstname || values.Firstname}
+                    placeholder="Firstname"
+                    onChangeText={handleChange("Firstname")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="user"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.firstName && errors.firstName && (
-                    <Text style={styles.errorText}>{errors.firstName}</Text>
+                  {touched.Firstname && errors.Firstname && (
+                    <Text style={styles.errorText}>{errors.Firstname}</Text>
                   )}
                 </View>
 
@@ -127,11 +134,19 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>Middle Name:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.middleName}
-                    onChangeText={handleChange("middleName")}
+                    value={user?.data?.Middlename || values.Middlename}
+                    onChangeText={handleChange("Middlename")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="user"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.middleName && errors.middleName && (
-                    <Text style={styles.errorText}>{errors.middleName}</Text>
+                  {touched.Middlename && errors.Middlename && (
+                    <Text style={styles.errorText}>{errors.Middlename}</Text>
                   )}
                 </View>
 
@@ -139,23 +154,34 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>Last/Surname Name:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.lastName}
-                    onChangeText={handleChange("lastName")}
+                    value={user?.data?.Lastname || values.Lastname}
+                    onChangeText={handleChange("Lastname")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="user"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.lastName && errors.lastName && (
-                    <Text style={styles.errorText}>{errors.lastName}</Text>
+                  {touched.Lastname && errors.Lastname && (
+                    <Text style={styles.errorText}>{errors.Lastname}</Text>
                   )}
                 </View>
 
                 <View style={styles.formGroup}>
                   <Text style={styles.label}>DOB:</Text>
-                  <TextInput
+                  <DateTimePicker
                     style={styles.input}
-                    value={values.dob}
-                    onChangeText={handleChange("dob")}
+                    mode="date"
+                    value={values.DOB}
+                    customStyles={styles.input}
+                    onChange={handleDateChange}
                   />
-                  {touched.dob && errors.dob && (
-                    <Text style={styles.errorText}>{errors.dob}</Text>
+
+                  {touched.DOB && errors.DOB && (
+                    <Text style={styles.errorText}>{errors.DOB}</Text>
                   )}
                 </View>
 
@@ -163,12 +189,20 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>AGE:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.age}
-                    onChangeText={handleChange("age")}
+                    value={user?.data?.Age || values.Age}
+                    onChangeText={handleChange("Age")}
                     keyboardType="numeric"
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="calendar-plus-o"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.age && errors.age && (
-                    <Text style={styles.errorText}>{errors.age}</Text>
+                  {touched.Age && errors.Age && (
+                    <Text style={styles.errorText}>{errors.Age}</Text>
                   )}
                 </View>
 
@@ -176,13 +210,19 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>SEX assigned at birth:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.sexAssignedAtBirth}
-                    onChangeText={handleChange("sexAssignedAtBirth")}
+                    value={user?.data?.Sex || values.Sex}
+                    onChangeText={handleChange("Sex")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="user-plus"
+                        size={19}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.sexAssignedAtBirth && errors.sexAssignedAtBirth && (
-                    <Text style={styles.errorText}>
-                      {errors.sexAssignedAtBirth}
-                    </Text>
+                  {touched.Sex && errors.Sex && (
+                    <Text style={styles.errorText}>{errors.Sex}</Text>
                   )}
                 </View>
 
@@ -190,11 +230,19 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>Address:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.address}
-                    onChangeText={handleChange("address")}
+                    value={user?.data?.Address || values.Address}
+                    onChangeText={handleChange("Address")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="location-arrow"
+                        size={22}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.address && errors.address && (
-                    <Text style={styles.errorText}>{errors.address}</Text>
+                  {touched.Address && errors.Address && (
+                    <Text style={styles.errorText}>{errors.Address}</Text>
                   )}
                 </View>
 
@@ -202,11 +250,19 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>Mobile phone:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.mobile}
-                    onChangeText={handleChange("mobile")}
+                    value={user?.data?.Phone || values.Phone}
+                    onChangeText={handleChange("Phone")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="phone"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.mobile && errors.mobile && (
-                    <Text style={styles.errorText}>{errors.mobile}</Text>
+                  {touched.Phone && errors.Phone && (
+                    <Text style={styles.errorText}>{errors.Phone}</Text>
                   )}
                 </View>
 
@@ -214,13 +270,24 @@ const UpdateProfileScreen = () => {
                   <Text style={styles.label}>Name of emergency contact:</Text>
                   <TextInput
                     style={styles.input}
-                    value={values.emergencyContactName}
-                    onChangeText={handleChange("emergencyContactName")}
+                    value={
+                      user?.data?.EmergencyContactName ||
+                      values.EmergencyContactName
+                    }
+                    onChangeText={handleChange("EmergencyContactName")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="user-md"
+                        size={20}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.emergencyContactName &&
-                    errors.emergencyContactName && (
+                  {touched.EmergencyContactName &&
+                    errors.EmergencyContactName && (
                       <Text style={styles.errorText}>
-                        {errors.emergencyContactName}
+                        {errors.EmergencyContactName}
                       </Text>
                     )}
                 </View>
@@ -231,13 +298,24 @@ const UpdateProfileScreen = () => {
                   </Text>
                   <TextInput
                     style={styles.input}
-                    value={values.emergencyContactMobile}
-                    onChangeText={handleChange("emergencyContactMobile")}
+                    value={
+                      user?.data?.EmergencyContactPhone ||
+                      values.EmergencyContactPhone
+                    }
+                    onChangeText={handleChange("EmergencyContactPhone")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="mobile-phone"
+                        size={23}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
+                    )}
                   />
-                  {touched.emergencyContactMobile &&
-                    errors.emergencyContactMobile && (
+                  {touched.EmergencyContactPhone &&
+                    errors.EmergencyContactPhone && (
                       <Text style={styles.errorText}>
-                        {errors.emergencyContactMobile}
+                        {errors.EmergencyContactPhone}
                       </Text>
                     )}
                 </View>
@@ -248,28 +326,56 @@ const UpdateProfileScreen = () => {
                   </Text>
                   <TextInput
                     style={styles.input}
-                    value={values.relationshipToEmergencyContact}
-                    onChangeText={handleChange(
-                      "relationshipToEmergencyContact"
+                    value={
+                      user?.data?.EmergencyContactRelationship ||
+                      values.EmergencyContactRelationship
+                    }
+                    onChangeText={handleChange("EmergencyContactRelationship")}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        name="users"
+                        size={18}
+                        color={Colors.primary}
+                        style={{ width: "10%", opacity: 0.6 }}
+                      />
                     )}
                   />
-                  {touched.relationshipToEmergencyContact &&
-                    errors.relationshipToEmergencyContact && (
+                  {touched.EmergencyContactRelationship &&
+                    errors.EmergencyContactRelationship && (
                       <Text style={styles.errorText}>
-                        {errors.relationshipToEmergencyContact}
+                        {errors.EmergencyContactRelationship}
                       </Text>
                     )}
                 </View>
-
                 <TouchableOpacity
-                  style={styles.updateButton}
-                  onPress={handleSubmit}>
-                  <Text style={styles.updateButtonText}>Update Profile</Text>
+                  onPress={isLoading ? null : handleSubmit}
+                  style={{ marginBottom: 10, marginTop: 10 }}>
+                  <View
+                    style={{
+                      backgroundColor: Colors.primary,
+                      borderRadius: 30,
+                      paddingVertical: 18,
+                      alignItems: "center",
+                    }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontFamily: "sen",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}>
+                      {isLoading ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        "Update Profile"
+                      )}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               </>
             )}
           </Formik>
-          <View style={{ marginBottom: 300 }} />
+          <View style={{ marginBottom: 600 }} />
         </ScrollView>
       </View>
     </View>
@@ -287,18 +393,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 4,
-    fontFamily: "ca",
+    marginLeft: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
+    height: 50,
+    paddingHorizontal: 18,
+    borderRadius: 30,
+    fontSize: 14,
+    borderColor: Colors.gray,
+    backgroundColor: Colors.gray,
   },
+  placeholderStyle: { fontSize: 10, zIndex: 20, opacity: 0.8 },
   errorText: {
     color: "red",
     fontSize: 12,
+    marginLeft: 5,
   },
   updateButton: {
     backgroundColor: "#478AFB",

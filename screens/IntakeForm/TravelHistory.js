@@ -65,8 +65,8 @@ const TravelHistory = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-      <IntakeFormTitle title="Surgical History" />
-      <Text>{route?.params.screen}</Text>
+      <IntakeFormTitle title="Travel History" />
+
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -111,7 +111,6 @@ const TravelHistory = () => {
             style={{
               color: "white",
               textAlign: "center",
-              fontFamily: "ca",
             }}>
             Add Item
           </Text>

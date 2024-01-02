@@ -62,7 +62,7 @@ const Immunizations = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Tetanus (Year of Last Vaccine)
@@ -93,7 +93,7 @@ const Immunizations = () => {
                   <Text
                     style={{
                       color: Colors.gray2,
-                      fontFamily: "ca",
+
                       marginBottom: 8,
                     }}>
                     {vaccine.charAt(0).toUpperCase() + vaccine.slice(1)}

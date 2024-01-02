@@ -17,34 +17,34 @@ const OnboardingScreen = () => {
     navigation.replace("Welcome");
   };
 
-  const checkFirstLaunch = async () => {
-    try {
-      const value = await AsyncStorage.getItem("firstLaunch");
-      if (value === null) {
-        // First launch
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
-      }
-    } catch (error) {
-      console.error("Error reading from AsyncStorage:", error);
-    }
-  };
+  // const checkFirstLaunch = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("firstLaunch");
+  //     if (value === null) {
+  //       // First launch
+  //       setIsFirstLaunch(true);
+  //     } else {
+  //       setIsFirstLaunch(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error reading from AsyncStorage:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    checkFirstLaunch();
-  }, []);
+  // useEffect(() => {
+  //   checkFirstLaunch();
+  // }, []);
 
-  if (isFirstLaunch === null) {
-    // Loading state, you might want to render a loading indicator here
-    return null;
-  }
+  // if (isFirstLaunch === null) {
+  //   // Loading state, you might want to render a loading indicator here
+  //   return null;
+  // }
 
-  if (!isFirstLaunch) {
-    // Not the first launch, skip onboarding and navigate to the welcome screen
-    navigation.replace("Welcome");
-    return null;
-  }
+  // if (!isFirstLaunch) {
+  //   // Not the first launch, skip onboarding and navigate to the welcome screen
+  //   navigation.replace("Welcome");
+  //   return null;
+  // }
 
   return (
     <>
@@ -105,7 +105,7 @@ const OnboardingScreen = () => {
                     fontSize: 12,
                     textAlign: "center",
                   }}>
-                  Schedule and manage your time and healthcare on your terms.
+                  Users can manage their healthcare efficiently
                 </Text>
               ),
             },
@@ -134,8 +134,7 @@ const OnboardingScreen = () => {
               ),
               subtitle: (
                 <Text style={{ fontSize: 12, textAlign: "center" }}>
-                  Arrive stress-free knowing your forms are submitted and
-                  appointments scheduled.
+                  Prefilled and submitted forms make appointments go quicker
                 </Text>
               ),
             },

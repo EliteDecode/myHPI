@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,143 +8,246 @@ import {
   Platform,
   StyleSheet,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { TextInput } from "react-native-element-textinput";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
 import Colors from "../helpers/Colors";
 import { useNavigation } from "@react-navigation/native";
 import MyStatusBar from "../helpers/MyStatusBar";
-
+import { loginSchema } from "../utils/schemas";
+import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { login, reset } from "../store/reducers/auth/authSlice";
 const { width, height } = Dimensions.get("window");
+import ToastManager, { Toast } from "toastify-react-native";
+import { Button } from "react-native";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  const initialValues = {
+    Email: "",
+    Password: "",
+  };
+
+  const handleLogin = (values) => {
+    dispatch(login(values));
+  };
+
+  useEffect(() => {
+    if (isSuccess && user) {
+      Alert.alert(
+        "Information",
+        "Congratulations you've Logged In Successfully",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.replace("Main");
+              dispatch(reset());
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+
+    if (isError && message) {
+      Toast.error(message);
+    }
+
+    console.log(user);
+
+    if (isSuccess) {
+      dispatch(reset());
+    }
+
+    if (isError && message) {
+      dispatch(reset());
+    }
+  }, [isError, isLoading, isSuccess, message, user]);
 
   return (
     <>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#fff",
-          paddingVertical: Platform.OS === "ios" ? 30 : 50,
-          paddingHorizontal: Platform.OS === "ios" ? 10 : 20,
-        }}>
-        <ScrollView
-          style={{ flex: 1 }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}>
+      <ToastManager
+        textStyle={{ fontSize: 12 }}
+        height={50}
+        position="top"
+        width={400}
+      />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={loginSchema}
+        onSubmit={handleLogin}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          values,
+          errors,
+          touched,
+        }) => (
           <View
             style={{
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 80,
+              backgroundColor: "#fff",
+              paddingVertical: Platform.OS === "ios" ? 30 : 50,
+              paddingHorizontal: Platform.OS === "ios" ? 10 : 20,
             }}>
-            <Image
-              source={require("../assets/images/onboarding/onBoarding2.png")}
-              style={{
-                width: width / 1.4,
-                height: height / 4,
-                resizeMode: "contain",
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 30,
-                fontFamily: "ca",
-                fontWeight: "bold",
-                color: Colors.dark,
-              }}>
-              Welcome Back!
-            </Text>
-            <Text style={{ fontSize: 13 }}>
-              Please provide your valid email address and password
-            </Text>
-          </View>
-
-          <View style={styles.container}>
-            <TextInput
-              showIcon
-              value={email}
-              style={styles.input}
-              inputStyle={styles.inputStyle}
-              placeholderStyle={styles.placeholderStyle}
-              textErrorStyle={styles.textErrorStyle}
-              // label="Email"
-              placeholder="Email address"
-              placeholderTextColor="gray"
-              focusColor={Colors.primary}
-              renderLeftIcon={() => (
-                <FontAwesome
-                  name="envelope"
-                  size={16}
-                  color={Colors.primary}
-                  style={{ width: "10%", opacity: 0.6 }}
+            <ScrollView
+              style={{ flex: 1 }}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 80,
+                }}>
+                <Image
+                  source={require("../assets/images/onboarding/onBoarding2.png")}
+                  style={{
+                    width: width / 1.4,
+                    height: height / 4,
+                    resizeMode: "contain",
+                  }}
                 />
-              )}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput
-              value={password}
-              showIcon
-              mode="password"
-              style={styles.input}
-              inputStyle={styles.inputStyle}
-              placeholderStyle={styles.placeholderStyle}
-              textErrorStyle={styles.textErrorStyle}
-              // label="Password"
-              placeholder="Password"
-              placeholderTextColor="gray"
-              focusColor={Colors.primary}
-              renderLeftIcon={() => (
-                <FontAwesome
-                  name="lock"
-                  size={22}
-                  color={Colors.primary}
-                  style={{ width: "10%", opacity: 0.6 }}
-                />
-              )}
-              onChangeText={(text) => setPassword(text)}
-            />
-
-            <TouchableOpacity
-              className="self-end"
-              onPress={() => navigation.navigate("Forgot Password")}>
-              <Text className="text-[12px] mr-2 flex-end">
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-
-            <View className=" mt-5 rounded-full flex flex-col items-center justify-center">
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Main")}
-                className="p-4 rounded-full flex flex-col items-center justify-center mt-2"
-                style={{ backgroundColor: Colors.primary, width: width / 2 }}>
                 <Text
-                  className="text-white font-ca font-bold"
-                  style={{ fontFamily: "sen" }}>
-                  LOGIN
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "bold",
+                    color: Colors.dark,
+                  }}>
+                  Welcome Back!
+                </Text>
+                <Text style={{ fontSize: 13 }}>
+                  Please provide your valid Email address and Password
+                </Text>
+              </View>
+
+              <View style={styles.container}>
+                <TextInput
+                  value={values.Email}
+                  onChangeText={handleChange("Email")}
+                  onBlur={handleBlur("Email")}
+                  style={styles.input}
+                  placeholder="Email address"
+                  placeholderTextColor="gray"
+                  renderLeftIcon={() => (
+                    <FontAwesome
+                      name="envelope"
+                      size={15}
+                      color={Colors.primary}
+                      style={{ width: "10%", opacity: 0.6 }}
+                    />
+                  )}
+                  // ... (other props)
+                />
+                {touched.Email && errors.Email && (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 12,
+                      marginLeft: 5,
+                      marginBottom: 3,
+                    }}>
+                    {errors.Email}
+                  </Text>
+                )}
+
+                <TextInput
+                  value={values.Password}
+                  onChangeText={handleChange("Password")}
+                  onBlur={handleBlur("Password")}
+                  style={styles.input}
+                  placeholder="Password"
+                  placeholderTextColor="gray"
+                  mode="password"
+                  renderLeftIcon={() => (
+                    <FontAwesome
+                      name="lock"
+                      size={20}
+                      color={Colors.primary}
+                      style={{ width: "10%", opacity: 0.6 }}
+                    />
+                  )} // ... (other props)
+                />
+                {touched.Password && errors.Password && (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 12,
+                      marginLeft: 5,
+                      marginBottom: 3,
+                    }}>
+                    {errors.Password}
+                  </Text>
+                )}
+
+                <TouchableOpacity
+                  onPress={isLoading ? null : handleSubmit}
+                  style={{ marginBottom: 10, marginTop: 10 }}>
+                  <View
+                    style={{
+                      backgroundColor: Colors.primary,
+                      borderRadius: 30,
+                      paddingVertical: 18,
+                      alignItems: "center",
+                    }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontFamily: "sen",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}>
+                      {isLoading ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        "LOGIN"
+                      )}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.replace("Forgot Password")}
+                  style={{ alignSelf: "flex-end" }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginRight: 2,
+                      alignSelf: "flex-end",
+                    }}>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => navigation.replace("Register")}
+                style={{ alignItems: "center" }}>
+                <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                  Don't have an account?{" "}
+                  <Text style={{ color: "blue" }}>Sign Up</Text>
                 </Text>
               </TouchableOpacity>
-            </View>
+
+              <View style={{ marginBottom: 300 }}></View>
+            </ScrollView>
           </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Register")}
-            className="items-center">
-            <Text className="text-[16px] font-bold">
-              Don't have an account?{" "}
-              <Text className="text-blue-500"> Sign Up </Text>
-            </Text>
-          </TouchableOpacity>
-
-          <View style={{ marginBottom: 300 }}></View>
-        </ScrollView>
-      </View>
+        )}
+      </Formik>
     </>
   );
 };
@@ -163,7 +266,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderColor: Colors.gray,
     backgroundColor: Colors.gray,
-    marginBottom: 8,
+
     marginTop: 8,
   },
   inputStyle: { fontSize: 14 },

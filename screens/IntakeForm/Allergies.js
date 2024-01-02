@@ -65,7 +65,7 @@ const Allergies = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-      <IntakeFormTitle title="Surgical History" />
+      <IntakeFormTitle title="Allergies" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -110,7 +110,6 @@ const Allergies = () => {
             style={{
               color: "white",
               textAlign: "center",
-              fontFamily: "ca",
             }}>
             Add Item
           </Text>

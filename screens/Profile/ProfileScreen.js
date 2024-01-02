@@ -10,22 +10,47 @@ import {
 import { Feather } from "@expo/vector-icons";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const { user } = useSelector((state) => state.auth);
+
   const userDetails = [
-    { label: "DOB", value: "01/15/1980" },
-    { label: "AGE", value: "42" },
-    { label: "SEX assigned at birth", value: "Male" },
+    { label: "DOB", value: user?.data?.DOB ? user?.data?.DOB : "Not Set" },
+    { label: "AGE", value: user?.data?.Age ? user?.data?.Age : "Not Set" },
+    {
+      label: "SEX assigned at birth",
+      value: user?.data?.Sex ? user?.data?.Sex : "Not Set",
+    },
     {
       label: "Address",
-      value: "123 Main Street, Cityville, State, Zip Code",
+      value: user?.data?.Address ? user?.data?.Address : "Not Set",
     },
-    { label: "Mobile phone", value: "+1234567890" },
-    { label: "Name of emergency contact", value: "Jane Doe" },
-    { label: "Emergency contact mobile phone", value: "+9876543210" },
-    { label: "Relationship to Emergency Contact", value: "Spouse" },
+    {
+      label: "Mobile phone",
+      value: user?.data?.Phone ? user?.data?.Phone : "Not Set",
+    },
+    {
+      label: "Name of emergency contact",
+      value: user?.data?.EmergencyContactName
+        ? user?.data?.EmergencyContactName
+        : "Not Set",
+    },
+    {
+      label: "Emergency contact mobile phone",
+      value: user?.data?.EmergencyContactPhone
+        ? user?.data?.EmergencyContactPhone
+        : "Not Set",
+    },
+    {
+      label: "Relationship to Emergency Contact",
+      value: user?.data?.EmergencyContactRelationship
+        ? user?.data?.EmergencyContactRelationship
+        : "Not Set",
+    },
   ];
 
   return (

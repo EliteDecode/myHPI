@@ -17,40 +17,6 @@ const SettingsScreen = () => {
       <View>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("Change Email", {
-              screen: route.name,
-            })
-          }
-          style={{ marginBottom: 16, backgroundColor: Colors.primary }}
-          className=" py-1 px-2 rounded-xl">
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingVertical: 12,
-            }}>
-            <View className="flex-row items-center justify-center space-x-2">
-              <View className=" px-1.5 py-1 rounded-full bg-white">
-                <MaterialIcons name="email" size={26} color={Colors.primary} />
-              </View>
-
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: "bold",
-                  fontFamily: "ca",
-                }}>
-                Change Email
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={24} color={Colors.white} />
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() =>
             navigation.navigate("Change Password", {
               screen: route.name,
             })
@@ -78,7 +44,6 @@ const SettingsScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 Change Password
               </Text>
@@ -112,7 +77,6 @@ const SettingsScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 Delete Account
               </Text>

@@ -65,7 +65,7 @@ const Medications = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-      <IntakeFormTitle title="Surgical History" />
+      <IntakeFormTitle title="Medications" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -110,7 +110,6 @@ const Medications = () => {
             style={{
               color: "white",
               textAlign: "center",
-              fontFamily: "ca",
             }}>
             Add Item
           </Text>

@@ -76,7 +76,6 @@ const GynecologicalHistory = () => {
                 <View key={field} style={{ marginBottom: 12 }}>
                   <Text
                     style={{
-                      fontFamily: "ca",
                       marginBottom: 8,
                       color: Colors.gray2,
                     }}>

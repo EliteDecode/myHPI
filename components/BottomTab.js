@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -35,7 +35,10 @@ import ConfirmEmailChangeScreen from "../screens/settings/ConfirmEmailChangeScre
 import ChangePasswordScreen from "../screens/settings/ChangePasswordScreen";
 import DeleteAccountScreen from "../screens/settings/DeleteAccountScreen";
 import { useNavigation } from "@react-navigation/native";
-import AskKemiScreen from "../screens/Kemi/AskKemiScreen";
+import AskKeMiScreen from "../screens/Kemi/AskKemiScreen";
+import EditComplaintScreen from "../screens/ComplaintScreen/EditComplaintScreen";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../store/reducers/auth/authSlice";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +50,15 @@ const drawerStyles = {
 const BottomTab = () => {
   const [open, setOpen] = useState(false);
   const drawerRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useLayoutEffect(() => {
+    dispatch(fetchUserData());
+  }, []);
 
   const closeControlPanel = () => {
     drawerRef.current.close();
@@ -103,7 +115,9 @@ const BottomTab = () => {
               <Avatar
                 size={30}
                 rounded
-                title="AB"
+                title={`${user?.data?.Lastname?.charAt(0) || ""}${
+                  user?.data?.Firstname?.charAt(0) || ""
+                }`}
                 containerStyle={{ backgroundColor: Colors.primary }}
               />
             </TouchableOpacity>
@@ -168,8 +182,8 @@ const BottomTab = () => {
             />
 
             <Tab.Screen
-              name="Ask Kemi"
-              component={AskKemiScreen}
+              name="Ask  KeMi"
+              component={AskKeMiScreen}
               options={{ headerShown: false, tabBarButton: () => null }}
             />
 
@@ -192,6 +206,11 @@ const BottomTab = () => {
             <Tab.Screen
               name="Previous Complaints"
               component={PreviousComplaintsScreen}
+              options={{ headerShown: false, tabBarButton: () => null }}
+            />
+            <Tab.Screen
+              name="Edit Complaints"
+              component={EditComplaintScreen}
               options={{ headerShown: false, tabBarButton: () => null }}
             />
             <Tab.Screen

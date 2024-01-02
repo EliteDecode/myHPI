@@ -41,7 +41,6 @@ const AppointmentScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 Book a New Appointment
               </Text>
@@ -78,7 +77,6 @@ const AppointmentScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 View Previous Appointments
               </Text>

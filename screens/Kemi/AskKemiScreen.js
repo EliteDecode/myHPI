@@ -3,7 +3,7 @@ import React from "react";
 import BackButton from "../../components/BackButton";
 import Colors from "../../helpers/Colors";
 
-const AskKemiScreen = () => {
+const AskKeMiScreen = () => {
   return (
     <>
       <BackButton color={Colors.primary} />
@@ -14,4 +14,4 @@ const AskKemiScreen = () => {
   );
 };
 
-export default AskKemiScreen;
+export default AskKeMiScreen;

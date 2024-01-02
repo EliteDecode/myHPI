@@ -9,6 +9,7 @@ import {
   Button,
   Share,
   Modal,
+  Platform,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
@@ -25,6 +26,8 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../store/reducers/auth/authSlice";
 
 const CopilotText = walkthroughable(Text);
 const CopilotView = walkthroughable(View);
@@ -32,14 +35,40 @@ const CopilotView = walkthroughable(View);
 const HomeScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
+  const [lastLoginTime, setLastLoginTime] = useState();
   const { start, copilotEvents } = useCopilot();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   const handleProfilePress = () => {
     navigation.navigate("UpdateProfile", {
       screen: route.name,
     });
   };
+
+  const getLastLoginTime = async () => {
+    const logoutTime = await AsyncStorage.getItem("lastLoginTime");
+
+    if (logoutTime) {
+      const formattedDate = new Date(
+        parseInt(logoutTime, 10)
+      ).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      setLastLoginTime(formattedDate);
+    }
+  };
+
+  useEffect(() => {
+    getLastLoginTime();
+  }, []);
 
   const checkFirstLaunch = async () => {
     try {
@@ -86,8 +115,8 @@ const HomeScreen = () => {
     }
   };
 
-  const handleAskKemiPress = () => {
-    navigation.navigate("Ask Kemi", {
+  const handleAskKeMiPress = () => {
+    navigation.navigate("Ask  KeMi", {
       screen: route.name,
     });
   };
@@ -102,7 +131,7 @@ const HomeScreen = () => {
         onRequestClose={() => {}}>
         <View style={styles.modalContainer}>
           <View className="bg-white p-5 rounded-md">
-            <Text className="my-2" style={{ fontFamily: "ca" }}>
+            <Text className="my-2" style={{}}>
               Start your tour guide{" "}
             </Text>
             <Button title="Start" onPress={closeModal} />
@@ -111,11 +140,14 @@ const HomeScreen = () => {
       </Modal>
       <SafeAreaView className="bg-white flex-1 ">
         <View className="p-7 mt-5 space-y-2">
-          <Text className="text-[23px] font-bold" style={{ fontFamily: "ca" }}>
-            Hi, Mr Festus Jeremy Hojlund 🎉
+          <Text className="text-[23px] font-bold" style={{}}>
+            Hi, Mr {`${user?.data?.Lastname} ${user?.data?.Firstname}`} 🎉
           </Text>
+          {!user?.data?.UpdatedUser && (
+            <Text>Please update your profile to add medical history.</Text>
+          )}
           <Text style={{ fontFamily: "sen" }}>
-            Last check-in: May 24, 2022. What's new with your health today?
+            Last check-in: {lastLoginTime}. What's new with your health today?
           </Text>
         </View>
         <View>
@@ -125,7 +157,7 @@ const HomeScreen = () => {
             style={{
               resizeMode: "contain",
               width: width,
-              height: height * 0.3,
+              height: Platform.OS === "ios" ? height * 0.35 : height * 0.3,
             }}
           />
         </View>
@@ -142,7 +174,7 @@ const HomeScreen = () => {
                 style={{ backgroundColor: Colors.primary, width: width * 0.7 }}>
                 <Text
                   className="text-white font-ca text-[20px] font-bold"
-                  style={{ fontFamily: "ca" }}>
+                  style={{}}>
                   {" "}
                   Add my medical history
                 </Text>
@@ -169,7 +201,7 @@ const HomeScreen = () => {
 
           <TouchableOpacity
             style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-            onPress={handleAskKemiPress}>
+            onPress={handleAskKeMiPress}>
             <Image
               source={require("../../assets/images/confusion.png")}
               style={styles.image}
@@ -178,7 +210,7 @@ const HomeScreen = () => {
               text="You can ask your assitstant KEMI, Coming soon."
               order={4}
               name="kemi">
-              <CopilotText style={styles.text}>Ask Kemi</CopilotText>
+              <CopilotText style={styles.text}>Ask KeMi</CopilotText>
             </CopilotStep>
           </TouchableOpacity>
           <TouchableOpacity
@@ -208,7 +240,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    padding: 20,
+    paddingHorizontal: 20,
     position: "relative",
   },
   box: {

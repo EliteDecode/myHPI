@@ -1,12 +1,38 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import Collapsible from "react-native-collapsible";
 import Icon from "react-native-vector-icons/Ionicons";
 import Colors from "../../helpers/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import BackButton from "../../components/BackButton";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PreviousComplaintsScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const handleEdit = (id) => {
+    // Display an alert to confirm if the user wants to edit
+    Alert.alert(
+      "Confirm Edit",
+      "Are you sure you want to edit this complaint?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => console.log("Edit Cancelled"),
+        },
+        {
+          text: "Proceed",
+          onPress: () => {
+            navigation.navigate("Edit Complaints", {
+              complaintId: id,
+              screen: route.name,
+            });
+          },
+        },
+      ]
+    );
+  };
   const [accordions, setAccordions] = useState([
     {
       id: 1,
@@ -128,11 +154,21 @@ const PreviousComplaintsScreen = () => {
                     <Text style={styles.detailText}>{complaint.context}</Text>
                   </View>
                 </View>
-                <MaterialIcons
-                  name="delete-forever"
-                  size={24}
-                  color={Colors.red}
-                />
+                <View className="flex-row space-x-2">
+                  <MaterialIcons
+                    name="delete-forever"
+                    className="cursor-pointer"
+                    size={24}
+                    color={Colors.red}
+                  />
+                  <MaterialIcons
+                    name="edit"
+                    size={24}
+                    color={Colors.primary}
+                    className="cursor-pointer"
+                    onPress={() => handleEdit(complaint.id)}
+                  />
+                </View>
               </View>
             </Collapsible>
           </View>
@@ -183,7 +219,7 @@ const styles = {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 4,
-    fontFamily: "ca",
+
     color: Colors.black,
   },
   detailText: {

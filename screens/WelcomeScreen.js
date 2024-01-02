@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,18 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { fetchUserData } from "../store/reducers/auth/authSlice";
 
 const WelcomeScreen = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const { height } = Dimensions.get("window");
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    dispatch(fetchUserData());
+  }, []);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -41,6 +48,9 @@ const WelcomeScreen = () => {
             style={[styles.welcomeText, { opacity: fadeAnim }]}>
             MyHPI
           </Animated.Text>
+          <Animated.Text style={[styles.subText2, { opacity: fadeAnim }]}>
+            Register as a new user to get started.
+          </Animated.Text>
 
           <Animated.View
             style={{
@@ -54,9 +64,7 @@ const WelcomeScreen = () => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.buttonText}>
-                First time user resgister here
-              </Text>
+              <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -88,14 +96,19 @@ const styles = StyleSheet.create({
     fontSize: 55,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 20,
+
     marginTop: 0,
-    fontFamily: "ca",
   },
   subText: {
     fontSize: 18,
     fontWeight: "600",
     color: "#fff",
+  },
+  subText2: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#f7f7f7",
+    marginTop: -5,
   },
   buttonContainer: {
     marginTop: 20,

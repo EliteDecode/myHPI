@@ -1,14 +1,72 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import Colors from "../../helpers/Colors";
 import BackButton from "../../components/BackButton";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAccount, reset } from "../../store/reducers/auth/authSlice";
+import { useNavigation } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 
-const DeleteAccountScreen = ({ navigation }) => {
+const DeleteAccountScreen = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
   const handleDeleteAccount = () => {
-    // Add logic to delete the account
-    console.log("Account deleted!");
-    // Implement account deletion logic and navigate to the appropriate screen
+    dispatch(deleteAccount());
   };
+
+  useEffect(() => {
+    if (isSuccess && message) {
+      Alert.alert(
+        "Information",
+        "Account Deleted successfully",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: "Login" }],
+                })
+              );
+
+              dispatch(reset());
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+
+    if (isError && message) {
+      Alert.alert(
+        "Information",
+        message,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              dispatch(reset());
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+
+    dispatch(reset());
+  }, [isError, isLoading, isSuccess]);
 
   return (
     <>
@@ -24,8 +82,15 @@ const DeleteAccountScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.confirmButton}
-          onPress={handleDeleteAccount}>
-          <Text style={styles.confirmButtonText}>Confirm Delete</Text>
+          onPress={isLoading ? null : handleDeleteAccount}>
+          <Text style={styles.confirmButtonText}>
+            {" "}
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              "Confirm Delete"
+            )}
+          </Text>
         </TouchableOpacity>
       </View>
     </>
@@ -36,7 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    padding: 20,
+    paddingHorizontal: 20,
   },
   warningText: {
     fontSize: 16,

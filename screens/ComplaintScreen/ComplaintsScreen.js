@@ -14,6 +14,11 @@ const ComplaintsScreen = () => {
 
   return (
     <View className="flex-1 bg-white p-4">
+      <Text className="my-3 text-sm opacity-80">
+        Explore and modify your previously submitted complaints if your current
+        concern pertains to the same body part.
+      </Text>
+
       <View>
         <TouchableOpacity
           onPress={() =>
@@ -44,7 +49,6 @@ const ComplaintsScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 Start a New Complaint
               </Text>
@@ -81,7 +85,6 @@ const ComplaintsScreen = () => {
                   fontSize: 16,
                   color: Colors.white,
                   fontWeight: "bold",
-                  fontFamily: "ca",
                 }}>
                 View Previous Complaints
               </Text>

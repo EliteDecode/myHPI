@@ -3,18 +3,31 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons"; // Import Feather icons from expo
 import Colors from "../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/reducers/auth/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ControlPanel = ({ closeControlPanel }) => {
   const navigation = useNavigation();
   const [active, setActive] = useState("");
   const route = useRoute();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   const handleNavigate = (location) => {
     navigation.navigate(location);
     setActive(location);
     closeControlPanel();
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    dispatch(logout());
+
+    const logoutTime = new Date().getTime();
+    await AsyncStorage.setItem("lastLoginTime", JSON.stringify(logoutTime));
+
     navigation.replace("Login");
   };
 
@@ -22,7 +35,7 @@ const ControlPanel = ({ closeControlPanel }) => {
     { label: "Profile", icon: "user" },
     { label: "Appointments", icon: "calendar" },
     { label: "Complaints", icon: "alert-circle" },
-    { label: "Ask Kemi", icon: "help-circle" },
+    { label: "Ask  KeMi", icon: "help-circle" },
     { label: "Settings", icon: "settings" },
   ];
 
@@ -37,16 +50,16 @@ const ControlPanel = ({ closeControlPanel }) => {
       <View className="flex items-center justify-center mb-10">
         <View className="w-28 h-28 rounded-full bg-white items-center justify-center ">
           <Text className="text-[25px]" style={{ color: Colors.primary }}>
-            AB
+            {`${user?.data?.Lastname?.charAt(0) || ""}${
+              user?.data?.Firstname?.charAt(0) || ""
+            }`}
           </Text>
         </View>
-        <Text
-          className="font-bold mt-1  "
-          style={{ fontFamily: "ca", color: Colors.gray2 }}>
-          John Michealis
+        <Text className="font-bold mt-1  " style={{ color: Colors.gray2 }}>
+          {`${user?.data?.Lastname} ${user?.data?.Firstname}`}
         </Text>
         <Text className="" style={{ fontFamily: "sen", color: Colors.gray2 }}>
-          sirelite11@gmail.com
+          {`${user?.data?.Email}`}
         </Text>
       </View>
       {controlPanelItems.map((item, index) => (
@@ -71,7 +84,6 @@ const ControlPanel = ({ closeControlPanel }) => {
             style={{
               color: active === item.label ? Colors.primary : Colors.primary,
               fontSize: 15,
-              fontFamily: "ca",
             }}>
             {item.label}
           </Text>

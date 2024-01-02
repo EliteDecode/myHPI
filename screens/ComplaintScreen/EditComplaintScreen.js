@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,16 +10,56 @@ import { Formik } from "formik";
 import Slider from "@react-native-community/slider";
 import Colors from "../../helpers/Colors";
 import BackButton from "../../components/BackButton";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-const NewComplaintScreen = () => {
-  const saveComplaint = (values) => {
-    // Implement logic to save the complaint data
-    console.log("Complaint data saved:", values);
-  };
+const EditComplaintScreen = () => {
+  const [complaints, setComplaints] = useState([
+    {
+      id: 1,
+      location: "Head",
+      duration: "2 days",
+      quality: "Sharp",
+      severity: 7,
+      timing: "Morning",
+      modifyingFactors: "Rest",
+      associatedSymptoms: "Nausea",
+      context: "At work",
+    },
+    {
+      id: 2,
+      location: "Back",
+      duration: "1 week",
+      quality: "Dull",
+      severity: 5,
+      timing: "Afternoon",
+      modifyingFactors: "Movement",
+      associatedSymptoms: "None",
+      context: "At home",
+    },
+
+    {
+      id: 3,
+      location: "Abdomen",
+      duration: "3 days",
+      quality: "Cramping",
+      severity: 8,
+      timing: "Evening",
+      modifyingFactors: "Medication",
+      associatedSymptoms: "Bloating",
+      context: "During meals",
+    },
+  ]);
+
+  const route = useRoute();
+  const navigation = useNavigation();
+
+  const complaint = complaints.find(
+    (item) => item.id === route.params.complaintId
+  );
 
   return (
     <>
-      <BackButton color={Colors.primary} content="My Concern" />
+      <BackButton color={Colors.primary} content="Edit Previous Concern" />
       <View
         style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 16 }}>
         <ScrollView
@@ -28,14 +68,14 @@ const NewComplaintScreen = () => {
           className="py-2">
           <Formik
             initialValues={{
-              bodyPart: "",
-              duration: "",
-              quality: "",
-              severity: 5, // Default to moderate
-              timing: "",
-              modifyingFactors: "",
-              associatedSymptoms: "",
-              context: "",
+              bodyPart: complaint.location,
+              duration: complaint.duration,
+              quality: complaint.quality,
+              severity: complaint.severity, // Default to moderate
+              timing: complaint.timing,
+              modifyingFactors: complaint.modifyingFactors,
+              associatedSymptoms: complaint.associatedSymptoms,
+              context: complaint.context,
             }}
             onSubmit={(values) => saveComplaint(values)}>
             {({ values, handleChange, handleSubmit, setFieldValue }) => (
@@ -45,6 +85,7 @@ const NewComplaintScreen = () => {
                   <TextInput
                     style={styles.input}
                     numberOfLines={3}
+                    editable={false}
                     value={values.bodyPart}
                     placeholder="Enter your bodyPart"
                     onChangeText={handleChange("bodyPart")}
@@ -57,7 +98,7 @@ const NewComplaintScreen = () => {
                     style={styles.input}
                     numberOfLines={3}
                     value={values.duration}
-                    placeholder="Provide number of days/weeks/month "
+                    placeholder="Enter Duration"
                     onChangeText={handleChange("duration")}
                   />
                 </View>
@@ -68,8 +109,7 @@ const NewComplaintScreen = () => {
                     style={styles.input}
                     numberOfLines={3}
                     value={values.quality}
-                    placeholder="Describe the sensation associated with the problem such as: sharp/dull/burning/radiating/stabbing/aching/throbbing
-                    "
+                    placeholder="Enter Quality"
                     onChangeText={handleChange("quality")}
                   />
                 </View>
@@ -112,8 +152,7 @@ const NewComplaintScreen = () => {
                     style={styles.input}
                     numberOfLines={3}
                     value={values.timing}
-                    placeholder="When does the pain occur? e.g. Daily/weekly
-                    "
+                    placeholder="Enter Timing"
                     onChangeText={handleChange("timing")}
                   />
                 </View>
@@ -124,8 +163,7 @@ const NewComplaintScreen = () => {
                     style={styles.input}
                     numberOfLines={3}
                     value={values.modifyingFactors}
-                    placeholder="What makes the pain better or worse? 
-                    "
+                    placeholder="Enter Modifying Factors"
                     onChangeText={handleChange("modifyingFactors")}
                   />
                 </View>
@@ -137,7 +175,7 @@ const NewComplaintScreen = () => {
                   <TextInput
                     style={styles.input}
                     numberOfLines={3}
-                    placeholder="Provide other symptoms that occur in combination with the main symptom."
+                    placeholder="Enter Associated Signs and Symptoms"
                     value={values.associatedSymptoms}
                     onChangeText={handleChange("associatedSymptoms")}
                   />
@@ -163,7 +201,7 @@ const NewComplaintScreen = () => {
                       textAlign: "center",
                       fontSize: 16,
                     }}>
-                    Submit Complaint
+                    Edit Complaint
                   </Text>
                 </TouchableOpacity>
               </>
@@ -204,4 +242,4 @@ const styles = {
   },
 };
 
-export default NewComplaintScreen;
+export default EditComplaintScreen;

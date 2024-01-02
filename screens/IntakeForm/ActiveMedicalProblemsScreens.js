@@ -75,7 +75,7 @@ const ActiveMedicalProblemsScreen = () => {
             key={problem.id}
             className="flex flex-row items-center justify-center">
             <TextInput
-              placeholder="Enter item here."
+              placeholder="e.g. Diabetes"
               style={{
                 flex: 1,
                 borderWidth: 1,
@@ -112,7 +112,6 @@ const ActiveMedicalProblemsScreen = () => {
             style={{
               color: "white",
               textAlign: "center",
-              fontFamily: "ca",
             }}>
             Add Item
           </Text>

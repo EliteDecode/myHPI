@@ -110,7 +110,6 @@ const SexualTransmittedDiseaseHistory = () => {
             style={{
               color: "white",
               textAlign: "center",
-              fontFamily: "ca",
             }}>
             Add Item
           </Text>

@@ -55,7 +55,7 @@ export const registerFields = [
     ),
   },
   {
-    title: "Confirm Password",
+    title: "ConfirmPassword",
     mode: "password",
     placeholder: "Confirm Password",
     icon: (

@@ -65,7 +65,7 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Marital Status
@@ -86,7 +86,7 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Profession
@@ -108,7 +108,7 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Tobacco Use
@@ -128,7 +128,7 @@ const SocialHistory = () => {
                   <Text
                     style={{
                       color: Colors.gray2,
-                      fontFamily: "ca",
+
                       marginBottom: 8,
                     }}>
                     Quantity
@@ -151,7 +151,7 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Recreational Drug Use
@@ -173,7 +173,7 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    fontFamily: "ca",
+
                     marginBottom: 8,
                   }}>
                   Sexual Partners

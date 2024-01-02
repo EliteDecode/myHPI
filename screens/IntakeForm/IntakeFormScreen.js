@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -37,6 +38,41 @@ const IntakeFormScreen = () => {
     navigation.navigate(category, {
       screen: route.name,
     });
+  };
+
+  const showCongratulationsAlert = () => {
+    Alert.alert("Congratulations!", "Your form has been submitted", [
+      {
+        text: "OK",
+        onPress: () => {
+          console.log("Congratulations OK Pressed");
+          // Call the second alert after the first one is closed
+          showComplaintAlert();
+        },
+      },
+    ]);
+  };
+
+  const showComplaintAlert = () => {
+    Alert.alert(
+      "Do you have a complaint today?",
+      "Please share reasons why you need an appointment with your health team",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Ask me later pressed"),
+        },
+
+        {
+          text: "Proceed",
+          onPress: () => {
+            navigation.navigate("New Complaint", {
+              screen: route.name,
+            });
+          },
+        },
+      ]
+    );
   };
 
   const renderCompletionIcon = (category) => {
@@ -78,14 +114,14 @@ const IntakeFormScreen = () => {
           }}>
           <TouchableOpacity
             className="rounded-full"
-            style={{ backgroundColor: Colors.gray2, paddingVertical: 18 }}>
+            style={{ backgroundColor: Colors.gray2, paddingVertical: 18 }}
+            onPress={showCongratulationsAlert}>
             <Text
               style={{
                 color: Colors.white,
                 textAlign: "center",
                 fontSize: 16,
                 fontWeight: "bold",
-                fontFamily: "ca",
               }}>
               Submit Form
             </Text>
@@ -119,7 +155,6 @@ const CategoryItem = ({ category, onPress, completionIcon }) => {
               fontSize: 16,
               color: Colors.white,
               fontWeight: "bold",
-              fontFamily: "ca",
             }}>
             {category}
           </Text>
