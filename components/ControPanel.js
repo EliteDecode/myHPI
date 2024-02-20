@@ -27,7 +27,6 @@ const ControlPanel = ({ closeControlPanel }) => {
 
     const logoutTime = new Date().getTime();
     await AsyncStorage.setItem("lastLoginTime", JSON.stringify(logoutTime));
-
     navigation.replace("Login");
   };
 

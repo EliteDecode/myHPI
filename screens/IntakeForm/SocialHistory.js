@@ -1,20 +1,65 @@
-import React, { useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { TextInput } from "react-native-element-textinput";
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import * as Yup from "yup";
+import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+
+const SocialHistorySchema = Yup.object().shape({
+  maritalStatus: Yup.string().required("Marital Status is required"),
+  profession: Yup.string().required("Profession is required"),
+  tobaccoUse: Yup.string().required("Tobacco Use is required"),
+  quantity: Yup.string().when("tobaccoUse", {
+    is: (value) => value === "Yes",
+    then: (schema) =>
+      schema.required("Quantity is required when Tobacco Use is Yes"),
+  }),
+  recreationalDrugUse: Yup.string().required(
+    "Recreational Drug Use is required"
+  ),
+  sexualPartners: Yup.string().required("Sexual Partners is required"),
+});
 
 const SocialHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { user } = useSelector((state) => state.auth);
+  const [initialSocialHistory, setInitialSocialHistory] = useState();
+
+  const initialValues = {
+    maritalStatus: "",
+    profession: "",
+    tobaccoUse: "",
+    quantity: "",
+    recreationalDrugUse: "",
+    sexualPartners: "",
+  };
+
+  useEffect(() => {
+    const fetchInitialValues = async () => {
+      try {
+        const loggedInUserId = user?.data?._id;
+        const storedValues = await AsyncStorage.getItem(
+          `socialHistory_${loggedInUserId}`
+        );
+        if (storedValues) {
+          // Set the initial values in Formik
+          setInitialSocialHistory(JSON.parse(storedValues));
+        }
+      } catch (error) {
+        console.error("Error fetching values from local storage:", error);
+      }
+    };
+
+    fetchInitialValues();
+  }, [route, navigation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,19 +78,20 @@ const SocialHistory = () => {
       ),
     });
   }, [navigation, route]);
-  const initialValues = {
-    maritalStatus: "",
-    profession: "",
-    tobaccoUse: "",
-    quantity: "",
-    recreationalDrugUse: "",
-    sexualPartners: "",
-  };
 
-  const saveAndContinue = (values) => {
-    navigation.navigate("Allergies", {
-      screen: route.name ? route.name : "IntakeForm",
-    });
+  const saveAndContinue = async (values) => {
+    try {
+      const loggedInUserId = user?.data?._id;
+      await AsyncStorage.setItem(
+        `socialHistory_${loggedInUserId}`,
+        JSON.stringify(values)
+      );
+      navigation.navigate("Allergies Form", {
+        screen: route.name ? route.name : "IntakeForm",
+      });
+    } catch (error) {
+      console.error("Error saving values to storage:", error);
+    }
   };
 
   return (
@@ -54,40 +100,71 @@ const SocialHistory = () => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
         <Formik
-          initialValues={initialValues}
+          enableReinitialize={true}
+          initialValues={
+            initialSocialHistory ? initialSocialHistory : initialValues
+          }
+          validationSchema={SocialHistorySchema}
           onSubmit={(values, { resetForm }) => {
             saveAndContinue(values);
             resetForm();
           }}>
-          {({ values, handleChange, handleSubmit, resetForm }) => (
+          {({
+            values,
+            handleChange,
+            handleSubmit,
+            resetForm,
+            errors,
+            touched,
+          }) => (
             <>
-              <View style={{ marginBottom: 12 }}>
+              <View style={{ marginBottom: 16 }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-
-                    marginBottom: 8,
+                    marginBottom: 5,
                   }}>
-                  Marital Status
+                  Marital Status{" "}
+                  {initialSocialHistory &&
+                    `: ${initialSocialHistory?.maritalStatus}`}
                 </Text>
-                <RNPickerSelect
-                  placeholder={{ label: "Select Marital Status", value: null }}
-                  onValueChange={handleChange("maritalStatus")}
-                  items={[
-                    { label: "Single", value: "Single" },
-                    { label: "Married", value: "Married" },
-                    { label: "Divorced", value: "Divorced" },
-                    { label: "Widowed", value: "Widowed" },
-                  ]}
-                />
+                <View className="my-2 border rounded-lg border-[#ccc]">
+                  <RNPickerSelect
+                    placeholder={{
+                      label: "Select Marital Status",
+                      value: null,
+                    }}
+                    onValueChange={handleChange("maritalStatus")}
+                    items={[
+                      { label: "Single", value: "Single" },
+                      { label: "Married", value: "Married" },
+                      { label: "Divorced", value: "Divorced" },
+                      { label: "Widowed", value: "Widowed" },
+                    ]}
+                    style={{
+                      inputIOS: {
+                        borderRadius: 10,
+                        paddingHorizontal: 13,
+                        paddingVertical: 16,
+                      },
+                      inputAndroid: {
+                        borderRadius: 4,
+                        paddingHorizontal: 13,
+                        paddingVertical: 15,
+                      },
+                    }}
+                  />
+                </View>
+                {touched.maritalStatus && errors.maritalStatus && (
+                  <Text style={{ color: "red" }}>{errors.maritalStatus}</Text>
+                )}
               </View>
 
-              <View style={{ marginBottom: 12 }}>
+              <View style={{ marginBottom: 16 }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-
-                    marginBottom: 8,
+                    marginBottom: 5,
                   }}>
                   Profession
                 </Text>
@@ -98,96 +175,166 @@ const SocialHistory = () => {
                     borderColor: "#ccc",
                     borderRadius: 12,
                     padding: 12,
+                    height: 60,
                   }}
-                  value={values.profession}
+                  value={initialSocialHistory?.profession || values.profession}
                   onChangeText={handleChange("profession")}
                 />
+                {touched.profession && errors.profession && (
+                  <Text style={{ color: "red" }}>{errors.profession}</Text>
+                )}
               </View>
 
-              <View style={{ marginBottom: 12 }}>
+              <View style={{ marginBottom: 16 }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-
-                    marginBottom: 8,
+                    marginBottom: 5,
                   }}>
-                  Tobacco Use
+                  Tobacco Use{" "}
+                  {initialSocialHistory &&
+                    `: ${initialSocialHistory?.tobaccoUse}`}
                 </Text>
-                <RNPickerSelect
-                  placeholder={{ label: "Select Tobacco Use", value: null }}
-                  onValueChange={handleChange("tobaccoUse")}
-                  items={[
-                    { label: "Yes", value: "Yes" },
-                    { label: "No", value: "No" },
-                  ]}
-                />
+                <View className="my-2 border rounded-lg border-[#ccc]">
+                  <RNPickerSelect
+                    placeholder={{ label: "Select Tobacco Use", value: null }}
+                    onValueChange={handleChange("tobaccoUse")}
+                    items={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    style={{
+                      inputIOS: {
+                        borderWidth: 1,
+                        borderColor: "#ccc",
+                        borderRadius: 10,
+                        paddingHorizontal: 13,
+                        paddingVertical: 16,
+                      },
+                      inputAndroid: {
+                        borderWidth: 1,
+                        borderColor: "#ccc",
+                        borderRadius: 4,
+                        paddingHorizontal: 13,
+                        paddingVertical: 15,
+                      },
+                    }}
+                  />
+                </View>
+                {touched.tobaccoUse && errors.tobaccoUse && (
+                  <Text style={{ color: "red" }}>{errors.tobaccoUse}</Text>
+                )}
               </View>
 
-              {values.tobaccoUse === "Yes" && (
-                <View style={{ marginBottom: 12 }}>
+              {values.tobaccoUse == "Yes" && (
+                <View style={{ marginBottom: 16 }}>
                   <Text
                     style={{
                       color: Colors.gray2,
-
-                      marginBottom: 8,
+                      marginBottom: 5,
                     }}>
                     Quantity
                   </Text>
                   <TextInput
                     placeholder="Enter Quantity"
                     style={{
-                      borderWidth: 1,
-                      borderColor: "#ccc",
                       borderRadius: 12,
                       padding: 12,
+                      height: 60,
+                      borderWidth: 1,
+                      borderColor: "#ccc",
                     }}
-                    value={values.quantity}
+                    value={initialSocialHistory?.quantity || values.quantity}
                     onChangeText={handleChange("quantity")}
                   />
+                  {touched.quantity && errors.quantity && (
+                    <Text style={{ color: "red" }}>{errors.quantity}</Text>
+                  )}
                 </View>
               )}
 
-              <View style={{ marginBottom: 12 }}>
+              <View style={{ marginBottom: 16 }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-
-                    marginBottom: 8,
+                    marginBottom: 5,
                   }}>
-                  Recreational Drug Use
+                  Recreational Drug Use{" "}
+                  {initialSocialHistory &&
+                    `: ${initialSocialHistory?.recreationalDrugUse}`}
                 </Text>
-                <RNPickerSelect
-                  placeholder={{
-                    label: "Select Recreational Drug Use",
-                    value: null,
-                  }}
-                  onValueChange={handleChange("recreationalDrugUse")}
-                  items={[
-                    { label: "Yes", value: "Yes" },
-                    { label: "No", value: "No" },
-                  ]}
-                />
+                <View className="my-2 border rounded-lg border-[#ccc]">
+                  <RNPickerSelect
+                    placeholder={{
+                      label: "Select Recreational Drug Use",
+                      value: null,
+                    }}
+                    onValueChange={handleChange("recreationalDrugUse")}
+                    items={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    style={{
+                      inputIOS: {
+                        borderRadius: 10,
+                        paddingHorizontal: 13,
+                        paddingVertical: 16,
+                      },
+                      inputAndroid: {
+                        borderRadius: 4,
+                        paddingHorizontal: 13,
+                        paddingVertical: 15,
+                      },
+                    }}
+                  />
+                </View>
+                {touched.recreationalDrugUse && errors.recreationalDrugUse && (
+                  <Text style={{ color: "red" }}>
+                    {errors.recreationalDrugUse}
+                  </Text>
+                )}
               </View>
 
-              <View style={{ marginBottom: 12 }}>
+              <View style={{ marginBottom: 16 }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-
-                    marginBottom: 8,
+                    marginBottom: 5,
                   }}>
-                  Sexual Partners
+                  Sexual Partners{" "}
+                  {initialSocialHistory &&
+                    `: ${initialSocialHistory?.sexualPartners}`}
                 </Text>
-                <RNPickerSelect
-                  placeholder={{ label: "Select Sexual Partners", value: null }}
-                  onValueChange={handleChange("sexualPartners")}
-                  items={[
-                    { label: "Male", value: "Male" },
-                    { label: "Female", value: "Female" },
-                    { label: "Bi-sexual", value: "Bi-sexual" },
-                    { label: "Abstinence", value: "Abstinence" },
-                  ]}
-                />
+                <View className="my-2 border rounded-lg border-[#ccc]">
+                  <RNPickerSelect
+                    placeholder={{
+                      label: "Select Sexual Partners",
+                      value: null,
+                    }}
+                    onValueChange={handleChange("sexualPartners")}
+                    items={[
+                      { label: "Male", value: "Male" },
+                      { label: "Female", value: "Female" },
+                      { label: "Bi-sexual", value: "Bi-sexual" },
+                      { label: "Abstinence", value: "Abstinence" },
+                    ]}
+                    style={{
+                      inputIOS: {
+                        borderRadius: 10,
+                        paddingHorizontal: 13,
+                        paddingVertical: 16,
+                      },
+                      inputAndroid: {
+                        borderRadius: 4,
+                        paddingHorizontal: 13,
+                        paddingVertical: 15,
+                      },
+                    }}
+                  />
+                </View>
+                {touched.sexualPartners && errors.sexualPartners && (
+                  <Text style={{ color: "red" }}>{errors.sexualPartners}</Text>
+                )}
               </View>
 
               <View
@@ -226,8 +373,9 @@ const SocialHistory = () => {
             </>
           )}
         </Formik>
-        <View style={{ marginBottom: 100 }} />
+        <View style={{ marginBottom: 80 }} />
       </ScrollView>
+      <BtnReturnIntakeForm />
     </View>
   );
 };

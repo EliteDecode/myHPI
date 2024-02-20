@@ -1,7 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/users/";
+// const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/users/";
+
+const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/users/";
 //Register user
 const register = async (user) => {
   const response = await axios.post(`${API_URL}register`, user);
@@ -48,6 +50,7 @@ const login = async (user) => {
 //update
 
 const update = async (user, userId, token) => {
+  console.log(user);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -61,7 +64,25 @@ const update = async (user, userId, token) => {
   );
 
   if (response.data) {
-    await AsyncStorage.setItem("userData", JSON.stringify(data));
+    await AsyncStorage.setItem("userData", JSON.stringify(response.data));
+  }
+
+  return response.data;
+};
+
+const getUser = async (userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.get(`${API_URL}${userId}`, config);
+
+  console.log(response.data);
+
+  if (response.data) {
+    await AsyncStorage.setItem("userData", JSON.stringify(response.data));
   }
 
   return response.data;
@@ -136,6 +157,7 @@ const authService = {
   forgotPassword,
   updatePassword,
   deleteAccount,
+  getUser,
 };
 
 export default authService;

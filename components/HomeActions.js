@@ -8,30 +8,23 @@ import {
   TouchableOpacity,
   Share,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import {
-  TourGuideProvider, // Main provider
-  TourGuideZone, // Main wrapper of highlight component
-  TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
-  useTourGuideController, // hook to start, etc.
+  TourGuideProvider,
+  TourGuideZone,
+  TourGuideZoneByPosition,
+  useTourGuideController,
 } from "rn-tourguide";
 
 const HomeActions = () => {
   // Use Hooks to control!
-  const {
-    canStart, // a boolean indicate if you can start tour guide
-    start, // a function to start the tourguide
-    stop, // a function  to stopping it
-    eventEmitter, // an object for listening some events
-  } = useTourGuideController();
+  const { canStart, start, stop, eventEmitter } = useTourGuideController();
 
-  // Can start at mount 🎉
-  // you need to wait until everything is registered 😁
   React.useEffect(() => {
     if (canStart) {
-      // 👈 test if you can start otherwise nothing will happen
       start();
     }
-  }, [canStart]); // 👈 don't miss it!
+  }, [canStart]);
 
   const handleOnStart = () => console.log("start");
   const handleOnStop = () => console.log("stop");
@@ -71,7 +64,7 @@ const HomeActions = () => {
     }
   };
 
-  const handleAsk KeMiPress = () => {
+  const handleAskKeMiPress = () => {
     navigation.navigate("Ask  KeMi", {
       screen: route.name,
     });
@@ -91,12 +84,12 @@ const HomeActions = () => {
 
       <TouchableOpacity
         style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-        onPress={handleAsk KeMiPress}>
+        onPress={handleAskKeMiPress}>
         <Image
           source={require("../assets/images/confusion.png")}
           style={styles.image}
         />
-        <Text style={styles.text}>Ask  KeMi</Text>
+        <Text style={styles.text}>Ask KeMi</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.box, { backgroundColor: "#EAEAEA" }]}
@@ -106,7 +99,12 @@ const HomeActions = () => {
           style={styles.image}
         />
         <TourGuideZone zone={3} shape={"rectangle_and_keep"}>
-          <Text style={styles.text}>Update Profile</Text>
+          <View>
+            <Text style={styles.text}>
+              Update Profile{" "}
+              <MaterialIcons name="verified" size={24} color="black" />
+            </Text>
+          </View>
         </TourGuideZone>
       </TouchableOpacity>
     </View>

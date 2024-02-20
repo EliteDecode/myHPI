@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../store/reducers/auth/authSlice";
 const { width, height } = Dimensions.get("window");
 import ToastManager, { Toast } from "toastify-react-native";
-import { Button } from "react-native";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -62,8 +61,6 @@ const LoginScreen = () => {
     if (isError && message) {
       Toast.error(message);
     }
-
-    console.log(user);
 
     if (isSuccess) {
       dispatch(reset());

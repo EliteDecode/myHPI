@@ -1,20 +1,19 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TextInput } from "react-native-element-textinput";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import IntakeFormTitle from "../../components/IntakeFormTitle";
+import { useSelector } from "react-redux";
+import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 
 const ActiveMedicalProblemsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { user } = useSelector((state) => state.auth);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,6 +34,25 @@ const ActiveMedicalProblemsScreen = () => {
   }, [navigation, route]);
 
   const [problems, setProblems] = useState([{ id: new Date(), value: "" }]);
+
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const loggedInUserId = user?.data?._id;
+        const storedProblems = await AsyncStorage.getItem(
+          `activeMedicalProblems_${loggedInUserId}`
+        );
+
+        if (storedProblems) {
+          setProblems(JSON.parse(storedProblems));
+        }
+      } catch (error) {
+        console.error("Error fetching problems from local storage:", error);
+      }
+    };
+
+    fetchProblems();
+  }, [route, navigation]);
 
   const addProblemField = () => {
     const newId = new Date();
@@ -57,11 +75,24 @@ const ActiveMedicalProblemsScreen = () => {
     setProblems([{ id: 1, value: "" }]);
   };
 
-  const saveAndContinue = () => {
-    // console.log("Form data saved:", problems);
-    navigation.navigate("Past Medical History", {
-      screen: route.name,
-    });
+  const saveAndContinue = async () => {
+    try {
+      const loggedInUserId = user?.data?._id;
+      const filteredProblems = problems.filter(
+        (problem) => problem.value !== ""
+      );
+
+      await AsyncStorage.setItem(
+        `activeMedicalProblems_${loggedInUserId}`,
+        JSON.stringify(filteredProblems)
+      );
+
+      navigation.navigate("Past Medical History Form", {
+        screen: route.name ? route : "IntakeForm",
+      });
+    } catch (error) {
+      console.error("Error saving problems to local storage:", error);
+    }
   };
 
   return (
@@ -84,6 +115,7 @@ const ActiveMedicalProblemsScreen = () => {
                 padding: 12,
                 marginBottom: 12,
                 fontFamily: "sen",
+                height: 60,
               }}
               value={problem.value}
               onChangeText={(text) => handleProblemChange(problem.id, text)}
@@ -143,6 +175,7 @@ const ActiveMedicalProblemsScreen = () => {
         </View>
         <View style={{ marginBottom: 100 }} />
       </ScrollView>
+      <BtnReturnIntakeForm />
     </View>
   );
 };

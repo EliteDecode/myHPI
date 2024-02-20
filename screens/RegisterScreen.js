@@ -219,7 +219,16 @@ const RegisterScreen = () => {
                             color={Colors.gray}
                           />
                         )}
-                        <Text style={styles.checkboxText}>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("Terms and Conditions", {
+                            screen: route.name,
+                          })
+                        }>
+                        <Text
+                          style={styles.checkboxText}
+                          className="text-blue-700 underline">
                           Agree to Terms and Conditions
                         </Text>
                       </TouchableOpacity>

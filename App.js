@@ -14,7 +14,7 @@ import { CopilotProvider } from "react-native-copilot";
 import { Provider as ReduxProvider } from "react-redux";
 import ForgotPassword from "./screens/ForgotPassword/ForgotPassword";
 import { store } from "./store";
-import ToastManager from "toastify-react-native";
+import TemrsAndConditions from "./screens/Terms";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +23,7 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(storeData);
   const [firstLaunch, setFirstLaunch] = React.useState(null);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     async function setData() {
       const appData = await AsyncStorage.getItem("firstLaunch");
       const storeData = await AsyncStorage.getItem("userData");
@@ -105,6 +105,15 @@ function App() {
             <Stack.Screen
               name="Register"
               component={RegisterScreen}
+              options={{
+                headerShown: false,
+                headerTitle: "", // Hide the title
+                headerBackVisible: true, // Hide the back button
+              }}
+            />
+            <Stack.Screen
+              name="Terms and Conditions"
+              component={TemrsAndConditions}
               options={{
                 headerShown: false,
                 headerTitle: "", // Hide the title

@@ -18,11 +18,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { reset, updatePassword } from "../../store/reducers/auth/authSlice";
 import ToastManager, { Toast } from "toastify-react-native";
 import { CommonActions } from "@react-navigation/native";
+import NavigationBar from "../../components/NavigationBar";
 
-const ChangePasswordScreen = () => {
+const ChangePasswordScreen = ({ route }) => {
   const navigation = useNavigation();
-  const route = useRoute();
+
   const dispatch = useDispatch();
+
+  const { openControlPanel } = route.params;
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -76,6 +79,7 @@ const ChangePasswordScreen = () => {
 
   return (
     <>
+      <NavigationBar openControlPanel={openControlPanel} />
       <BackButton color={Colors.primary} />
       <ToastManager
         textStyle={{ fontSize: 12 }}

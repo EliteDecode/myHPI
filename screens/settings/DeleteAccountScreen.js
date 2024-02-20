@@ -13,13 +13,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, reset } from "../../store/reducers/auth/authSlice";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
+import NavigationBar from "../../components/NavigationBar";
 
-const DeleteAccountScreen = () => {
+const DeleteAccountScreen = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+
+  const { openControlPanel } = route.params;
 
   const handleDeleteAccount = () => {
     dispatch(deleteAccount());
@@ -70,6 +73,7 @@ const DeleteAccountScreen = () => {
 
   return (
     <>
+      <NavigationBar openControlPanel={openControlPanel} />
       <BackButton color={Colors.primary} />
       <View style={styles.container}>
         <Text style={styles.warningText}>

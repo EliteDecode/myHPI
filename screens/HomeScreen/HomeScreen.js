@@ -7,42 +7,57 @@ import {
   Dimensions,
   StyleSheet,
   Button,
-  Share,
   Modal,
   Platform,
+  Alert,
+  ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+
 import React from "react";
 import Colors from "../../helpers/Colors";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  CommonActions,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import MyStatusBar from "../../helpers/MyStatusBar";
 const { width, height } = Dimensions.get("window");
-import {
-  CopilotProvider,
-  CopilotStep,
-  walkthroughable,
-  useCopilot,
-} from "react-native-copilot";
+import * as Clipboard from "expo-clipboard";
+import { CopilotStep, walkthroughable, useCopilot } from "react-native-copilot";
 import { useEffect } from "react";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../store/reducers/auth/authSlice";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
+import NavigationBar from "../../components/NavigationBar";
+import { get_form } from "../../store/reducers/intakeForm/intakeFormSlice";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import {
+  generateHtmlContent,
+  generateHtmlContent1,
+  generatePlainHtmlContent,
+} from "../../utils/htmlcontent";
+const { compile } = require("html-to-text");
 
 const CopilotText = walkthroughable(Text);
 const CopilotView = walkthroughable(View);
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
-  const route = useRoute();
   const dispatch = useDispatch();
+
   const [lastLoginTime, setLastLoginTime] = useState();
   const { start, copilotEvents } = useCopilot();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
+  const { user } = useSelector((state) => state.auth);
+  const { form } = useSelector((state) => state.form);
+
+  const { openControlPanel } = route.params;
 
   const handleProfilePress = () => {
     navigation.navigate("UpdateProfile", {
@@ -83,6 +98,33 @@ const HomeScreen = () => {
     }
   };
 
+  const handleAddMedicalHistory = () => {
+    if (user?.data?.UpdatedUser) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "IntakeForm" }],
+        })
+      );
+    } else {
+      Alert.alert(
+        "Information",
+        "Please update your profile to add your medical history",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.navigate("UpdateProfile", {
+                screen: route.name,
+              });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
   const setFirstGuide = async () => {
     try {
       await AsyncStorage.setItem("firstLaunchTour", "true");
@@ -103,27 +145,70 @@ const HomeScreen = () => {
   };
 
   const handleShareHistoryPress = async () => {
-    try {
-      // Implement logic to get the data you want to share
-      const sharedData = "This is the data to share.";
+    Alert.alert(
+      "Would you like to Copy and upload to your patient portal for your doctor's electronic medical records it or email it to your healthcare provider?",
+      "Please select your preferred option.",
+      [
+        {
+          text: "Copy File",
+          onPress: async () => {
+            const data = generatePlainHtmlContent(user.data, form);
 
-      await Share.share({
-        message: sharedData,
-      });
-    } catch (error) {
-      console.error("Error sharing:", error.message);
-    }
+            const options = {
+              wordwrap: 130,
+            };
+            const compiledConvert = compile(options);
+
+            const texts = data.map(compiledConvert);
+            const copy = await Clipboard.setStringAsync(texts.join("\n"));
+            if (copy) {
+              Alert.alert(
+                "Information",
+                "Congratulations your file have been copied",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      // navigation.navigate("Previous Complaints");
+                      // dispatch(reset());
+                    },
+                  },
+                ],
+                { cancelable: false }
+              );
+            }
+          },
+        },
+        {
+          text: "Send File",
+          onPress: async () => {
+            try {
+              const html = generateHtmlContent1(user.data, form);
+              const { uri } = await Print.printToFileAsync({ html });
+              Sharing.shareAsync(uri);
+            } catch (error) {
+              console.error("Error sharing:", error.message);
+            }
+          },
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("Ask me later pressed"),
+        },
+      ]
+    );
   };
 
   const handleAskKeMiPress = () => {
-    navigation.navigate("Ask  KeMi", {
+    navigation.navigate("Ask KeMi", {
       screen: route.name,
     });
   };
 
   return (
     <>
-      <MyStatusBar barStyle="light-content" backgroundColor={Colors.primary} />
+      <MyStatusBar barStyle="dark-content" backgroundColor={Colors.primary} />
+      <NavigationBar openControlPanel={openControlPanel} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -139,95 +224,115 @@ const HomeScreen = () => {
         </View>
       </Modal>
       <SafeAreaView className="bg-white flex-1 ">
-        <View className="p-7 mt-5 space-y-2">
-          <Text className="text-[23px] font-bold" style={{}}>
-            Hi, Mr {`${user?.data?.Lastname} ${user?.data?.Firstname}`} 🎉
-          </Text>
-          {!user?.data?.UpdatedUser && (
-            <Text>Please update your profile to add medical history.</Text>
-          )}
-          <Text style={{ fontFamily: "sen" }}>
-            Last check-in: {lastLoginTime}. What's new with your health today?
-          </Text>
-        </View>
-        <View>
-          <Image
-            alt="welcome image"
-            source={require("../../assets/images/homeImg.png")}
-            style={{
-              resizeMode: "contain",
-              width: width,
-              height: Platform.OS === "ios" ? height * 0.35 : height * 0.3,
-            }}
-          />
-        </View>
-        <View className=" mt-1 rounded-full flex flex-col items-center justify-center">
-          <CopilotStep
-            order={2}
-            text="Please fill up your intake form"
-            name="form">
-            <CopilotView className="">
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => navigation.navigate("IntakeForm")}
-                className="px-3 py-3 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
-                style={{ backgroundColor: Colors.primary, width: width * 0.7 }}>
-                <Text
-                  className="text-white font-ca text-[20px] font-bold"
-                  style={{}}>
-                  {" "}
-                  Add my medical history
-                </Text>
-                <FontAwesome name="wpforms" size={20} color="#fff" />
-              </TouchableOpacity>
-            </CopilotView>
-          </CopilotStep>
-        </View>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-            onPress={handleShareHistoryPress}>
+        <ScrollView>
+          <View className="p-7  space-y-2">
+            <View className="flex-row items-center">
+              <Text className="text-[23px] font-bold">
+                Hi,{` ${user?.data?.Firstname}`}{" "}
+              </Text>
+              {user?.data?.UpdatedUser ? (
+                <MaterialIcons
+                  name="verified"
+                  size={20}
+                  color={Colors.primary}
+                />
+              ) : (
+                <Octicons name="unverified" size={20} color="red" />
+              )}
+            </View>
+            {!user?.data?.UpdatedUser && (
+              <Text>
+                Please update your profile to add your medical history.
+              </Text>
+            )}
+            <Text style={{ fontFamily: "sen" }}>
+              What's new with your health today?
+            </Text>
+          </View>
+          <View>
             <Image
-              source={require("../../assets/images/data-sharing.png")}
-              style={styles.image}
+              alt="welcome image"
+              source={require("../../assets/images/homeImg.png")}
+              style={{
+                resizeMode: "contain",
+                width: width,
+                height: Platform.OS === "ios" ? height * 0.35 : height * 0.323,
+              }}
             />
+          </View>
+          <View className=" mt-1 rounded-full flex flex-col items-center justify-center">
             <CopilotStep
-              text="You can share your records"
-              order={3}
-              name="share">
-              <CopilotText style={styles.text}>Share Records</CopilotText>
+              order={2}
+              text="Please fill up your intake form"
+              name="form">
+              <CopilotView className="">
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={handleAddMedicalHistory}
+                  className="px-3 py-3 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
+                  style={{
+                    backgroundColor: Colors.primary,
+                    width: width * 0.75,
+                  }}>
+                  <Text
+                    className="text-white font-bold"
+                    style={{ fontSize: 18 }}>
+                    {" "}
+                    Update my medical history
+                  </Text>
+                  <FontAwesome name="wpforms" size={20} color="#fff" />
+                </TouchableOpacity>
+              </CopilotView>
             </CopilotStep>
-          </TouchableOpacity>
+          </View>
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+              onPress={handleShareHistoryPress}>
+              <Image
+                source={require("../../assets/images/data-sharing.png")}
+                style={styles.image}
+              />
+              <CopilotStep
+                text="You can share your records"
+                order={3}
+                name="share">
+                <CopilotText style={styles.text}>Share Records</CopilotText>
+              </CopilotStep>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-            onPress={handleAskKeMiPress}>
-            <Image
-              source={require("../../assets/images/confusion.png")}
-              style={styles.image}
-            />
-            <CopilotStep
-              text="You can ask your assitstant KEMI, Coming soon."
-              order={4}
-              name="kemi">
-              <CopilotText style={styles.text}>Ask KeMi</CopilotText>
-            </CopilotStep>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-            onPress={handleProfilePress}>
-            <Image
-              source={require("../../assets/images/profile.png")}
-              style={styles.image}
-            />
-            <CopilotStep
-              text="Please update your profile"
-              order={1}
-              name="profile">
-              <CopilotText style={styles.text}>Update Profile</CopilotText>
-            </CopilotStep>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+              onPress={handleAskKeMiPress}>
+              <Image
+                source={require("../../assets/images/confusion.png")}
+                style={styles.image}
+              />
+              <CopilotStep
+                text="You can ask your assitstant KEMI, Coming soon."
+                order={4}
+                name="kemi">
+                <CopilotText style={styles.text}>Ask KeMi</CopilotText>
+              </CopilotStep>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+              onPress={handleProfilePress}>
+              <Image
+                source={require("../../assets/images/profile.png")}
+                style={styles.image}
+              />
+              <CopilotStep
+                text="Please update your profile"
+                order={1}
+                name="profile">
+                <CopilotText style={styles.text}>Update Profile </CopilotText>
+              </CopilotStep>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{ marginBottom: Platform.OS === "ios" ? 300 : 200 }}></View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );

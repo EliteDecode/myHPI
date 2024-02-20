@@ -1,15 +1,53 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Image,
+  Dimensions,
+} from "react-native";
 import Collapsible from "react-native-collapsible";
 import Icon from "react-native-vector-icons/Ionicons";
 import Colors from "../../helpers/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import BackButton from "../../components/BackButton";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  CommonActions,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import NavigationBar from "../../components/NavigationBar";
+import { useDispatch, useSelector } from "react-redux";
+import ToastManager, { Toast } from "toastify-react-native";
+import {
+  delete_complaint,
+  get_complaint,
+  reset,
+} from "../../store/reducers/complaint/complaintSlice";
+const { width, height } = Dimensions.get("window");
 
-const PreviousComplaintsScreen = () => {
+const PreviousComplaintsScreen = ({ route }) => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const routes = useRoute();
+  const { complaint, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.complaint
+  );
+  const [accordions, setAccordions] = useState([]);
+
+  const [activeAccordion, setActiveAccordion] = useState(null);
+
+  const toggleAccordion = (id) => {
+    setActiveAccordion(activeAccordion === id ? null : id);
+  };
+
+  const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { openControlPanel } = route.params;
   const handleEdit = (id) => {
     // Display an alert to confirm if the user wants to edit
     Alert.alert(
@@ -24,158 +62,310 @@ const PreviousComplaintsScreen = () => {
         {
           text: "Proceed",
           onPress: () => {
-            navigation.navigate("Edit Complaints", {
-              complaintId: id,
-              screen: route.name,
-            });
+            dispatch(reset());
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0, // Number of screens you want to reset, in this case, 1
+                routes: [
+                  {
+                    name: "Edit Complaints",
+                    params: {
+                      complaintId: id,
+                      screen: routes.name,
+                    },
+                  },
+                ],
+              })
+            );
           },
         },
       ]
     );
   };
-  const [accordions, setAccordions] = useState([
-    {
-      id: 1,
-      location: "Head",
-      duration: "2 days",
-      quality: "Sharp",
-      severity: 7,
-      timing: "Morning",
-      modifyingFactors: "Rest",
-      associatedSymptoms: "Nausea",
-      context: "At work",
-    },
-    {
-      id: 2,
-      location: "Back",
-      duration: "1 week",
-      quality: "Dull",
-      severity: 5,
-      timing: "Afternoon",
-      modifyingFactors: "Movement",
-      associatedSymptoms: "None",
-      context: "At home",
-    },
 
-    {
-      id: 3,
-      location: "Abdomen",
-      duration: "3 days",
-      quality: "Cramping",
-      severity: 8,
-      timing: "Evening",
-      modifyingFactors: "Medication",
-      associatedSymptoms: "Bloating",
-      context: "During meals",
-    },
-  ]);
-
-  const [activeAccordion, setActiveAccordion] = useState(null);
-
-  const toggleAccordion = (id) => {
-    setActiveAccordion(activeAccordion === id ? null : id);
+  const handleDelete = (id) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this complaint?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => console.log("delete Cancelled"),
+        },
+        {
+          text: "Proceed",
+          onPress: () => {
+            dispatch(delete_complaint(id));
+          },
+        },
+      ]
+    );
   };
 
+  useEffect(() => {
+    dispatch(reset());
+    dispatch(get_complaint());
+  }, [route?.params]);
+
+  const refresh = () => {
+    dispatch(get_complaint());
+  };
+
+  useEffect(() => {
+    if (complaint) {
+      setError(false);
+      setAccordions(complaint);
+    }
+
+    if (
+      complaint &&
+      message === "Congratulations this complaint has been deleted"
+    ) {
+      Toast.success("Congratulations this complaint has been deleted");
+      dispatch(reset());
+    }
+
+    if (isError && message) {
+      Toast.error(message);
+      dispatch(reset());
+      setError(true);
+    }
+
+    if (isError && message.includes("timeout")) {
+      Toast.error("Something went wrong, please refresh");
+      dispatch(reset());
+      setError(true);
+    }
+  }, [isError, isLoading, isSuccess, message, complaint]);
+
   return (
-    <View className="flex-1">
-      <BackButton color={Colors.primary} />
-      <ScrollView style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-        {accordions.map((complaint) => (
-          <View key={complaint.id} style={styles.accordionContainer}>
-            <TouchableOpacity
-              style={styles.accordionHeader}
-              onPress={() => toggleAccordion(complaint.id)}>
-              <View>
-                <Text style={styles.accordionHeaderText}>
-                  {complaint.location}
-                </Text>
-                <Text
-                  className="text-[14px]"
-                  style={{ color: Colors.gray, fontFamily: "sen" }}>
-                  Duration: {complaint.duration}
-                </Text>
-              </View>
-              <Icon
-                name={
-                  activeAccordion === complaint.id
-                    ? "chevron-up"
-                    : "chevron-down"
-                }
-                size={24}
-                color={Colors.white}
-              />
-            </TouchableOpacity>
-            <Collapsible collapsed={activeAccordion !== complaint.id}>
-              <View style={styles.accordionContent} className="p-5 space-y-4">
-                <View style={styles.gridContainer}>
-                  <View style={styles.gridItemStart}>
-                    <Text style={styles.labelText}>Location:</Text>
-                    <Text style={styles.detailText}>{complaint.location}</Text>
-                  </View>
-                  <View style={styles.gridItemEnd}>
-                    <Text style={styles.labelText}>Duration:</Text>
-                    <Text style={styles.detailText}>{complaint.duration}</Text>
-                  </View>
-                </View>
+    <>
+      <NavigationBar openControlPanel={openControlPanel} />
+      <ToastManager
+        textStyle={{ fontSize: 12 }}
+        height={50}
+        position="top"
+        width={400}
+      />
 
-                <View style={styles.gridContainer}>
-                  <View style={styles.gridItemStart}>
-                    <Text style={styles.labelText}>Quality:</Text>
-                    <Text style={styles.detailText}>{complaint.quality}</Text>
-                  </View>
-                  <View style={styles.gridItemEnd}>
-                    <Text style={styles.labelText}>Severity:</Text>
-                    <Text style={styles.detailText}>{complaint.severity}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.gridContainer}>
-                  <View style={styles.gridItemStart}>
-                    <Text style={styles.labelText}>Timing:</Text>
-                    <Text style={styles.detailText}>{complaint.timing}</Text>
-                  </View>
-                  <View style={styles.gridItemEnd}>
-                    <Text style={styles.labelText}>Modifying Factors:</Text>
-                    <Text style={styles.detailText}>
-                      {complaint.modifyingFactors}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.gridContainer}>
-                  <View style={styles.gridItemStart}>
-                    <Text style={styles.labelText}>Associated Symptoms:</Text>
-                    <Text style={styles.detailText}>
-                      {complaint.associatedSymptoms}
-                    </Text>
-                  </View>
-                  <View style={styles.gridItemEnd}>
-                    <Text style={styles.labelText}>Context:</Text>
-                    <Text style={styles.detailText}>{complaint.context}</Text>
-                  </View>
-                </View>
-                <View className="flex-row space-x-2">
-                  <MaterialIcons
-                    name="delete-forever"
-                    className="cursor-pointer"
-                    size={24}
-                    color={Colors.red}
-                  />
-                  <MaterialIcons
-                    name="edit"
-                    size={24}
-                    color={Colors.primary}
-                    className="cursor-pointer"
-                    onPress={() => handleEdit(complaint.id)}
-                  />
-                </View>
-              </View>
-            </Collapsible>
+      <View className="flex-1 bg-white">
+        {isLoading && (
+          <View className="px-4 py-3 mb-3 items-center justify-center flex-1">
+            <ActivityIndicator size="large" color={Colors.primary} />
           </View>
-        ))}
-        <View style={{ marginBottom: 200 }} />
-      </ScrollView>
-    </View>
+        )}
+
+        {!isLoading && complaint?.length > 0 ? (
+          <>
+            <BackButton color={Colors.primary} />
+
+            <ScrollView
+              style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+              {accordions &&
+                accordions?.map((complaint) => (
+                  <View key={complaint._id} style={styles.accordionContainer}>
+                    <TouchableOpacity
+                      style={styles.accordionHeader}
+                      onPress={() => toggleAccordion(complaint._id)}>
+                      <View>
+                        <Text style={styles.accordionHeaderText}>
+                          {complaint.bodyPart}
+                        </Text>
+                        <Text
+                          className="text-[14px]"
+                          style={{ color: Colors.gray, fontFamily: "sen" }}>
+                          Duration: {complaint.duration}
+                        </Text>
+                      </View>
+                      <Icon
+                        name={
+                          activeAccordion === complaint._id
+                            ? "chevron-up"
+                            : "chevron-down"
+                        }
+                        size={24}
+                        color={Colors.white}
+                      />
+                    </TouchableOpacity>
+                    <Collapsible collapsed={activeAccordion !== complaint._id}>
+                      <View
+                        style={styles.accordionContent}
+                        className="p-5 space-y-4">
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>Location:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.bodyPart}
+                            </Text>
+                          </View>
+                          <View style={styles.gridItemEnd}>
+                            <Text style={styles.labelText}>Duration:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.duration}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>Quality:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.quality}
+                            </Text>
+                          </View>
+                          <View style={styles.gridItemEnd}>
+                            <Text style={styles.labelText}>Severity:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.severity}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>Timing:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.timing}
+                            </Text>
+                          </View>
+                          <View style={styles.gridItemEnd}>
+                            <Text style={styles.labelText}>
+                              Modifying Factors:
+                            </Text>
+                            <Text style={styles.detailText}>
+                              {complaint.modifyingFactors}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>
+                              Associated Symptoms:
+                            </Text>
+                            <Text style={styles.detailText}>
+                              {complaint.associatedSymptoms}
+                            </Text>
+                          </View>
+                          <View style={styles.gridItemEnd}>
+                            <Text style={styles.labelText}>Context:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.context}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>
+                              Recipient Email
+                            </Text>
+                            <Text style={styles.detailText}>
+                              {complaint.recipientEmail}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className="flex-row justify-between space-x-2">
+                          <MaterialIcons
+                            name="delete-forever"
+                            className="cursor-pointer"
+                            size={27}
+                            color={Colors.red}
+                            onPress={() => handleDelete(complaint._id)}
+                          />
+                          <MaterialIcons
+                            name="edit"
+                            size={27}
+                            color={Colors.primary}
+                            className="cursor-pointer"
+                            onPress={() => handleEdit(complaint._id)}
+                          />
+                        </View>
+                      </View>
+                    </Collapsible>
+                  </View>
+                ))}
+              <View style={{ marginBottom: 200 }} />
+            </ScrollView>
+          </>
+        ) : !isLoading && isSuccess && complaint?.length === 0 ? (
+          <>
+            <View className="flex flex-1 flex-row items-center justify-center">
+              <Image
+                alt="welcome image"
+                source={require("../../assets/images/addFile.png")}
+                style={{
+                  resizeMode: "contain",
+                  width: width,
+                  height:
+                    Platform.OS === "ios" ? height * 0.35 : height * 0.323,
+                }}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("New Complaint")}
+              style={{ marginBottom: 10, marginTop: 10, marginHorizontal: 20 }}>
+              <View
+                style={{
+                  backgroundColor: Colors.primary,
+                  borderRadius: 30,
+                  paddingVertical: 18,
+                  alignItems: "center",
+                }}>
+                <Text
+                  style={{
+                    color: "white",
+                    fontFamily: "sen",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}>
+                  Add a New Complaint
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : !isLoading && error ? (
+          <>
+            <View className="flex flex-1 flex-row items-center justify-center">
+              <Image
+                alt="welcome image"
+                source={require("../../assets/images/refresh.png")}
+                style={{
+                  resizeMode: "contain",
+                  width: width,
+                  height:
+                    Platform.OS === "ios" ? height * 0.35 : height * 0.323,
+                }}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={refresh}
+              style={{ marginBottom: 10, marginTop: 10, marginHorizontal: 20 }}>
+              <View
+                style={{
+                  backgroundColor: Colors.primary,
+                  borderRadius: 30,
+                  paddingVertical: 18,
+                  alignItems: "center",
+                }}>
+                <Text
+                  style={{
+                    color: "white",
+                    fontFamily: "sen",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}>
+                  Refresh
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : (
+          ""
+        )}
+      </View>
+    </>
   );
 };
 

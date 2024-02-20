@@ -1,16 +1,14 @@
-import React, { useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import React, { useLayoutEffect, useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Formik } from "formik";
+import { Formik, formik } from "formik";
 import * as yup from "yup";
 import Colors from "../../helpers/Colors";
+import { useSelector } from "react-redux";
+import { TextInput } from "react-native-element-textinput";
+import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 
 const validationSchema = yup.object().shape({
   ageAtFirstPeriod: yup.string().required("Age at First Period is required"),
@@ -23,6 +21,7 @@ const validationSchema = yup.object().shape({
 const GynecologicalHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { user } = useSelector((state) => state.auth);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,24 +40,57 @@ const GynecologicalHistory = () => {
       ),
     });
   }, [navigation, route]);
-  const saveAndContinue = (values) => {
-    navigation.navigate("Surgical History", {
-      screen: route.name,
-    });
-  };
+  const [initials, setInitialValues] = useState();
 
+  useEffect(() => {
+    const fetchInitialValues = async () => {
+      try {
+        const loggedInUserId = user?.data?._id;
+        const storedValues = await AsyncStorage.getItem(
+          `gynecologicalHistory_${loggedInUserId}`
+        );
+        if (storedValues) {
+          // Set the initial values in Formik
+          setInitialValues(JSON.parse(storedValues));
+        }
+      } catch (error) {
+        console.error("Error fetching values from local storage:", error);
+      }
+    };
+
+    fetchInitialValues();
+  }, [route, navigation]);
+
+  const saveAndContinue = async (values) => {
+    try {
+      const loggedInUserId = user?.data?._id;
+
+      await AsyncStorage.setItem(
+        `gynecologicalHistory_${loggedInUserId}`,
+        JSON.stringify(values)
+      );
+      navigation.navigate("Surgical History Form", {
+        screen: route.name,
+      });
+    } catch (error) {
+      console.error("Error saving values to local storage:", error);
+    }
+  };
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
         <Formik
+          enableReinitialize={true}
           initialValues={{
-            ageAtFirstPeriod: "",
-            lastMenstrualPeriod: "",
-            ageAtMenopause: "",
+            ageAtFirstPeriod: initials ? initials["ageAtFirstPeriod"] : "",
+            lastMenstrualPeriod: initials
+              ? initials["lastMenstrualPeriod"]
+              : "",
+            ageAtMenopause: initials ? initials["ageAtMenopause"] : "",
           }}
-          // validationSchema={validationSchema}
+          validationSchema={validationSchema}
           onSubmit={(values, { resetForm }) => {
             saveAndContinue(values);
             resetForm();
@@ -99,9 +131,10 @@ const GynecologicalHistory = () => {
                       borderRadius: 12,
                       padding: 12,
                     }}
-                    value={value}
+                    value={initials ? initials[field] : value}
                     onChangeText={handleChange(field)}
                   />
+
                   {touched[field] && errors[field] && (
                     <Text style={{ color: "red" }}>{errors[field]}</Text>
                   )}
@@ -144,6 +177,7 @@ const GynecologicalHistory = () => {
         </Formik>
         <View style={{ marginBottom: 100 }} />
       </ScrollView>
+      <BtnReturnIntakeForm />
     </View>
   );
 };

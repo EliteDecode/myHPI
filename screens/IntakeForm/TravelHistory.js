@@ -1,20 +1,19 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TextInput } from "react-native-element-textinput";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import IntakeFormTitle from "../../components/IntakeFormTitle";
+import { useSelector } from "react-redux";
+import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 
 const TravelHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { user } = useSelector((state) => state.auth);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,7 +32,27 @@ const TravelHistory = () => {
       ),
     });
   }, [navigation, route]);
+
   const [problems, setProblems] = useState([{ id: new Date(), value: "" }]);
+
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const loggedInUserId = user?.data?._id;
+        const storedProblems = await AsyncStorage.getItem(
+          `travelHistories_${loggedInUserId}`
+        );
+
+        if (storedProblems) {
+          setProblems(JSON.parse(storedProblems));
+        }
+      } catch (error) {
+        console.error("Error fetching problems from local storage:", error);
+      }
+    };
+
+    fetchProblems();
+  }, [route, navigation]);
 
   const addProblemField = () => {
     const newId = new Date();
@@ -56,11 +75,25 @@ const TravelHistory = () => {
     setProblems([{ id: 1, value: "" }]);
   };
 
-  const saveAndContinue = () => {
-    // console.log("Form data saved:", problems);
-    navigation.navigate("Active Medical Problems", {
-      screen: route.name ? route : "IntakeForm",
-    });
+  const saveAndContinue = async () => {
+    try {
+      // Filter out objects with empty "value"
+      const filteredProblems = problems.filter(
+        (problem) => problem.value !== ""
+      );
+
+      const loggedInUserId = user?.data?._id;
+      await AsyncStorage.setItem(
+        `travelHistories_${loggedInUserId}`,
+        JSON.stringify(filteredProblems)
+      );
+
+      navigation.navigate("Active Medical Problems Form", {
+        screen: route.name ? route : "IntakeForm",
+      });
+    } catch (error) {
+      console.error("Error saving problems to local storage:", error);
+    }
   };
 
   return (
@@ -83,6 +116,7 @@ const TravelHistory = () => {
                 borderRadius: 12,
                 padding: 12,
                 marginBottom: 12,
+                height: 60,
               }}
               value={problem.value}
               onChangeText={(text) => handleProblemChange(problem.id, text)}
@@ -142,24 +176,7 @@ const TravelHistory = () => {
         </View>
         <View style={{ marginBottom: 100 }} />
       </ScrollView>
-
-      {route?.params?.screen === "IntakeForm" ? (
-        ""
-      ) : (
-        <TouchableOpacity
-          style={{ position: "fixed", bottom: 5 }}
-          className=" bg-[#e7e7e7] py-3 text-center rounded-md shadow-md flex-row items-center justify-center">
-          <View className="flex-row items-center space-x-1">
-            <Ionicons
-              name="arrow-back"
-              size={20}
-              color="#478AFB"
-              style={{ marginLeft: 16 }}
-            />
-            <Text>My Medical History</Text>
-          </View>
-        </TouchableOpacity>
-      )}
+      <BtnReturnIntakeForm />
     </View>
   );
 };

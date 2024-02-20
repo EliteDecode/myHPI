@@ -50,9 +50,24 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 
 export const update = createAsyncThunk("auth/upate", async (user, thunkAPI) => {
   try {
-    const userId = thunkAPI.getState().auth.user._id;
-    const token = thunkAPI.getState().auth.user.token;
+    const userId = thunkAPI.getState().auth.user.data._id;
+    const token = thunkAPI.getState().auth.user.data.token;
     const data = await authService.update(user, userId, token);
+    return data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
+  try {
+    const userId = thunkAPI.getState().auth.user.data._id;
+    const token = thunkAPI.getState().auth.user.data.token;
+    const data = await authService.getUser(userId, token);
     return data;
   } catch (error) {
     const message =
@@ -232,14 +247,27 @@ export const authSlice = createSlice({
       .addCase(update.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "Congratulations your verification is now in review";
+        state.message = "Congratulations your profile has been updated";
         state.user = action.payload;
       })
       .addCase(update.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.user = null;
+      })
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Congratulations your profile has been updated";
+        state.user = action.payload;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(verify.pending, (state) => {
         state.isLoading = true;
