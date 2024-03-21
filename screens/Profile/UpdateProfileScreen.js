@@ -135,7 +135,7 @@ const UpdateProfileScreen = ({ route }) => {
         />
         <View className="h-36" style={{ backgroundColor: Colors.gray2 }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(route.params.screen)}
+            onPress={() => navigation.navigate(route.params.screen || "Home")}
             className="mt-5 flex-row space-x-2 items-center ">
             <Ionicons
               name="arrow-back"

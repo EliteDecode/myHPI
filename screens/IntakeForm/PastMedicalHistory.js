@@ -9,11 +9,17 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import IntakeFormTitle from "../../components/IntakeFormTitle";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { textSchema } from "../../utils/schemas";
+import RNPickerSelect from "react-native-picker-select";
 
 const PastMedicalHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector((state) => state.auth);
+  const [error, setError] = useState();
+  const [problems, setProblems] = useState([
+    { id: new Date(), problem: "", relativeType: "" },
+  ]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,8 +39,6 @@ const PastMedicalHistory = () => {
     });
   }, [navigation, route]);
 
-  const [problems, setProblems] = useState([{ id: new Date(), value: "" }]);
-
   useEffect(() => {
     const fetchProblems = async () => {
       try {
@@ -52,16 +56,33 @@ const PastMedicalHistory = () => {
     };
 
     fetchProblems();
-  }, [route, navigation]);
+  }, [user]);
 
   const addProblemField = () => {
     const newId = new Date();
-    setProblems([...problems, { id: newId, value: "" }]);
+    setProblems([...problems, { id: newId, problem: "", relativeType: "" }]);
   };
 
   const handleProblemChange = (id, text) => {
+    // Validate the text
+    textSchema
+      .validate(text)
+      .then((validText) => {
+        setError(null);
+        // If text is valid, update the problems
+        const updatedProblems = problems.map((problem) =>
+          problem.id === id ? { ...problem, problem: validText } : problem
+        );
+        setProblems(updatedProblems);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
+
+  const handleRelativeTypeChange = (id, type) => {
     const updatedProblems = problems.map((problem) =>
-      problem.id === id ? { ...problem, value: text } : problem
+      problem.id === id ? { ...problem, relativeType: type } : problem
     );
     setProblems(updatedProblems);
   };
@@ -72,26 +93,28 @@ const PastMedicalHistory = () => {
   };
 
   const resetForm = () => {
-    setProblems([{ id: 1, value: "" }]);
+    setProblems([{ id: new Date(), problem: "", relativeType: "" }]);
   };
 
   const saveAndContinue = async () => {
-    try {
-      const loggedInUserId = user?.data?._id;
-      const filteredProblems = problems.filter(
-        (problem) => problem.value !== ""
-      );
+    if (!error) {
+      try {
+        const loggedInUserId = user?.data?._id;
+        const filteredProblems = problems.filter(
+          (problem) => problem.problem !== ""
+        );
 
-      await AsyncStorage.setItem(
-        `pastMedicalProblems_${loggedInUserId}`,
-        JSON.stringify(filteredProblems)
-      );
+        await AsyncStorage.setItem(
+          `pastMedicalProblems_${loggedInUserId}`,
+          JSON.stringify(filteredProblems)
+        );
 
-      navigation.navigate("Sexual Transmitted Disease History Form", {
-        screen: route.name ? route : "IntakeForm",
-      });
-    } catch (error) {
-      console.error("Error saving problems to local storage:", error);
+        navigation.navigate("Sexual Transmitted Disease History Form", {
+          screen: route.name ? route : "IntakeForm",
+        });
+      } catch (error) {
+        console.error("Error saving problems to local storage:", error);
+      }
     }
   };
 
@@ -100,37 +123,80 @@ const PastMedicalHistory = () => {
       <IntakeFormTitle title="Past Medical History" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}>
-        {problems.map((problem) => (
-          <View
-            key={problem.id}
-            className="flex flex-row items-center justify-center">
-            <TextInput
-              placeholder="Enter item here."
-              style={{
-                flex: 1,
-                borderWidth: 1,
-                borderColor: "#ccc",
-                borderRadius: 12,
-                padding: 12,
-                marginBottom: 12,
-                height: 60,
-              }}
-              value={problem.value}
-              onChangeText={(text) => handleProblemChange(problem.id, text)}
-            />
+        showsVerticalScrollIndicator={false}
+        className="space-y-4">
+        {problems.map((problem, index) => (
+          <View className="border p-3 rounded-lg border-gray-300" key={index}>
+            <View
+              key={problem.id}
+              className="flex flex-row items-center justify-center">
+              <TextInput
+                placeholder="Enter problem here."
+                style={{
+                  flex: 1,
+                  borderWidth: 1,
+                  borderColor: "#ccc",
+                  borderRadius: 12,
+                  padding: 12,
+                  marginBottom: 12,
+                  height: 60,
+                  width: "40%",
+                }}
+                value={problem.problem}
+                onChangeText={(text) => handleProblemChange(problem.id, text)}
+              />
+            </View>
+            <View className="my-2 border rounded-lg border-[#ccc]">
+              <RNPickerSelect
+                placeholder={{
+                  label: "Select relative's type...",
+                  value: null,
+                }}
+                items={[
+                  { label: "Father", value: "Father" },
+                  { label: "Mother", value: "Mother" },
+                  { label: "Grand Father", value: "Grand Father" },
+                  { label: "Grand Mother", value: "Grand Mother" },
+                  { label: "Great Grand Father", value: "Great Grand Father" },
+                  { label: "Great Grand Mother", value: "Great Grand Mother" },
+                  { label: "Sibling", value: "Sibling" },
+                  { label: "Spouse", value: "Spouse" },
+                  { label: "Others", value: "Other" },
+
+                  // Add more options as needed
+                ]}
+                value={problem.relativeType}
+                onValueChange={(value) =>
+                  handleRelativeTypeChange(problem.id, value)
+                }
+                style={{
+                  inputIOS: {
+                    borderRadius: 10,
+                    paddingHorizontal: 13,
+                    paddingVertical: 16,
+                  },
+                  inputAndroid: {
+                    borderRadius: 4,
+                    paddingHorizontal: 13,
+                    paddingVertical: 15,
+                  },
+                }}
+              />
+            </View>
             <TouchableOpacity
               onPress={() => removeProblemField(problem.id)}
-              className="-mt-3">
+              className="">
               <MaterialIcons
                 name="delete-forever"
-                style={{ marginLeft: 8 }}
                 size={34}
                 color={Colors.red}
               />
             </TouchableOpacity>
           </View>
         ))}
+        <Text className="text-red-500 text-[12px] -mt-2 mb-2">
+          {error?.message}
+        </Text>
         <TouchableOpacity
           onPress={addProblemField}
           style={{
@@ -147,7 +213,11 @@ const PastMedicalHistory = () => {
             Add Item
           </Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}>
           <TouchableOpacity
             onPress={resetForm}
             style={{

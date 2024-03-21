@@ -12,6 +12,7 @@ import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import NavigationBar from "../../components/NavigationBar";
+import { Ionicons } from "@expo/vector-icons";
 
 const ProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -56,8 +57,20 @@ const ProfileScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
+      <View className="h-36" style={{ backgroundColor: Colors.gray2 }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(route.params.screen || "Home")}
+          className="mt-5 flex-row space-x-2 items-center ">
+          <Ionicons
+            name="arrow-back"
+            size={28}
+            color={Colors.white}
+            style={{ marginLeft: 16 }}
+          />
+        </TouchableOpacity>
+      </View>
       <View className="flex-1">
-        <View className="h-36" style={{ backgroundColor: Colors.gray2 }}></View>
+        <View className="h-26" style={{ backgroundColor: Colors.gray2 }}></View>
         <View
           className=" bg-white  h-screen -mt-16"
           style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}>
@@ -82,7 +95,7 @@ const ProfileScreen = ({ route }) => {
               <TouchableOpacity
                 className=""
                 onPress={() =>
-                  navigation.navigate("UpdateProfile", {
+                  navigation.navigate("Update Profile", {
                     screen: route.name,
                   })
                 }>

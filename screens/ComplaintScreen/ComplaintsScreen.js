@@ -10,6 +10,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import NavigationBar from "../../components/NavigationBar";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Fontisto } from "@expo/vector-icons";
 
 const ComplaintsScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -137,6 +138,38 @@ const ComplaintsScreen = ({ route }) => {
               <Ionicons name="chevron-forward" size={24} color={Colors.white} />
             </View>
           </TouchableOpacity>
+          {/* <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Meds Request", {
+                screen: route.name,
+              })
+            }
+            style={{ marginBottom: 16, backgroundColor: Colors.primary }}
+            className=" px-2 rounded-xl">
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingVertical: 12,
+              }}>
+              <View className="flex-row items-center justify-center space-x-2">
+                <View className=" px-1.5 py-1.5 rounded-full bg-white">
+                  <Fontisto name="pills" size={22} color={Colors.primary} />
+                </View>
+
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: "bold",
+                  }}>
+                  Request for Medications
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color={Colors.white} />
+            </View>
+          </TouchableOpacity> */}
         </View>
       </View>
     </>

@@ -158,7 +158,7 @@ const PreviousComplaintsScreen = ({ route }) => {
 
         {!isLoading && complaint?.length > 0 ? (
           <>
-            <BackButton color={Colors.primary} />
+            <BackButton color={Colors.primary} content="Previous Complaints" />
 
             <ScrollView
               style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
@@ -170,12 +170,15 @@ const PreviousComplaintsScreen = ({ route }) => {
                       onPress={() => toggleAccordion(complaint._id)}>
                       <View>
                         <Text style={styles.accordionHeaderText}>
-                          {complaint.bodyPart}
+                          {new Date(complaint?.createdAt).toLocaleDateString(
+                            "en-US",
+                            { day: "numeric", month: "short", year: "numeric" }
+                          )}
                         </Text>
                         <Text
                           className="text-[14px]"
                           style={{ color: Colors.gray, fontFamily: "sen" }}>
-                          Duration: {complaint.duration}
+                          BodyPart: {complaint.bodyPart}
                         </Text>
                       </View>
                       <Icon
@@ -231,10 +234,26 @@ const PreviousComplaintsScreen = ({ route }) => {
                           </View>
                           <View style={styles.gridItemEnd}>
                             <Text style={styles.labelText}>
-                              Modifying Factors:
+                              Modifying Factors(What eases the pain):
                             </Text>
                             <Text style={styles.detailText}>
                               {complaint.modifyingFactors}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.gridContainer}>
+                          <View style={styles.gridItemStart}>
+                            <Text style={styles.labelText}>Timing:</Text>
+                            <Text style={styles.detailText}>
+                              {complaint.timing}
+                            </Text>
+                          </View>
+                          <View style={styles.gridItemEnd}>
+                            <Text style={styles.labelText}>
+                              Modifying Factors(what makes the pain worse):
+                            </Text>
+                            <Text style={styles.detailText}>
+                              {complaint.modifyingFactorsWorse}
                             </Text>
                           </View>
                         </View>

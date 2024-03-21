@@ -31,7 +31,7 @@ const ControlPanel = ({ closeControlPanel }) => {
   };
 
   const controlPanelItems = [
-    { label: "Profile", icon: "user" },
+    { label: "Update Profile", icon: "user" },
     { label: "Appointments", icon: "calendar" },
     { label: "Complaints", icon: "alert-circle" },
     { label: "Ask  KeMi", icon: "help-circle" },
@@ -49,16 +49,13 @@ const ControlPanel = ({ closeControlPanel }) => {
       <View className="flex items-center justify-center mb-10">
         <View className="w-28 h-28 rounded-full bg-white items-center justify-center ">
           <Text className="text-[25px]" style={{ color: Colors.primary }}>
-            {`${user?.data?.Lastname?.charAt(0) || ""}${
-              user?.data?.Firstname?.charAt(0) || ""
+            {`${user?.data?.Firstname?.charAt(0) || ""}${
+              user?.data?.Lastname?.charAt(0) || ""
             }`}
           </Text>
         </View>
         <Text className="font-bold mt-1  " style={{ color: Colors.gray2 }}>
           {`${user?.data?.Lastname} ${user?.data?.Firstname}`}
-        </Text>
-        <Text className="" style={{ fontFamily: "sen", color: Colors.gray2 }}>
-          {`${user?.data?.Email}`}
         </Text>
       </View>
       {controlPanelItems.map((item, index) => (
@@ -72,7 +69,11 @@ const ControlPanel = ({ closeControlPanel }) => {
             flexDirection: "row",
             alignItems: "center",
           }}
-          onPress={() => handleNavigate(item.label)}>
+          onPress={() =>
+            handleNavigate(item.label, {
+              screen: route.name,
+            })
+          }>
           <Feather
             name={item.icon}
             size={21}

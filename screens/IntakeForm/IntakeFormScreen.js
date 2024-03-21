@@ -188,7 +188,7 @@ const IntakeFormScreen = ({ route }) => {
   const showComplaintAlert = () => {
     Alert.alert(
       "Do you have a complaint today?",
-      "Please share reasons why you need an appointment with your health team",
+      "Please share additional information with your health team",
       [
         {
           text: "Cancel",
@@ -340,7 +340,7 @@ const IntakeFormScreen = ({ route }) => {
                 ) : (
                   <Text className="text-[15px]" style={{ fontFamily: "sen" }}>
                     Please if any change is made in any tab, click the update
-                    button to update your informations
+                    your information and to save changes
                   </Text>
                 )}
               </View>

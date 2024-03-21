@@ -42,20 +42,22 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (isSuccess && user) {
-      Alert.alert(
-        "Information",
-        "Congratulations you've Logged In Successfully",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.replace("Main");
-              dispatch(reset());
-            },
-          },
-        ],
-        { cancelable: false }
-      );
+      navigation.replace("Main");
+      dispatch(reset());
+      // Alert.alert(
+      //   "Information",
+      //   "Congratulations you've Logged In Successfully",
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => {
+      //         navigation.replace("Main");
+      //         dispatch(reset());
+      //       },
+      //     },
+      //   ],
+      //   { cancelable: false }
+      // );
     }
 
     if (isError && message) {

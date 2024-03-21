@@ -9,11 +9,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import IntakeFormTitle from "../../components/IntakeFormTitle";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { textSchema } from "../../utils/schemas";
 
 const TravelHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector((state) => state.auth);
+  const [error, setError] = useState();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,7 +35,9 @@ const TravelHistory = () => {
     });
   }, [navigation, route]);
 
-  const [problems, setProblems] = useState([{ id: new Date(), value: "" }]);
+  const [problems, setProblems] = useState([
+    { id: new Date(), location: "", timeline: "" },
+  ]);
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -52,18 +56,45 @@ const TravelHistory = () => {
     };
 
     fetchProblems();
-  }, [route, navigation]);
+  }, [user]);
 
   const addProblemField = () => {
     const newId = new Date();
-    setProblems([...problems, { id: newId, value: "" }]);
+    setProblems([...problems, { id: newId, location: "", timeline: "" }]);
   };
 
-  const handleProblemChange = (id, text) => {
-    const updatedProblems = problems.map((problem) =>
-      problem.id === id ? { ...problem, value: text } : problem
-    );
-    setProblems(updatedProblems);
+  const handleLocationChange = (id, location) => {
+    // Validate the text
+    textSchema
+      .validate(location)
+      .then((validText) => {
+        setError(null);
+        // If text is valid, update the problems
+        const updatedProblems = problems.map((problem) =>
+          problem.id === id ? { ...problem, location } : problem
+        );
+        setProblems(updatedProblems);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
+
+  const handleTimelineChange = (id, timeline) => {
+    // Validate the text
+    textSchema
+      .validate(timeline)
+      .then((validText) => {
+        setError(null);
+        // If text is valid, update the problems
+        const updatedProblems = problems.map((problem) =>
+          problem.id === id ? { ...problem, timeline } : problem
+        );
+        setProblems(updatedProblems);
+      })
+      .catch((error) => {
+        setError(error);
+      });
   };
 
   const removeProblemField = (id) => {
@@ -72,22 +103,19 @@ const TravelHistory = () => {
   };
 
   const resetForm = () => {
-    setProblems([{ id: 1, value: "" }]);
+    setProblems([{ id: new Date(), location: "", timeline: "" }]);
   };
 
   const saveAndContinue = async () => {
     try {
-      // Filter out objects with empty "value"
-      const filteredProblems = problems.filter(
-        (problem) => problem.value !== ""
-      );
-
       const loggedInUserId = user?.data?._id;
+      const filteredProblems = problems.filter(
+        (problem) => problem.location !== "" && problem.timeline !== ""
+      );
       await AsyncStorage.setItem(
         `travelHistories_${loggedInUserId}`,
         JSON.stringify(filteredProblems)
       );
-
       navigation.navigate("Active Medical Problems Form", {
         screen: route.name ? route : "IntakeForm",
       });
@@ -98,41 +126,68 @@ const TravelHistory = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-      <IntakeFormTitle title="Travel History" />
-
+      <Text
+        className="text-[14px] opacity-80 mb-2"
+        style={{ fontFamily: "sen" }}>
+        Please enter your travel history for the past 4 weeks stating location
+        and period of travel. Enter one item per box, click the "Add Item"
+        button to add more
+      </Text>
       <ScrollView
+        className="space-y-4"
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
-        {problems.map((problem) => (
-          <View
-            key={problem.id}
-            className="flex flex-row items-center justify-center">
+        {problems.map((problem, index) => (
+          <View className="border p-3 rounded-lg border-gray-300" key={index}>
             <TextInput
-              placeholder="Enter item here."
+              placeholder="Enter location here."
               style={{
                 flex: 1,
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 12,
-                padding: 12,
+                padding: 10,
+                fontSize: "5px",
                 marginBottom: 12,
                 height: 60,
               }}
-              value={problem.value}
-              onChangeText={(text) => handleProblemChange(problem.id, text)}
+              placeholderTextColor="#ccc"
+              value={problem.location}
+              onChangeText={(text) => handleLocationChange(problem.id, text)}
             />
+
+            <TextInput
+              placeholder="Enter timeline here."
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 12,
+                padding: 10,
+                fontSize: 10,
+                marginBottom: 12,
+                height: 60,
+                // Add margin for spacing between inputs
+              }}
+              placeholderTextColor="#ccc"
+              value={problem.timeline}
+              onChangeText={(text) => handleTimelineChange(problem.id, text)}
+            />
+
             <TouchableOpacity
               onPress={() => removeProblemField(problem.id)}
-              className="-mt-3">
+              className="mt-0">
               <MaterialIcons
                 name="delete-forever"
-                style={{ marginLeft: 8 }}
                 size={34}
                 color={Colors.red}
               />
             </TouchableOpacity>
           </View>
         ))}
+        <Text className="text-red-500 text-[12px] -mt-2 mb-2">
+          {error?.message}
+        </Text>
         <TouchableOpacity
           onPress={addProblemField}
           style={{
@@ -149,7 +204,11 @@ const TravelHistory = () => {
             Add Item
           </Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}>
           <TouchableOpacity
             onPress={resetForm}
             style={{
@@ -176,6 +235,7 @@ const TravelHistory = () => {
         </View>
         <View style={{ marginBottom: 100 }} />
       </ScrollView>
+      {/* Assuming BtnReturnIntakeForm is a custom component */}
       <BtnReturnIntakeForm />
     </View>
   );

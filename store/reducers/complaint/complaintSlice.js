@@ -13,7 +13,7 @@ const initialState = {
 };
 
 export const new_complaint = createAsyncThunk(
-  "intakeForm/new_complaint",
+  "complaint/new_complaint",
   async (complaint, thunkAPI) => {
     try {
       const userId = thunkAPI.getState().auth.user.data._id;
@@ -23,6 +23,26 @@ export const new_complaint = createAsyncThunk(
         userId,
         token
       );
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const med_request = createAsyncThunk(
+  "complaint/med_request",
+  async (request, thunkAPI) => {
+    try {
+      const userId = thunkAPI.getState().auth.user.data._id;
+      const token = thunkAPI.getState().auth.user.data.token;
+      const data = await complaintService.med_request(request, userId, token);
       return data;
     } catch (error) {
       const message =
@@ -99,10 +119,24 @@ export const complaintSlice = createSlice({
       .addCase(new_complaint.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "Congratulations your complaint has been submitted";
+        state.message = "Congratulations your complaint has been sent";
         state.complaint = action.payload;
       })
       .addCase(new_complaint.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(med_request.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(med_request.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Congratulations your request has been sent";
+        state.complaint = action.payload;
+      })
+      .addCase(med_request.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

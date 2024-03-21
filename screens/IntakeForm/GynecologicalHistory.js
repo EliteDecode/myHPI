@@ -11,11 +11,30 @@ import { TextInput } from "react-native-element-textinput";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 
 const validationSchema = yup.object().shape({
-  ageAtFirstPeriod: yup.string().required("Age at First Period is required"),
+  ageAtFirstPeriod: yup
+    .string()
+    .matches(
+      /^[a-zA-Z0-9\s,.';:]*$/,
+      "Age at First Period must not contain special characters"
+    )
+    .max(15, "Age at First Period must be at most 15 characters long")
+    .required("Age at First Period is required"),
   lastMenstrualPeriod: yup
     .string()
+    .matches(
+      /^[a-zA-Z0-9\s,.';:]*$/,
+      "Last Menstrual Period must not contain special characters"
+    )
+    .max(15, "Last Menstrual Period must be at most 15 characters long")
     .required("Last Menstrual Period is required"),
-  ageAtMenopause: yup.string().required("Age at Menopause is required"),
+  ageAtMenopause: yup
+    .string()
+    .matches(
+      /^[a-zA-Z0-9\s,.';:]*$/,
+      "Age at Menopause must not contain special characters"
+    )
+    .max(15, "Age at Menopause must be at most 15 characters long")
+    .required("Age at Menopause is required"),
 });
 
 const GynecologicalHistory = () => {

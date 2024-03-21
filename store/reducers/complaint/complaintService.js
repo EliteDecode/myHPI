@@ -46,10 +46,27 @@ const delete_complaints = async (userId, complaintId, token) => {
   return response.data;
 };
 
+const med_request = async (request, userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(
+    `${API_URL}${userId}/new_complaint`,
+    request,
+    config
+  );
+
+  return response.data;
+};
+
 const authService = {
   new_complaint,
   get_complaints,
   delete_complaints,
+  med_request,
 };
 
 export default authService;

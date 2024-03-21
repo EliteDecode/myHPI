@@ -16,7 +16,7 @@ export const fetchFormData = createAsyncThunk(
   async (id, thunkAPI) => {
     const userId = thunkAPI.getState().auth.user.data._id;
     const formData = await AsyncStorage.getItem(`formData_${userId}`);
-    console.log(formData);
+
     return JSON.parse(formData);
   }
 );

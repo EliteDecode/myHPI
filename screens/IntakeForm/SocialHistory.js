@@ -14,12 +14,23 @@ import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 
 const SocialHistorySchema = Yup.object().shape({
   maritalStatus: Yup.string().required("Marital Status is required"),
-  profession: Yup.string().required("Profession is required"),
+  profession: Yup.string()
+    .matches(
+      /^[a-zA-Z0-9\s,.';:]*$/,
+      "Profession must not contain special characters"
+    )
+    .max(15, "Profession must be at most 15 characters long")
+    .required("Profession is required"),
   tobaccoUse: Yup.string().required("Tobacco Use is required"),
   quantity: Yup.string().when("tobaccoUse", {
-    is: (value) => value === "Yes",
-    then: (schema) =>
-      schema.required("Quantity is required when Tobacco Use is Yes"),
+    is: "Yes",
+    then: Yup.string()
+      .required("Quantity is required when Tobacco Use is Yes")
+      .matches(
+        /^[a-zA-Z0-9\s,.';:]*$/,
+        "Text must not contain special characters"
+      )
+      .max(10, "Text must be at most 10 characters long"),
   }),
   recreationalDrugUse: Yup.string().required(
     "Recreational Drug Use is required"

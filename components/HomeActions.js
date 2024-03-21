@@ -46,7 +46,7 @@ const HomeActions = () => {
   const route = useRoute();
 
   const handleProfilePress = () => {
-    navigation.navigate("UpdateProfile", {
+    navigation.navigate("Update Profile", {
       screen: route.name,
     });
   };

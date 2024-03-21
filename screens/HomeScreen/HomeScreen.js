@@ -33,7 +33,10 @@ import { fetchUserData } from "../../store/reducers/auth/authSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import NavigationBar from "../../components/NavigationBar";
-import { get_form } from "../../store/reducers/intakeForm/intakeFormSlice";
+import {
+  fetchFormData,
+  get_form,
+} from "../../store/reducers/intakeForm/intakeFormSlice";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import {
@@ -41,6 +44,7 @@ import {
   generateHtmlContent1,
   generatePlainHtmlContent,
 } from "../../utils/htmlcontent";
+import { get_complaint } from "../../store/reducers/complaint/complaintSlice";
 const { compile } = require("html-to-text");
 
 const CopilotText = walkthroughable(Text);
@@ -56,14 +60,21 @@ const HomeScreen = ({ route }) => {
 
   const { user } = useSelector((state) => state.auth);
   const { form } = useSelector((state) => state.form);
+  const { complaint, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.complaint
+  );
 
   const { openControlPanel } = route.params;
 
-  const handleProfilePress = () => {
-    navigation.navigate("UpdateProfile", {
+  const handleAddComplaint = () => {
+    navigation.navigate("New Complaint", {
       screen: route.name,
     });
   };
+
+  useEffect(() => {
+    dispatch(fetchFormData(user?.data?._id));
+  }, []);
 
   const getLastLoginTime = async () => {
     const logoutTime = await AsyncStorage.getItem("lastLoginTime");
@@ -109,12 +120,12 @@ const HomeScreen = ({ route }) => {
     } else {
       Alert.alert(
         "Information",
-        "Please update your profile to add your medical history",
+        "Please update your profile to update your medical history",
         [
           {
             text: "OK",
             onPress: () => {
-              navigation.navigate("UpdateProfile", {
+              navigation.navigate("Update Profile", {
                 screen: route.name,
               });
             },
@@ -137,6 +148,7 @@ const HomeScreen = ({ route }) => {
 
   useEffect(() => {
     checkFirstLaunch();
+    dispatch(get_complaint());
   }, []);
 
   const closeModal = () => {
@@ -145,6 +157,7 @@ const HomeScreen = ({ route }) => {
   };
 
   const handleShareHistoryPress = async () => {
+    dispatch(fetchFormData(user?.data?._id));
     Alert.alert(
       "Would you like to Copy and upload to your patient portal for your doctor's electronic medical records it or email it to your healthcare provider?",
       "Please select your preferred option.",
@@ -152,7 +165,13 @@ const HomeScreen = ({ route }) => {
         {
           text: "Copy File",
           onPress: async () => {
-            const data = generatePlainHtmlContent(user.data, form);
+            const data = generatePlainHtmlContent(
+              user.data,
+              form,
+              complaint[0]
+            );
+
+            console.log(complaint[0]);
 
             const options = {
               wordwrap: 130,
@@ -268,7 +287,7 @@ const HomeScreen = ({ route }) => {
               <CopilotView className="">
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={handleAddMedicalHistory}
+                  onPress={handleAddComplaint}
                   className="px-3 py-3 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
                   style={{
                     backgroundColor: Colors.primary,
@@ -278,7 +297,7 @@ const HomeScreen = ({ route }) => {
                     className="text-white font-bold"
                     style={{ fontSize: 18 }}>
                     {" "}
-                    Update my medical history
+                    Add new complaint
                   </Text>
                   <FontAwesome name="wpforms" size={20} color="#fff" />
                 </TouchableOpacity>
@@ -317,7 +336,7 @@ const HomeScreen = ({ route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-              onPress={handleProfilePress}>
+              onPress={handleAddMedicalHistory}>
               <Image
                 source={require("../../assets/images/profile.png")}
                 style={styles.image}
@@ -326,7 +345,7 @@ const HomeScreen = ({ route }) => {
                 text="Please update your profile"
                 order={1}
                 name="profile">
-                <CopilotText style={styles.text}>Update Profile </CopilotText>
+                <CopilotText style={styles.text}>Medical History </CopilotText>
               </CopilotStep>
             </TouchableOpacity>
           </View>

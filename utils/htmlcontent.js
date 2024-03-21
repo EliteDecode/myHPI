@@ -71,6 +71,22 @@ export const generateHtmlContent1 = (user, form, complaints) => {
         </ul>
       </section>
 
+      <div>
+  <h2>Complaints</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+  <li><strong>Body Part:</strong> ${complaints?.bodyPart}</li>
+  <li><strong>Duration:</strong> ${complaints?.duration}</li>
+  <li><strong>Quality:</strong> ${complaints?.quality}</li>
+  <li><strong>Severity:</strong> ${complaints?.severity}</li>
+  <li><strong>Timing:</strong> ${complaints?.timing}</li>
+  <li><strong>Modifying Factors:</strong> ${complaints?.modifyingFactors}</li>
+  <li><strong>Associated Symptoms:</strong> ${
+    complaints?.associatedSymptoms
+  }</li>
+  <li><strong>Context:</strong> ${complaints?.context}</li>
+  </ul>
+ </div>
+
       <!-- Active Medical Problems Section -->
       <section>
         <h2>Active Medical Problems</h2>
@@ -190,9 +206,7 @@ export const generateHtmlContent1 = (user, form, complaints) => {
   </section>
 
   <!-- New Section: Complaints -->
-  ${
-    complaints &&
-    `<div>
+<div>
   <h2>Complaints</h2>
   <ul style='display: flex; flex-wrap: wrap'>
   <li><strong>Body Part:</strong> ${complaints?.bodyPart}</li>
@@ -201,11 +215,13 @@ export const generateHtmlContent1 = (user, form, complaints) => {
   <li><strong>Severity:</strong> ${complaints?.severity}</li>
   <li><strong>Timing:</strong> ${complaints?.timing}</li>
   <li><strong>Modifying Factors:</strong> ${complaints?.modifyingFactors}</li>
-  <li><strong>Associated Symptoms:</strong> ${complaints?.associatedSymptoms}</li>
+  <li><strong>Associated Symptoms:</strong> ${
+    complaints?.associatedSymptoms
+  }</li>
   <li><strong>Context:</strong> ${complaints?.context}</li>
   </ul>
- </div>`
-  }
+ </div>
+  
 
     </body>
     </html>
@@ -231,6 +247,24 @@ export const generatePlainHtmlContent = (user, form, complaints) => {
         <!-- Add other user details here -->
       </ul>
     </div>
+
+    
+
+   <div>
+   <h2>Complaints</h2>
+   <ul style='display: flex; flex-wrap: wrap'>
+   <li><strong>Body Part:</strong> ${complaints?.bodyPart}</li>
+   <li><strong>Duration:</strong> ${complaints?.duration}</li>
+   <li><strong>Quality:</strong> ${complaints?.quality}</li>
+   <li><strong>Severity:</strong> ${complaints?.severity}</li>
+   <li><strong>Timing:</strong> ${complaints?.timing}</li>
+   <li><strong>Modifying Factors:</strong> ${complaints?.modifyingFactors}</li>
+   <li><strong>Associated Symptoms:</strong> ${
+     complaints?.associatedSymptoms
+   }</li>
+   <li><strong>Context:</strong> ${complaints?.context}</li>
+   </ul>
+  </div>
    
 
     <div>
@@ -338,22 +372,7 @@ export const generatePlainHtmlContent = (user, form, complaints) => {
   </ul>
 </div>
 
- ${
-   complaints &&
-   `<div>
- <h2>Complaints</h2>
- <ul style='display: flex; flex-wrap: wrap'>
- <li><strong>Body Part:</strong> ${complaints?.bodyPart}</li>
- <li><strong>Duration:</strong> ${complaints?.duration}</li>
- <li><strong>Quality:</strong> ${complaints?.quality}</li>
- <li><strong>Severity:</strong> ${complaints?.severity}</li>
- <li><strong>Timing:</strong> ${complaints?.timing}</li>
- <li><strong>Modifying Factors:</strong> ${complaints?.modifyingFactors}</li>
- <li><strong>Associated Symptoms:</strong> ${complaints?.associatedSymptoms}</li>
- <li><strong>Context:</strong> ${complaints?.context}</li>
- </ul>
-</div>`
- }
+ 
 
 `,
   ];

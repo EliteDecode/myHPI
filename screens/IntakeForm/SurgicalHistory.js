@@ -9,11 +9,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import IntakeFormTitle from "../../components/IntakeFormTitle";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { textSchema } from "../../utils/schemas";
 
 const SurgicalHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector((state) => state.auth);
+  const [error, setError] = useState();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,10 +62,20 @@ const SurgicalHistory = () => {
   };
 
   const handleProblemChange = (id, text) => {
-    const updatedProblems = problems.map((problem) =>
-      problem.id === id ? { ...problem, value: text } : problem
-    );
-    setProblems(updatedProblems);
+    // Validate the text
+    textSchema
+      .validate(text)
+      .then((validText) => {
+        setError(null);
+        // If text is valid, update the problems
+        const updatedProblems = problems.map((problem) =>
+          problem.id === id ? { ...problem, value: validText } : problem
+        );
+        setProblems(updatedProblems);
+      })
+      .catch((error) => {
+        setError(error);
+      });
   };
 
   const removeProblemField = (id) => {
@@ -76,23 +88,25 @@ const SurgicalHistory = () => {
   };
 
   const saveAndContinue = async () => {
-    try {
-      const loggedInUserId = user?.data?._id;
+    if (!error) {
+      try {
+        const loggedInUserId = user?.data?._id;
 
-      const filteredProblems = problems.filter(
-        (problem) => problem.value !== ""
-      );
+        const filteredProblems = problems.filter(
+          (problem) => problem.value !== ""
+        );
 
-      await AsyncStorage.setItem(
-        `surgicalHistoryProblems_${loggedInUserId}`,
-        JSON.stringify(filteredProblems)
-      );
+        await AsyncStorage.setItem(
+          `surgicalHistoryProblems_${loggedInUserId}`,
+          JSON.stringify(filteredProblems)
+        );
 
-      navigation.navigate("Family History Form", {
-        screen: route.name ? route : "IntakeForm",
-      });
-    } catch (error) {
-      console.error("Error saving problems to local storage:", error);
+        navigation.navigate("Family History Form", {
+          screen: route.name ? route : "IntakeForm",
+        });
+      } catch (error) {
+        console.error("Error saving problems to local storage:", error);
+      }
     }
   };
 
@@ -132,6 +146,9 @@ const SurgicalHistory = () => {
             </TouchableOpacity>
           </View>
         ))}
+        <Text className="text-red-500 text-[12px] -mt-2 mb-2">
+          {error?.message}
+        </Text>
         <TouchableOpacity
           onPress={addProblemField}
           style={{

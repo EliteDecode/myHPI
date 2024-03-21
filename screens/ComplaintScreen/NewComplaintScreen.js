@@ -26,9 +26,6 @@ import {
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import ToastManager, { Toast } from "toastify-react-native";
 const { compile } = require("html-to-text");
-import ConfirmComplaintModal from "./ConfirmComplaintModal";
-import { generatePlainHtmlContent } from "../../utils/htmlcontent";
-import * as Clipboard from "expo-clipboard";
 
 const NewComplaintScreen = ({ route }) => {
   const { complaint, isLoading, isError, isSuccess, message } = useSelector(
@@ -41,88 +38,12 @@ const NewComplaintScreen = ({ route }) => {
 
   const dispatch = useDispatch();
 
-  const saveComplaint = (values) => {
-    Alert.alert(
-      "Would you prefer to duplicate your file or share it via email?",
-      "Please select your preferred option.",
-      [
-        {
-          text: "Copy File",
-          onPress: async () => {
-            const data = generatePlainHtmlContent(user.data, form, values);
-
-            const options = {
-              wordwrap: 130,
-            };
-            const compiledConvert = compile(options);
-
-            const texts = data.map(compiledConvert);
-            const copy = await Clipboard.setStringAsync(texts.join("\n"));
-            if (copy) {
-              Alert.alert(
-                "Information",
-                "Congratulations your file have been copied",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      // navigation.navigate("Previous Complaints");
-                      // dispatch(reset());
-                    },
-                  },
-                ],
-                { cancelable: false }
-              );
-            }
-          },
-        },
-        {
-          text: "Send File",
-          onPress: async () => {
-            dispatch(new_complaint(values));
-          },
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
-        },
-      ]
-    );
+  const saveComplaint = (values, resetForm) => {
+    navigation.navigate("Preview Complaint", {
+      complaint: values,
+      resetForm,
+    });
   };
-
-  useEffect(() => {
-    if (
-      isSuccess &&
-      message === "Congratulations your complaint has been submitted"
-    ) {
-      Alert.alert(
-        "Information",
-        "Congratulations your complaint have been sent",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              // navigation.navigate("Previous Complaints");
-              // dispatch(reset());
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    }
-
-    if (isError && message) {
-      Toast.error(message);
-    }
-
-    if (isSuccess) {
-      dispatch(reset());
-    }
-
-    if (isError && message) {
-      dispatch(reset());
-    }
-  }, [isError, isLoading, isSuccess, message, complaint]);
   const { openControlPanel } = route.params;
 
   return (
@@ -151,11 +72,14 @@ const NewComplaintScreen = ({ route }) => {
               severity: 5, // Default to moderate
               timing: "",
               modifyingFactors: "",
+              modifyingFactorsWorse: "",
               associatedSymptoms: "",
               context: "",
-              recipientEmail: "",
+              // recipientEmail: "",
             }}
-            onSubmit={(values) => saveComplaint(values)}>
+            onSubmit={(values, { resetForm }) =>
+              saveComplaint(values, resetForm)
+            }>
             {({
               values,
               handleChange,
@@ -274,10 +198,12 @@ const NewComplaintScreen = ({ route }) => {
                 </View>
 
                 <View style={styles.formGroup}>
-                  <Text style={styles.label}>Modifying Factors:</Text>
+                  <Text style={styles.label}>
+                    Modifying Factor(what eases the pain):
+                  </Text>
                   <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
                     <Text className="text-red-700">(*)</Text> What makes the
-                    pain better or worse?
+                    pain better ?
                   </Text>
                   <TextInput
                     style={styles.input}
@@ -292,6 +218,29 @@ const NewComplaintScreen = ({ route }) => {
                       {errors.modifyingFactors}
                     </Text>
                   )}
+                </View>
+                <View style={styles.formGroup}>
+                  <Text style={styles.label}>
+                    Modifying Factors(what makes the pain worse):
+                  </Text>
+                  <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
+                    <Text className="text-red-700">(*)</Text> What makes the
+                    pain worse?
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    numberOfLines={3}
+                    value={values.modifyingFactorsWorse}
+                    placeholder="e.g. Relaxation
+                    "
+                    onChangeText={handleChange("modifyingFactorsWorse")}
+                  />
+                  {touched.modifyingFactorsWorse &&
+                    errors.modifyingFactorsWorse && (
+                      <Text style={styles.errorText}>
+                        {errors.modifyingFactorsWorse}
+                      </Text>
+                    )}
                 </View>
 
                 <View style={styles.formGroup}>
@@ -332,7 +281,7 @@ const NewComplaintScreen = ({ route }) => {
                     <Text style={styles.errorText}>{errors.context}</Text>
                   )}
                 </View>
-                <View style={styles.formGroup}>
+                {/* <View style={styles.formGroup}>
                   <Text style={styles.label}>Recipient Email:</Text>
                   <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
                     <Text className="text-red-700">(*)</Text> Please enter
@@ -350,7 +299,7 @@ const NewComplaintScreen = ({ route }) => {
                       {errors.recipientEmail}
                     </Text>
                   )}
-                </View>
+                </View> */}
 
                 <TouchableOpacity
                   onPress={

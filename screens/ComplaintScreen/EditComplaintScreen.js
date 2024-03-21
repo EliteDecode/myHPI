@@ -43,91 +43,12 @@ const EditComplaintScreen = ({ route }) => {
     (item) => item._id === route.params.complaintId
   );
 
-  const dispatch = useDispatch();
-
-  const saveComplaint = (values) => {
-    Alert.alert(
-      "Would you prefer to duplicate your file or share it via email?",
-      "Please select your preferred option.",
-      [
-        {
-          text: "Copy File",
-          onPress: async () => {
-            const data = generatePlainHtmlContent(user.data, form, values);
-
-            const options = {
-              wordwrap: 130,
-            };
-            const compiledConvert = compile(options);
-
-            const texts = data.map(compiledConvert);
-            const copy = await Clipboard.setStringAsync(texts.join("\n"));
-            if (copy) {
-              Alert.alert(
-                "Information",
-                "Congratulations your file have been copied",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      // navigation.navigate("Previous Complaints");
-                      // dispatch(reset());
-                    },
-                  },
-                ],
-                { cancelable: false }
-              );
-            }
-          },
-        },
-        {
-          text: "Send File",
-          onPress: async () => {
-            dispatch(new_complaint(values));
-          },
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
-        },
-      ]
-    );
+  const saveComplaint = (values, resetForm) => {
+    navigation.navigate("Preview Complaint", {
+      complaint: values,
+      resetForm,
+    });
   };
-
-  useEffect(() => {
-    if (isSuccess && complaint) {
-      Alert.alert(
-        "Information",
-        "Congratulations your complaint has been submitted",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: "Previous Complaints" }],
-                })
-              );
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    }
-
-    if (isError && message) {
-      Toast.error(message);
-    }
-
-    if (isSuccess) {
-      dispatch(reset());
-    }
-
-    if (isError && message) {
-      dispatch(reset());
-    }
-  }, [isError, isLoading, isSuccess, message, complaint]);
 
   return (
     <>
@@ -153,11 +74,13 @@ const EditComplaintScreen = ({ route }) => {
               severity: complaint?.severity, // Default to moderate
               timing: complaint?.timing,
               modifyingFactors: complaint?.modifyingFactors,
+              modifyingFactorsWorse: complaint?.modifyingFactorsWorse,
               associatedSymptoms: complaint?.associatedSymptoms,
               context: complaint?.context,
-              recipientEmail: complaint?.recipientEmail,
             }}
-            onSubmit={(values) => saveComplaint(values)}>
+            onSubmit={(values, { resetForm }) =>
+              saveComplaint(values, resetForm)
+            }>
             {({ values, handleChange, handleSubmit, setFieldValue }) => (
               <>
                 <View style={styles.formGroup}>
@@ -251,16 +174,37 @@ const EditComplaintScreen = ({ route }) => {
                 </View>
 
                 <View style={styles.formGroup}>
-                  <Text style={styles.label}>Modifying Factors:</Text>
+                  <Text style={styles.label}>
+                    Modifying Factor(what eases the pain):
+                  </Text>
                   <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
                     <Text className="text-red-700">(*)</Text> What makes the
-                    pain better or worse?
+                    pain better ?
                   </Text>
                   <TextInput
                     style={styles.input}
+                    numberOfLines={3}
                     value={values.modifyingFactors}
-                    placeholder="Enter Modifying Factors"
+                    placeholder="e.g. Relaxation
+                    "
                     onChangeText={handleChange("modifyingFactors")}
+                  />
+                </View>
+                <View style={styles.formGroup}>
+                  <Text style={styles.label}>
+                    Modifying Factors(what makes the pain worse):
+                  </Text>
+                  <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
+                    <Text className="text-red-700">(*)</Text> What makes the
+                    pain worse?
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    numberOfLines={3}
+                    value={values.modifyingFactorsWorse}
+                    placeholder="e.g. Relaxation
+                    "
+                    onChangeText={handleChange("modifyingFactorsWorse")}
                   />
                 </View>
 
@@ -290,21 +234,6 @@ const EditComplaintScreen = ({ route }) => {
                     value={values.context}
                     placeholder="Enter Context"
                     onChangeText={handleChange("context")}
-                  />
-                </View>
-
-                <View style={styles.formGroup}>
-                  <Text style={styles.label}>Recipient Email:</Text>
-                  <Text className="mt-1 mb-2 text-[12px] text-gray-700 leading-4">
-                    <Text className="text-red-700">(*)</Text> Please enter
-                    recipient email.
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    numberOfLines={3}
-                    value={values.recipientEmail}
-                    placeholder="e.g. johndoe@gmail.com"
-                    onChangeText={handleChange("recipientEmail")}
                   />
                 </View>
 

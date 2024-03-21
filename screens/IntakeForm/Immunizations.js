@@ -53,7 +53,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -62,7 +68,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -71,7 +83,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -80,7 +98,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -89,7 +113,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -98,7 +128,13 @@ const Immunizations = () => {
       date: Yup.string().when("selectedOption", {
         is: (value) => value === "Yes",
         then: (schema) =>
-          schema.required("Date is required for selected option Yes"),
+          schema
+            .matches(
+              /^[a-zA-Z0-9\s,.';:]*$/,
+              "Date must not contain special characters"
+            )
+            .max(15, "Date must be at most 15 characters long")
+            .required("Date is required for selected option Yes"),
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
@@ -159,6 +195,7 @@ const Immunizations = () => {
             touched,
           }) => (
             <>
+              {console.log(errors)}
               <View style={{ marginBottom: 12 }}>
                 <Text style={{ color: Colors.gray2, marginBottom: 5 }}>
                   Tetanus (Year of Last Vaccine)
@@ -238,27 +275,28 @@ const Immunizations = () => {
                       </Text>
                     )}
                     {values[vaccine].selectedOption === "Yes" && (
-                      <TextInput
-                        placeholder="Date"
-                        style={{
-                          flex: 1,
-                          borderWidth: 1,
-                          borderColor: "#ccc",
-                          borderRadius: 12,
-                          padding: 12,
-                          height: 60,
-                        }}
-                        value={values[vaccine].date}
-                        onChangeText={handleChange(`${vaccine}.date`)}
-                        error={!values[vaccine].date}
-                      />
+                      <>
+                        <TextInput
+                          placeholder="Date"
+                          style={{
+                            flex: 1,
+                            borderWidth: 1,
+                            borderColor: "#ccc",
+                            borderRadius: 12,
+                            padding: 12,
+                            height: 60,
+                          }}
+                          value={values[vaccine].date}
+                          onChangeText={handleChange(`${vaccine}.date`)}
+                          error={!!errors[vaccine]?.date}
+                        />
+                        {errors[vaccine]?.date && (
+                          <Text style={{ color: "red" }}>
+                            {errors[vaccine].date}
+                          </Text>
+                        )}
+                      </>
                     )}
-                    {values[vaccine].selectedOption === "Yes" &&
-                      !values[vaccine].date && (
-                        <Text style={{ color: "red" }}>
-                          Please enter a date
-                        </Text>
-                      )}
                   </View>
                 </View>
               ))}

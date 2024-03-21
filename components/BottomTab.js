@@ -48,6 +48,8 @@ import AskKemiMedProblemScreen from "../screens/Kemi/AskKemiMedProblemScreen";
 import AskKemiDrugInfoScreen from "../screens/Kemi/AskKemiDrugInfoScreen";
 import AskKemiLabTestScreen from "../screens/Kemi/AskKemiLabTestScreen";
 import AskKemiMedProcedureScreen from "../screens/Kemi/AskKemiMedProcedureScreen";
+import PreviewComplaintScreen from "../screens/ComplaintScreen/PreviewComplaintScreen";
+import MedsRequest from "../screens/ComplaintScreen/MedsRequest";
 
 const Tab = createBottomTabNavigator();
 
@@ -229,8 +231,24 @@ const BottomTab = () => {
               }}
             />
             <Tab.Screen
+              name="Preview Complaint"
+              component={PreviewComplaintScreen}
+              options={{ headerShown: false, tabBarButton: () => null }}
+              initialParams={{
+                openControlPanel: () => drawerRef.current.open(),
+              }}
+            />
+            <Tab.Screen
               name="New Appointment"
               component={NewAppointments}
+              options={{ headerShown: false, tabBarButton: () => null }}
+              initialParams={{
+                openControlPanel: () => drawerRef.current.open(),
+              }}
+            />
+            <Tab.Screen
+              name="Meds Request"
+              component={MedsRequest}
               options={{ headerShown: false, tabBarButton: () => null }}
               initialParams={{
                 openControlPanel: () => drawerRef.current.open(),
@@ -332,7 +350,7 @@ const BottomTab = () => {
               options={{ tabBarButton: () => null, headerShown: false }}
             />
             <Tab.Screen
-              name="UpdateProfile"
+              name="Update Profile"
               component={UpdateProfileScreen}
               initialParams={{
                 openControlPanel: () => drawerRef.current.open(),

@@ -197,7 +197,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
-                                Hi, {user?.data?.Lastname} how can I help you
+                                Hi, {user?.data?.Firstname} how can I help you
                                 today?
                               </Text>
                             </TouchableOpacity>
@@ -210,7 +210,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
-                                Hi, {user?.data?.Lastname} we could'nt get your
+                                Hi, {user?.data?.Firstname} we could'nt get your
                                 request, please try researching with a different
                                 keyword
                               </Text>
@@ -226,7 +226,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                               <Text
                                 style={styles.tagText}
                                 className="font-bold">
-                                Hi, {user?.data?.Lastname} please select one
+                                Hi, {user?.data?.Firstname} please select one
                               </Text>
                               {message?.data?.map((codes, index) => (
                                 <TouchableOpacity

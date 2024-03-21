@@ -5,12 +5,14 @@ import { TouchableOpacity } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Avatar } from "@rneui/base";
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import MyStatusBar from "../helpers/MyStatusBar";
 
 const NavigationBar = ({ openControlPanel }) => {
   const { user } = useSelector((state) => state.auth);
   const navigation = useNavigation();
+
+  const route = useRoute();
 
   return (
     <>
@@ -39,7 +41,11 @@ const NavigationBar = ({ openControlPanel }) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() =>
+              navigation.navigate("Profile", {
+                screen: route.name,
+              })
+            }
             activeOpacity={0.6}
             style={{
               flexDirection: "row",

@@ -144,7 +144,7 @@ const AskKemiDrugInfoScreen = ({ route }) => {
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
-                                Hi, {user?.data?.Lastname} how can I help you
+                                Hi, {user?.data?.Firstname} how can I help you
                                 today? Please enter an exact drug name
                               </Text>
                             </TouchableOpacity>
@@ -158,7 +158,7 @@ const AskKemiDrugInfoScreen = ({ route }) => {
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
-                                Hi, {user?.data?.Lastname} we could'nt get your
+                                Hi, {user?.data?.Firstname} we could'nt get your
                                 request, please try researching with an actual
                                 drug name
                               </Text>

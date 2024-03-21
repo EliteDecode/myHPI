@@ -60,7 +60,7 @@ const AskKemiScreen = ({ route }) => {
       <BackButton color={Colors.primary} content="" font="bold" />
       <View className="flex-1 bg-white px-4">
         <Text className="my-3 text-sm opacity-80">
-          <Text className="text-red-500">(*)</Text> Hi, {user?.data?.Lastname}.
+          <Text className="text-red-500">(*)</Text> Hi, {user?.data?.Firstname}.
           I am KeMi your medical support assistant. What information would you
           like to search below.
         </Text>
