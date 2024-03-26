@@ -101,7 +101,7 @@ const UpdateProfileScreen = ({ route }) => {
           {
             text: "OK",
             onPress: () => {
-              navigation.navigate(route.params.screen);
+              navigation.navigate(route.params.screen || "Home");
               dispatch(reset());
             },
           },

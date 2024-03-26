@@ -152,31 +152,38 @@ const PreviewComplaintScreen = ({ route }) => {
       ...route?.params?.complaint,
       recipientEmail: "",
     };
-    Alert.alert("Click Copy file to Proceed or cancel this operation", [
-      {
-        text: "Copy File",
-        onPress: async () => {
-          const data = generatePlainHtmlContent(user.data, form, dataForm);
-          const options = {
-            wordwrap: 130,
-          };
-          const compiledConvert = compile(options);
-          const texts = data.map(compiledConvert);
-          const copy = await Clipboard.setStringAsync(texts.join("\n"));
-          if (copy) {
-            setEmail("");
-            setCopy(true);
-            setSend(false);
-            dispatch(new_complaint(dataForm));
-          }
-        },
-      },
 
-      {
-        text: "Cancel",
-        onPress: () => console.log("Ask me later pressed"),
-      },
-    ]);
+    ("");
+
+    Alert.alert(
+      `Notice`,
+      "Click Copy file to Proceed or cancel this operation",
+      [
+        {
+          text: "Copy File",
+          onPress: async () => {
+            const data = generatePlainHtmlContent(user?.data, form, dataForm);
+            const options = {
+              wordwrap: 130,
+            };
+            const compiledConvert = compile(options);
+            const texts = data.map(compiledConvert);
+            const copy = await Clipboard.setStringAsync(texts.join("\n"));
+            if (copy) {
+              setEmail("");
+              setCopy(true);
+              setSend(false);
+              dispatch(new_complaint(dataForm));
+            }
+          },
+        },
+
+        {
+          text: "Cancel",
+          onPress: () => console.log("Ask me later pressed"),
+        },
+      ]
+    );
   };
 
   return (

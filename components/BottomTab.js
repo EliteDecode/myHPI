@@ -246,14 +246,14 @@ const BottomTab = () => {
                 openControlPanel: () => drawerRef.current.open(),
               }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
               name="Meds Request"
               component={MedsRequest}
               options={{ headerShown: false, tabBarButton: () => null }}
               initialParams={{
                 openControlPanel: () => drawerRef.current.open(),
               }}
-            />
+            /> */}
             <Tab.Screen
               name="Previous Complaints"
               component={PreviousComplaintsScreen}

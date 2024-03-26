@@ -64,6 +64,8 @@ const HomeScreen = ({ route }) => {
     (state) => state.complaint
   );
 
+  console.log(form);
+
   const { openControlPanel } = route.params;
 
   const handleAddComplaint = () => {
