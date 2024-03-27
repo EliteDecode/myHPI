@@ -64,8 +64,6 @@ const HomeScreen = ({ route }) => {
     (state) => state.complaint
   );
 
-  console.log(form);
-
   const { openControlPanel } = route.params;
 
   const handleAddComplaint = () => {
@@ -165,16 +163,9 @@ const HomeScreen = ({ route }) => {
       "Please select your preferred option.",
       [
         {
-          text: "Copy File",
+          text: "Paste Medical History to Patient Portal",
           onPress: async () => {
-            const data = generatePlainHtmlContent(
-              user.data,
-              form,
-              complaint[0]
-            );
-
-            console.log(complaint[0]);
-
+            const data = generatePlainHtmlContent(user.data, form);
             const options = {
               wordwrap: 130,
             };
@@ -201,7 +192,7 @@ const HomeScreen = ({ route }) => {
           },
         },
         {
-          text: "Send File",
+          text: "Email Medical History",
           onPress: async () => {
             try {
               const html = generateHtmlContent1(user.data, form);
