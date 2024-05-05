@@ -238,7 +238,7 @@ const EditComplaintScreen = ({ route }) => {
                 </View>
 
                 <TouchableOpacity
-                  onPress={handleSubmit}
+                  onPress={isLoading ? "" : handleSubmit}
                   style={{ marginBottom: 10, marginTop: 10 }}>
                   <View
                     style={{
@@ -257,7 +257,7 @@ const EditComplaintScreen = ({ route }) => {
                       {isLoading ? (
                         <ActivityIndicator size="small" color="#fff" />
                       ) : (
-                        "Edit Complaint"
+                        "Save Complaint"
                       )}
                     </Text>
                   </View>

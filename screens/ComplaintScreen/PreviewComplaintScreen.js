@@ -59,7 +59,7 @@ const PreviewComplaintScreen = ({ route }) => {
     ) {
       Alert.alert(
         "Information",
-        "Congratulations your complaint have been sent",
+        "Congratulations your complaint has been sent",
         [
           {
             text: "OK",
@@ -126,11 +126,11 @@ const PreviewComplaintScreen = ({ route }) => {
         recipientEmail: email.trim(),
       };
       Alert.alert(
-        `You are about sending your complaints to ${email}`,
+        `Email Medical History to ${email}`,
         "Do you want to proceed?",
         [
           {
-            text: "Send File",
+            text: "Proceed",
             onPress: async () => {
               setCopy(false);
               setSend(true);
@@ -156,11 +156,11 @@ const PreviewComplaintScreen = ({ route }) => {
     ("");
 
     Alert.alert(
-      `Notice`,
-      "Click Copy file to Proceed or cancel this operation",
+      `Paste Medical History to Patient Portal`,
+      "Do you want to proceed?",
       [
         {
-          text: "Copy File",
+          text: "Proceed",
           onPress: async () => {
             const data = generatePlainHtmlContent(user?.data, form, dataForm);
             const options = {
@@ -296,7 +296,7 @@ const PreviewComplaintScreen = ({ route }) => {
 
               {errorEmail && <Text style={styles.errorText}>{errorEmail}</Text>}
             </View>
-            <View className="flex items-center space-x-2 mt-5 flex-row">
+            <View className="mt-5 grid grid-cols-2 border-t-2 border-gray-200 py-5">
               {!copy && (
                 <TouchableOpacity
                   onPress={
@@ -309,7 +309,7 @@ const PreviewComplaintScreen = ({ route }) => {
                   style={{
                     marginBottom: 10,
                     marginTop: 10,
-                    width: send ? "100%" : "50%",
+                    width: send ? "100%" : "70%",
                   }}>
                   <View
                     style={{
@@ -327,7 +327,7 @@ const PreviewComplaintScreen = ({ route }) => {
                       {isLoading ? (
                         <ActivityIndicator size="small" color="#fff" />
                       ) : (
-                        "Send Complaint"
+                        "Send Complaint Now"
                       )}
                     </Text>
                   </View>
@@ -346,7 +346,7 @@ const PreviewComplaintScreen = ({ route }) => {
                   style={{
                     marginBottom: 10,
                     marginTop: 10,
-                    width: copy ? "100%" : "50%",
+                    width: copy ? "100%" : "70%",
                   }}>
                   <View
                     style={{
@@ -364,7 +364,7 @@ const PreviewComplaintScreen = ({ route }) => {
                       {isLoading ? (
                         <ActivityIndicator size="small" color="#fff" />
                       ) : (
-                        "Copy Complaint"
+                        "Paste complaints to portal"
                       )}
                     </Text>
                   </View>

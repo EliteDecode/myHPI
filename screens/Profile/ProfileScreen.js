@@ -21,7 +21,6 @@ const ProfileScreen = ({ route }) => {
 
   const userDetails = [
     { label: "DOB", value: user?.data?.DOB ? user?.data?.DOB : "Not Set" },
-    { label: "AGE", value: user?.data?.Age ? user?.data?.Age : "Not Set" },
     {
       label: "SEX assigned at birth",
       value: user?.data?.Sex ? user?.data?.Sex : "Not Set",

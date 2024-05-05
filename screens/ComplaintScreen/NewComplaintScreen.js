@@ -90,18 +90,18 @@ const NewComplaintScreen = ({ route }) => {
             }) => (
               <>
                 <View style={styles.formGroup}>
-                  <Text style={styles.label}>Body Part:</Text>
-                  <Text className="mt-1 mb-2 text-[12px] text-gray-700">
+                  <Text style={styles.label}>State your medical concern:</Text>
+                  {/* <Text className="mt-1 mb-2 text-[12px] text-gray-700">
                     <Text className="text-red-700">(*)</Text> Enter the body
                     part associated with your concern
-                  </Text>
+                  </Text> */}
                   <TextInput
                     style={styles.input}
                     numberOfLines={3}
                     value={values.bodyPart}
                     placeholderStyle={styles.placeholderStyle}
                     showSoftInputOnFocus
-                    placeholder="e.g. Head"
+                    placeholder="e.g. Left eye pain"
                     onChangeText={handleChange("bodyPart")}
                   />
                   {touched.bodyPart && errors.bodyPart && (

@@ -19,7 +19,7 @@ const SocialHistorySchema = Yup.object().shape({
       /^[a-zA-Z0-9\s,.';:]*$/,
       "Profession must not contain special characters"
     )
-    .max(30, "Profession must be at most 30 characters long")
+    .max(45, "Profession must be at most 45 characters long")
     .required("Profession is required"),
   tobaccoUse: Yup.string().required("Tobacco Use is required"),
   quantity: Yup.string().when("tobaccoUse", {

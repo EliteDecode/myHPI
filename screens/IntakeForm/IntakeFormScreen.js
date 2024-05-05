@@ -34,8 +34,6 @@ const IntakeFormScreen = ({ route }) => {
   );
   const { openControlPanel } = route.params;
 
-  console.log(form);
-
   const dispatch = useDispatch();
 
   const loggedInUserId = user?.data?._id;

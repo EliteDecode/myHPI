@@ -11,7 +11,7 @@ export const registerFields = [
         name="user"
         size={22}
         color={Colors.primary}
-        style={{ width: "10%", opacity: 0.6 }}
+        style={{ width: "10%", opacity: 0.9 }}
       />
     ),
   },
@@ -24,7 +24,7 @@ export const registerFields = [
         name="user"
         size={22}
         color={Colors.primary}
-        style={{ width: "10%", opacity: 0.6 }}
+        style={{ width: "10%", opacity: 0.9 }}
       />
     ),
   },
@@ -37,7 +37,7 @@ export const registerFields = [
         name="envelope"
         size={15}
         color={Colors.primary}
-        style={{ width: "10%", opacity: 0.6 }}
+        style={{ width: "10%", opacity: 0.9 }}
       />
     ),
   },
@@ -50,7 +50,7 @@ export const registerFields = [
         name="lock"
         size={20}
         color={Colors.primary}
-        style={{ width: "10%", opacity: 0.6 }}
+        style={{ width: "10%", opacity: 0.9 }}
       />
     ),
   },
@@ -63,7 +63,7 @@ export const registerFields = [
         name="lock"
         size={22}
         color={Colors.primary}
-        style={{ width: "10%", opacity: 0.6 }}
+        style={{ width: "10%", opacity: 0.9 }}
       />
     ),
   },

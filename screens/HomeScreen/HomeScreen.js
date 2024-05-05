@@ -43,6 +43,7 @@ import {
   generateHtmlContent,
   generateHtmlContent1,
   generatePlainHtmlContent,
+  generatePlainHtmlContent2,
 } from "../../utils/htmlcontent";
 import { get_complaint } from "../../store/reducers/complaint/complaintSlice";
 const { compile } = require("html-to-text");
@@ -67,9 +68,30 @@ const HomeScreen = ({ route }) => {
   const { openControlPanel } = route.params;
 
   const handleAddComplaint = () => {
-    navigation.navigate("New Complaint", {
-      screen: route.name,
-    });
+    if (!form) {
+      Alert.alert(
+        "Info",
+        "Please update your history of medical illness before making a complaints",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Ask me later pressed"),
+          },
+          {
+            text: "Update Medical History",
+            onPress: async () => {
+              navigation.navigate("IntakeForm", {
+                screen: route.name,
+              });
+            },
+          },
+        ]
+      );
+    } else {
+      navigation.navigate("New Complaint", {
+        screen: route.name,
+      });
+    }
   };
 
   useEffect(() => {
@@ -159,13 +181,17 @@ const HomeScreen = ({ route }) => {
   const handleShareHistoryPress = async () => {
     dispatch(fetchFormData(user?.data?._id));
     Alert.alert(
-      "Would you like to Copy and upload to your patient portal for your doctor's electronic medical records it or email it to your healthcare provider?",
-      "Please select your preferred option.",
+      "Info",
+      "Upload medical history to portal or email it by clicking below.",
       [
         {
-          text: "Paste Medical History to Patient Portal",
+          text: "Cancel",
+          onPress: () => console.log("Ask me later pressed"),
+        },
+        {
+          text: "Paste Medical History",
           onPress: async () => {
-            const data = generatePlainHtmlContent(user.data, form);
+            const data = generatePlainHtmlContent2(user.data, form);
             const options = {
               wordwrap: 130,
             };
@@ -202,10 +228,6 @@ const HomeScreen = ({ route }) => {
               console.error("Error sharing:", error.message);
             }
           },
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
         },
       ]
     );
@@ -273,10 +295,7 @@ const HomeScreen = ({ route }) => {
             />
           </View>
           <View className=" mt-1 rounded-full flex flex-col items-center justify-center">
-            <CopilotStep
-              order={2}
-              text="Please fill up your intake form"
-              name="form">
+            <CopilotStep order={2} text="Add new complaints" name="form">
               <CopilotView className="">
                 <TouchableOpacity
                   activeOpacity={0.6}
@@ -335,7 +354,7 @@ const HomeScreen = ({ route }) => {
                 style={styles.image}
               />
               <CopilotStep
-                text="Please update your profile"
+                text="Please update your medical history"
                 order={1}
                 name="profile">
                 <CopilotText style={styles.text}>Medical History </CopilotText>

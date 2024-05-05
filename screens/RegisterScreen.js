@@ -176,14 +176,14 @@ const RegisterScreen = () => {
                       <View key={index}>
                         <TextInput
                           key={index}
-                          showIcon
                           mode={field.mode}
+                          showIcon={false}
                           style={styles.input}
                           inputStyle={styles.inputStyle}
                           placeholderStyle={styles.placeholderStyle}
                           textErrorStyle={styles.textErrorStyle}
                           placeholder={field.placeholder}
-                          placeholderTextColor="gray"
+                          placeholderTextColor="#000"
                           focusColor={Colors.primary}
                           onChangeText={handleChange(field.title)}
                           onBlur={handleBlur(field.title)}
@@ -194,7 +194,7 @@ const RegisterScreen = () => {
                           <Text
                             style={{
                               color: "red",
-                              fontSize: 11,
+                              fontSize: 14,
                               marginLeft: 5,
                             }}>
                             {errors[field.title]}
@@ -209,14 +209,14 @@ const RegisterScreen = () => {
                         {AgreeTerms ? (
                           <FontAwesome
                             name="check-square-o"
-                            size={24}
+                            size={30}
                             color={Colors.primary}
                           />
                         ) : (
                           <FontAwesome
                             name="square-o"
-                            size={24}
-                            color={Colors.gray}
+                            size={30}
+                            color={Colors.gray3}
                           />
                         )}
                       </TouchableOpacity>

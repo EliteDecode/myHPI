@@ -137,17 +137,18 @@ const LoginScreen = () => {
               <View style={styles.container}>
                 <TextInput
                   value={values.Email}
+                  showIcon={false}
                   onChangeText={handleChange("Email")}
                   onBlur={handleBlur("Email")}
                   style={styles.input}
                   placeholder="Email address"
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#000"
                   renderLeftIcon={() => (
                     <FontAwesome
                       name="envelope"
                       size={15}
                       color={Colors.primary}
-                      style={{ width: "10%", opacity: 0.6 }}
+                      style={{ width: "10%", opacity: 0.9 }}
                     />
                   )}
                   // ... (other props)
@@ -156,7 +157,7 @@ const LoginScreen = () => {
                   <Text
                     style={{
                       color: "red",
-                      fontSize: 12,
+                      fontSize: 14,
                       marginLeft: 5,
                       marginBottom: 3,
                     }}>
@@ -166,18 +167,19 @@ const LoginScreen = () => {
 
                 <TextInput
                   value={values.Password}
+                  showIcon={false}
                   onChangeText={handleChange("Password")}
                   onBlur={handleBlur("Password")}
                   style={styles.input}
                   placeholder="Password"
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#000"
                   mode="password"
                   renderLeftIcon={() => (
                     <FontAwesome
                       name="lock"
                       size={20}
                       color={Colors.primary}
-                      style={{ width: "10%", opacity: 0.6 }}
+                      style={{ width: "10%", opacity: 0.9 }}
                     />
                   )} // ... (other props)
                 />
@@ -185,7 +187,7 @@ const LoginScreen = () => {
                   <Text
                     style={{
                       color: "red",
-                      fontSize: 12,
+                      fontSize: 14,
                       marginLeft: 5,
                       marginBottom: 3,
                     }}>
@@ -220,11 +222,12 @@ const LoginScreen = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  className="my-2"
                   onPress={() => navigation.replace("Forgot Password")}
                   style={{ alignSelf: "flex-end" }}>
                   <Text
                     style={{
-                      fontSize: 12,
+                      fontSize: 18,
                       marginRight: 2,
                       alignSelf: "flex-end",
                     }}>
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: { fontSize: 14 },
   labelStyle: {
-    fontSize: 12,
+    fontSize: 14,
     position: "absolute",
 
     top: -8,

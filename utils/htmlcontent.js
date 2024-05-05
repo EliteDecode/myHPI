@@ -377,3 +377,136 @@ export const generatePlainHtmlContent = (user, form, complaints) => {
 `,
   ];
 };
+
+export const generatePlainHtmlContent2 = (user, form, complaints) => {
+  return [
+    `
+    <div class='header'>
+      <h1>My History of Present Illness <span>(MyHPI)</span></h1>
+    </div>
+
+    <div>
+      <h2>User Profile Details</h2>
+      <ul>
+        <li><strong>First Name:</strong> ${user?.Firstname}</li>
+        <li><strong>Middle Name:</strong> ${user?.Middlename}</li>
+        <li><strong>Last Name:</strong> ${user?.Lastname}</li>
+        <li><strong>Email:</strong> ${user?.Email}</li>
+        <li><strong>Sex:</strong> ${user?.Sex}</li>
+        <li><strong>Phone:</strong> ${user?.Phone}</li>
+        <!-- Add other user details here -->
+      </ul>
+    </div>
+
+
+
+    <div>
+      <h2>Active Medical Problems</h2>
+      <ul>
+        <li>${form?.activeMedicalProblems
+          .map((item) => item.value)
+          .join("</li><li>")}</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Allergies</h2>
+      <ul>
+        <li>${form?.allergies.map((item) => item.value).join("</li><li>")}</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Family History</h2>
+      <ul>
+        <li>${form?.familyHistory
+          .map((item) => item.value)
+          .join("</li><li>")}</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Immunizations</h2>
+      <ul>
+        <li><strong>COVID:</strong> ${
+          form?.immunizations.covid.selectedOption
+        }</li>
+        <!-- Add other immunizations details here -->
+      </ul>
+    </div>
+    <div>
+      <h2>Medications</h2>
+      <ul>
+        <li>${form?.medications
+          .map((item) => item.value)
+          .join("</li><li>")}</li>
+      </ul>
+    </div>
+    ${
+      user?.Sex === "Male"
+        ? ""
+        : `<div>
+      <h2>Obstetric History</h2>
+      <ul>
+        <li><strong>Age at First Period:</strong> ${form?.obstericHistory?.ageAtFirstPeriod}</li>
+        <!-- Add other obstetric history details here -->
+      </ul>
+    </div>`
+    }
+
+    <div>
+  <h2>Past Medical History</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+    <li>${form?.pastMedicalHistory
+      .map((item) => item.value)
+      .join("</li><li>")}</li>
+  </ul>
+</div>
+
+<div>
+  <h2>Sexually Transmitted Disease History</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+    <li>${form?.sexualTransmittedDiseaseHistory
+      .map((item) => item.value)
+      .join("</li><li>")}</li>
+  </ul>
+</div>
+
+<div>
+  <h2>Social History</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+    <li><strong>Marital Status:</strong> ${
+      form?.socialHistory.maritalStatus
+    }</li>
+    <li><strong>Profession:</strong> ${form?.socialHistory.profession}</li>
+    <li><strong>Quantity:</strong> ${form?.socialHistory.quantity}</li>
+    <li><strong>Recreational Drug Use:</strong> ${
+      form?.socialHistory.recreationalDrugUse
+    }</li>
+    <li><strong>Sexual Partners:</strong> ${
+      form?.socialHistory.sexualPartners
+    }</li>
+    <li><strong>Tobacco Use:</strong> ${form?.socialHistory.tobaccoUse}</li>
+  </ul>
+</div>
+
+<div>
+  <h2>Surgical History</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+    <li>${form?.surgicalHistory
+      .map((item) => item.value)
+      .join("</li><li>")}</li>
+  </ul>
+</div>
+
+<div>
+  <h2>Travel History</h2>
+  <ul style='display: flex; flex-wrap: wrap'>
+    <li>${form?.travelHistory.map((item) => item.value).join("</li><li>")}</li>
+  </ul>
+</div>
+
+ 
+
+`,
+  ];
+};

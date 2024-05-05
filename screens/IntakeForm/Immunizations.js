@@ -195,7 +195,6 @@ const Immunizations = () => {
             touched,
           }) => (
             <>
-              {console.log(errors)}
               <View style={{ marginBottom: 12 }}>
                 <Text style={{ color: Colors.gray2, marginBottom: 5 }}>
                   Tetanus (Year of Last Vaccine)

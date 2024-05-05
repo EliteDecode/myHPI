@@ -126,7 +126,7 @@ const PreviousComplaintsScreen = ({ route }) => {
       dispatch(reset());
     }
 
-    if (isError && message) {
+    if (isError && !message.includes("null")) {
       Toast.error(message);
       dispatch(reset());
       setError(true);
