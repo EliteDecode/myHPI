@@ -84,16 +84,16 @@ const EditComplaintScreen = ({ route }) => {
             {({ values, handleChange, handleSubmit, setFieldValue }) => (
               <>
                 <View style={styles.formGroup}>
-                  <Text style={styles.label}>Body Part:</Text>
-                  <Text className="mt-1 mb-2 text-[12px] text-gray-700">
+                  <Text style={styles.label}>State your medical concern:</Text>
+                  {/* <Text className="mt-1 mb-2 text-[12px] text-gray-700">
                     <Text className="text-red-700">(*)</Text> Enter the body
                     part associated with your concern
-                  </Text>
+                  </Text> */}
                   <TextInput
                     style={[styles.input, { backgroundColor: "#f0f0f0" }]}
                     editable={false}
                     value={values.bodyPart}
-                    placeholder="Enter your bodyPart"
+                    placeholder="e.g. Left eye pain"
                     onChangeText={handleChange("bodyPart")}
                   />
                 </View>

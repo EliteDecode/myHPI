@@ -3,7 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/users/";
 
-const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/users/";
+// const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/users/";
+
+const API_URL = "https://myhpibackend.uw.r.appspot.com/myhpi/api/v1/users/";
 //Register user
 const register = async (user) => {
   const response = await axios.post(`${API_URL}register`, user);

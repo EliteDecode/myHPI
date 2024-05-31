@@ -31,6 +31,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "Freeznji@gmail.com",
+        "ascAppId": "6502265695",
+        "appleTeamId": "4HX64UH3TN"
+      }
+    }
   }
 }

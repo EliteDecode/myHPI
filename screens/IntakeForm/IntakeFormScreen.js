@@ -143,6 +143,7 @@ const IntakeFormScreen = ({ route }) => {
 
   useEffect(() => {
     fetchForms();
+
     setLoading(true);
     turnOff();
     dispatch(reset());

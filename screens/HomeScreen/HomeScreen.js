@@ -96,6 +96,7 @@ const HomeScreen = ({ route }) => {
 
   useEffect(() => {
     dispatch(fetchFormData(user?.data?._id));
+    dispatch(get_form());
   }, []);
 
   const getLastLoginTime = async () => {
@@ -392,7 +393,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   text: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: "sen",
     position: "absolute",
     bottom: 2,

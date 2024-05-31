@@ -34,7 +34,7 @@ const UpdateProfileScreen = ({ route }) => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(user?.data?.DOB));
   const [dateInput, setDateInput] = useState();
   const [showPicker, setShowPicker] = useState(false);
 
@@ -419,9 +419,9 @@ const UpdateProfileScreen = ({ route }) => {
                                 borderRadius: 4,
                               },
                             }}
-                            // value={
-                            //   user?.data?.Sex ? user?.data?.Sex : values.Sex
-                            // }
+                            value={
+                              user?.data?.Sex ? user?.data?.Sex : values.Sex
+                            }
                           />
                         </View>
                       </View>

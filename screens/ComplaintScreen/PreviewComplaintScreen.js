@@ -309,7 +309,7 @@ const PreviewComplaintScreen = ({ route }) => {
                   style={{
                     marginBottom: 10,
                     marginTop: 10,
-                    width: send ? "100%" : "70%",
+                    width: send ? "100%" : "100%",
                   }}>
                   <View
                     style={{
@@ -346,7 +346,7 @@ const PreviewComplaintScreen = ({ route }) => {
                   style={{
                     marginBottom: 10,
                     marginTop: 10,
-                    width: copy ? "100%" : "70%",
+                    width: copy ? "100%" : "100%",
                   }}>
                   <View
                     style={{
