@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myhpi.app",
@@ -48,6 +50,9 @@
     },
     "updates": {
       "url": "https://u.expo.dev/7d0cbaa8-facc-4397-b360-83d3bb005ec8"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

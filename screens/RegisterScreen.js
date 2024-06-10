@@ -22,6 +22,7 @@ import { registerSchema } from "../utils/schemas";
 import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../store/reducers/auth/authSlice";
 import { ActivityIndicator } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -113,13 +114,14 @@ const RegisterScreen = () => {
         width={400}
       />
 
-      <View
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
           flex: 1,
           backgroundColor: "#fff",
         }}>
         <ScrollView
-          style={{ flex: 1 }}
+          style={{ flex: 1, flexGrow: 1 }}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}>
           <View
@@ -281,7 +283,7 @@ const RegisterScreen = () => {
 
           <View style={{ marginBottom: 300 }}></View>
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

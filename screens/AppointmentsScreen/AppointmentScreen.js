@@ -18,7 +18,10 @@ const AppointmentScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <View className="flex-1 bg-white p-4">
+      <View className="flex items-center justify-center flex-row flex-1">
+        <Text>Coming soon...</Text>
+      </View>
+      {/* <View className="flex-1 bg-white p-4">
         <Text className="my-3 text-sm opacity-80">
           Disclaimer: Please note that the booking process is facilitated
           through Calendly. By clicking the "Book a New Appointment" button, you
@@ -61,7 +64,7 @@ const AppointmentScreen = ({ route }) => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </>
   );
 };

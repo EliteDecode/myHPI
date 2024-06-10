@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import React, { useEffect } from "react";
 import Colors from "../helpers/Colors";
 import { TouchableOpacity } from "react-native";

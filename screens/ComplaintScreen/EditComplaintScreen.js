@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Platform,
 } from "react-native";
 import { Formik } from "formik";
 import Slider from "@react-native-community/slider";

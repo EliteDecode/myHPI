@@ -171,7 +171,6 @@ const HomeScreen = ({ route }) => {
 
   useEffect(() => {
     checkFirstLaunch();
-    dispatch(get_complaint());
   }, []);
 
   const closeModal = () => {

@@ -49,7 +49,6 @@ const AskKemiLabTestScreen = ({ route }) => {
 
   const fetchMedicalProblem = async (code) => {
     setLoading(true);
-    console.log(code);
 
     try {
       const response = await axios.get(
@@ -60,7 +59,7 @@ const AskKemiLabTestScreen = ({ route }) => {
         setLoading(false);
         setMedicalProblem(response.data);
         scrollViewRef.current.scrollToEnd({ animated: true });
-        console.log(response.data);
+
         await AsyncStorage.setItem(
           `kemiMedicalProblem_${user?.data?._id}`,
           JSON.stringify(response.data)
@@ -68,7 +67,6 @@ const AskKemiLabTestScreen = ({ route }) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
