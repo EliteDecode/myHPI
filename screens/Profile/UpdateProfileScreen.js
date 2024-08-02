@@ -85,8 +85,6 @@ const UpdateProfileScreen = ({ route }) => {
         Email: user?.data?.Email,
       })
     );
-
-    console.log(values);
   };
 
   useEffect(() => {
@@ -279,7 +277,7 @@ const UpdateProfileScreen = ({ route }) => {
                       <DateTimePicker
                         style={styles.input2}
                         mode="date"
-                        display="spinner"
+                        display="inline"
                         value={selectedDate}
                         onChange={(event, selectedDate) =>
                           handleDateChange(event, selectedDate, setFieldValue)
@@ -612,14 +610,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gray,
   },
 
-  input2: {
-    height: 200,
-    paddingHorizontal: 18,
-    borderRadius: 30,
-    fontSize: 14,
-    borderColor: Colors.gray,
-    backgroundColor: Colors.gray,
-  },
+  input2: {},
   placeholderStyle: { fontSize: 10, zIndex: 20, opacity: 0.8 },
   errorText: {
     color: "red",

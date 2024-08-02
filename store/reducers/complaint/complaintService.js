@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/complaints/";
+const API_URL = "http://192.168.1.185:5000/myhpi/api/v1/complaints/";
 // const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/complaints/";
 // const API_URL =
 //   "https://myhpibackend.uw.r.appspot.com/myhpi/api/v1/complaints/";

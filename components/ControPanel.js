@@ -34,7 +34,7 @@ const ControlPanel = ({ closeControlPanel }) => {
     { label: "Update Profile", icon: "user" },
     { label: "Appointments", icon: "calendar" },
     { label: "Complaints", icon: "alert-circle" },
-    { label: "Ask  KeMi", icon: "help-circle" },
+    { label: "Ask KeMi", icon: "help-circle" },
     { label: "Settings", icon: "settings" },
   ];
 

@@ -9,235 +9,35 @@ import {
   Button,
   Modal,
   Platform,
-  Alert,
   ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-
-import React from "react";
+import React, { useEffect } from "react";
 import Colors from "../../helpers/Colors";
-import {
-  CommonActions,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import MyStatusBar from "../../helpers/MyStatusBar";
-const { width, height } = Dimensions.get("window");
-import * as Clipboard from "expo-clipboard";
-import { CopilotStep, walkthroughable, useCopilot } from "react-native-copilot";
-import { useEffect } from "react";
-import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData } from "../../store/reducers/auth/authSlice";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+const { compile } = require("html-to-text");
 import { MaterialIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import NavigationBar from "../../components/NavigationBar";
-import {
-  fetchFormData,
-  get_form,
-} from "../../store/reducers/intakeForm/intakeFormSlice";
-import * as Print from "expo-print";
-import * as Sharing from "expo-sharing";
-import {
-  generateHtmlContent,
-  generateHtmlContent1,
-  generatePlainHtmlContent,
-  generatePlainHtmlContent2,
-} from "../../utils/htmlcontent";
-import { get_complaint } from "../../store/reducers/complaint/complaintSlice";
-const { compile } = require("html-to-text");
-
+import MyStatusBar from "../../helpers/MyStatusBar";
+import useHomeOperations from "../../hooks/useHomeOperations";
+import { styles } from "./style";
+import { rMS } from "../../styles/responsiveness";
+const { width, height } = Dimensions.get("window");
 const CopilotText = walkthroughable(Text);
 const CopilotView = walkthroughable(View);
 
 const HomeScreen = ({ route }) => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-
-  const [lastLoginTime, setLastLoginTime] = useState();
-  const { start, copilotEvents } = useCopilot();
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const { user } = useSelector((state) => state.auth);
-  const { form } = useSelector((state) => state.form);
-  const { complaint, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.complaint
-  );
-
-  const { openControlPanel } = route.params;
-
-  const handleAddComplaint = () => {
-    if (!form) {
-      Alert.alert(
-        "Info",
-        "Please update your history of medical illness before making a complaints",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Ask me later pressed"),
-          },
-          {
-            text: "Update Medical History",
-            onPress: async () => {
-              navigation.navigate("IntakeForm", {
-                screen: route.name,
-              });
-            },
-          },
-        ]
-      );
-    } else {
-      navigation.navigate("New Complaint", {
-        screen: route.name,
-      });
-    }
-  };
-
-  useEffect(() => {
-    dispatch(fetchFormData(user?.data?._id));
-    dispatch(get_form());
-  }, []);
-
-  const getLastLoginTime = async () => {
-    const logoutTime = await AsyncStorage.getItem("lastLoginTime");
-
-    if (logoutTime) {
-      const formattedDate = new Date(
-        parseInt(logoutTime, 10)
-      ).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      });
-
-      setLastLoginTime(formattedDate);
-    }
-  };
-
-  useEffect(() => {
-    getLastLoginTime();
-  }, []);
-
-  const checkFirstLaunch = async () => {
-    try {
-      const value = await AsyncStorage.getItem("firstLaunchTour");
-      if (value === null) {
-        setModalVisible(true);
-      } else {
-        setModalVisible(false);
-      }
-    } catch (error) {
-      console.error("Error reading from AsyncStorage:", error);
-    }
-  };
-
-  const handleAddMedicalHistory = () => {
-    if (user?.data?.UpdatedUser) {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "IntakeForm" }],
-        })
-      );
-    } else {
-      Alert.alert(
-        "Information",
-        "Please update your profile to update your medical history",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.navigate("Update Profile", {
-                screen: route.name,
-              });
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    }
-  };
-
-  const setFirstGuide = async () => {
-    try {
-      await AsyncStorage.setItem("firstLaunchTour", "true");
-    } catch (error) {
-      console.error("Error setting firstLaunchTour in AsyncStorage:", error);
-    }
-  };
-
-  copilotEvents.on("stop", setFirstGuide);
-
-  useEffect(() => {
-    checkFirstLaunch();
-  }, []);
-
-  const closeModal = () => {
-    setModalVisible(false);
-    start();
-  };
-
-  const handleShareHistoryPress = async () => {
-    dispatch(fetchFormData(user?.data?._id));
-    Alert.alert(
-      "Info",
-      "Upload medical history to portal or email it by clicking below.",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
-        },
-        {
-          text: "Paste Medical History",
-          onPress: async () => {
-            const data = generatePlainHtmlContent2(user.data, form);
-            const options = {
-              wordwrap: 130,
-            };
-            const compiledConvert = compile(options);
-
-            const texts = data.map(compiledConvert);
-            const copy = await Clipboard.setStringAsync(texts.join("\n"));
-            if (copy) {
-              Alert.alert(
-                "Information",
-                "Congratulations your file have been copied",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      // navigation.navigate("Previous Complaints");
-                      // dispatch(reset());
-                    },
-                  },
-                ],
-                { cancelable: false }
-              );
-            }
-          },
-        },
-        {
-          text: "Email Medical History",
-          onPress: async () => {
-            try {
-              const html = generateHtmlContent1(user.data, form);
-              const { uri } = await Print.printToFileAsync({ html });
-              Sharing.shareAsync(uri);
-            } catch (error) {
-              console.error("Error sharing:", error.message);
-            }
-          },
-        },
-      ]
-    );
-  };
-
-  const handleAskKeMiPress = () => {
-    navigation.navigate("Ask KeMi", {
-      screen: route.name,
-    });
-  };
+  const {
+    handleAddComplaint,
+    handleAddMedicalHistory,
+    modalVisible,
+    closeModal,
+    handleShareHistoryPress,
+    handleAskKeMiPress,
+    openControlPanel,
+    user,
+  } = useHomeOperations({ route });
 
   return (
     <>
@@ -370,39 +170,3 @@ const HomeScreen = ({ route }) => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingHorizontal: 20,
-    position: "relative",
-  },
-  box: {
-    alignItems: "center",
-    borderRadius: 10,
-    paddingHorizontal: 5,
-    paddingVertical: 20,
-    width: "32%",
-  },
-  image: {
-    borderRadius: 10,
-    marginBottom: 10,
-    resizeMode: "contain",
-  },
-  text: {
-    fontSize: 11,
-    fontFamily: "sen",
-    position: "absolute",
-    bottom: 2,
-    marginBottom: 5,
-    padding: 5,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-});
