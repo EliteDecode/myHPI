@@ -62,7 +62,7 @@ const AskKemiScreen = ({ route }) => {
         <Text className="my-3 text-sm opacity-80">
           <Text className="text-red-500">(*)</Text> Hi, {user?.data?.Firstname}.
           I am KeMi your medical support assistant. What information would you
-          like to search below.
+          like to search below?
         </Text>
 
         <View>

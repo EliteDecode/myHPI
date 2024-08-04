@@ -10,6 +10,7 @@ import IntakeFormTitle from "../../components/IntakeFormTitle";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 import { textSchema } from "../../utils/schemas";
+import { rMS, rVS } from "../../styles/responsiveness";
 
 const TravelHistory = () => {
   const navigation = useNavigation();
@@ -26,9 +27,9 @@ const TravelHistory = () => {
           }>
           <Ionicons
             name="arrow-back"
-            size={24}
+            size={rMS(24)}
             color="#478AFB"
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       ),
@@ -125,7 +126,7 @@ const TravelHistory = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <Text
         className="text-[14px] opacity-80 mb-2"
         style={{ fontFamily: "sen" }}>
@@ -138,7 +139,7 @@ const TravelHistory = () => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
         {problems.map((problem, index) => (
-          <View className="border p-3 rounded-lg border-gray-300" key={index}>
+          <View className="border p-3 rounded-lg  border-gray-300" key={index}>
             <TextInput
               placeholder="Enter location here."
               style={{
@@ -146,10 +147,10 @@ const TravelHistory = () => {
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 12,
-                padding: 10,
+                padding: rMS(10),
                 fontSize: "5px",
-                marginBottom: 12,
-                height: 60,
+                marginBottom: rMS(12),
+                height: rVS(35),
               }}
               placeholderTextColor="#ccc"
               value={problem.location}
@@ -163,10 +164,10 @@ const TravelHistory = () => {
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 12,
-                padding: 10,
-                fontSize: 10,
-                marginBottom: 12,
-                height: 60,
+                padding: rMS(10),
+                fontSize: rMS(10),
+                marginBottom: rMS(12),
+                height: rVS(35),
                 // Add margin for spacing between inputs
               }}
               placeholderTextColor="#ccc"
@@ -179,7 +180,7 @@ const TravelHistory = () => {
               className="mt-0">
               <MaterialIcons
                 name="delete-forever"
-                size={34}
+                size={rMS(27)}
                 color={Colors.red}
               />
             </TouchableOpacity>
@@ -192,9 +193,9 @@ const TravelHistory = () => {
           onPress={addProblemField}
           style={{
             backgroundColor: "#478AFB",
-            padding: 10,
+            padding: rMS(10),
             borderRadius: 5,
-            marginBottom: 12,
+            marginBottom: rMS(12),
           }}>
           <Text
             style={{
@@ -214,9 +215,9 @@ const TravelHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#ccc",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
-              marginRight: 8,
+              marginRight: rMS(8),
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>Reset</Text>
           </TouchableOpacity>
@@ -225,7 +226,7 @@ const TravelHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#478AFB",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>
@@ -233,7 +234,7 @@ const TravelHistory = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ marginBottom: 100 }} />
+        <View style={{ marginBottom: rMS(100) }} />
       </ScrollView>
       {/* Assuming BtnReturnIntakeForm is a custom component */}
       <BtnReturnIntakeForm />

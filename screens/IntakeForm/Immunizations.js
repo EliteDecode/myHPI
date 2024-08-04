@@ -1,6 +1,12 @@
 import React, { useLayoutEffect, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { TextInput } from "react-native-element-textinput";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+  Pressable,
+} from "react-native";
 import { Formik } from "formik";
 import RNPickerSelect from "react-native-picker-select";
 import Colors from "../../helpers/Colors";
@@ -10,29 +16,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { rMS, rVS } from "../../styles/responsiveness";
+import { immuneValidationSchema } from "../../utils/schemas";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { TextInput } from "react-native-element-textinput";
 
 const Immunizations = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector((state) => state.auth);
+  const [showPicker, setShowPicker] = useState(null);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(route?.params?.screen || "IntakeForm")
-          }>
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color="#478AFB"
-            style={{ marginLeft: 16 }}
-          />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, route]);
+  const handleDateChange = (event, selectedDate, setFieldValue, vaccine) => {
+    if (selectedDate) {
+      setFieldValue(`${vaccine}.date`, selectedDate.toDateString());
+    }
+    setShowPicker(null);
+  };
 
   const initialValues = {
     tetanusLastVaccineYear: "",
@@ -43,102 +43,6 @@ const Immunizations = () => {
     influenza: { selectedOption: null, date: "" },
     hpv: { selectedOption: null, date: "" },
   };
-
-  const validationSchema = Yup.object({
-    tetanusLastVaccineYear: Yup.string().required(
-      "Year of last vaccine is required"
-    ),
-    covid: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    hepatitisA: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    hepatitisB: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    pneumonia: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    influenza: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    hpv: Yup.object({
-      selectedOption: Yup.string().required("Please select Yes or No"),
-      date: Yup.string().when("selectedOption", {
-        is: (value) => value === "Yes",
-        then: (schema) =>
-          schema
-            .matches(
-              /^[a-zA-Z0-9\s,.';:]*$/,
-              "Date must not contain special characters"
-            )
-            .max(15, "Date must be at most 15 characters long")
-            .required("Date is required for selected option Yes"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-  });
 
   const [initialImmunization, setInitialImmunization] = useState();
   useEffect(() => {
@@ -173,8 +77,26 @@ const Immunizations = () => {
     }
   };
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(route?.params?.screen || "IntakeForm")
+          }>
+          <Ionicons
+            name="arrow-back"
+            size={rMS(24)}
+            color="#478AFB"
+            style={{ marginLeft: rMS(16) }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, route]);
+
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -183,7 +105,7 @@ const Immunizations = () => {
             initialImmunization ? initialImmunization : initialValues
           }
           enableReinitialize={true}
-          validationSchema={validationSchema}
+          validationSchema={immuneValidationSchema}
           onSubmit={(values) => saveAndContinue(values)}>
           {({
             values,
@@ -191,12 +113,12 @@ const Immunizations = () => {
             handleSubmit,
             resetForm,
             errors,
-            setValues,
+            setFieldValue,
             touched,
           }) => (
             <>
-              <View style={{ marginBottom: 12 }}>
-                <Text style={{ color: Colors.gray2, marginBottom: 5 }}>
+              <View style={{ marginBottom: rMS(12) }}>
+                <Text style={{ color: Colors.gray2, marginBottom: rMS(5) }}>
                   Tetanus (Year of Last Vaccine)
                 </Text>
                 <TextInput
@@ -205,8 +127,8 @@ const Immunizations = () => {
                     borderWidth: 1,
                     borderColor: "#ccc",
                     borderRadius: 12,
-                    padding: 12,
-                    height: 60,
+                    padding: rMS(12),
+                    height: rVS(35),
                   }}
                   value={
                     initialImmunization?.tetanusLastVaccineYear ||
@@ -243,11 +165,13 @@ const Immunizations = () => {
                       </Text>
                     )}
                   </Text>
-                  <View className="my-2 border rounded-lg border-[#ccc]">
+                  <View
+                    className="my-2 border rounded-lg border-[#ccc]"
+                    style={{ height: rVS(35), borderRadius: 12 }}>
                     <RNPickerSelect
                       placeholder={{ label: "Select", value: null }}
                       onValueChange={(value) =>
-                        handleChange(`${vaccine}.selectedOption`)(value)
+                        setFieldValue(`${vaccine}.selectedOption`, value)
                       }
                       items={[
                         { label: "Yes", value: "Yes" },
@@ -275,24 +199,44 @@ const Immunizations = () => {
                     )}
                     {values[vaccine].selectedOption === "Yes" && (
                       <>
-                        <TextInput
-                          placeholder="Date"
-                          style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            borderColor: "#ccc",
-                            borderRadius: 12,
-                            padding: 12,
-                            height: 60,
-                          }}
-                          value={values[vaccine].date}
-                          onChangeText={handleChange(`${vaccine}.date`)}
-                          error={!!errors[vaccine]?.date}
-                        />
+                        <Pressable
+                          className=""
+                          onPress={() => setShowPicker(vaccine)}>
+                          <TextInput
+                            placeholder="Date"
+                            onPress={() => setShowPicker(vaccine)}
+                            style={{
+                              flex: 1,
+                              borderWidth: 1,
+                              borderColor: "#ccc",
+                              borderRadius: 12,
+                              padding: rMS(12),
+                              height: rVS(35),
+                            }}
+                            value={values[vaccine].date}
+                            editable={false}
+                          />
+                        </Pressable>
                         {errors[vaccine]?.date && (
                           <Text style={{ color: "red" }}>
                             {errors[vaccine].date}
                           </Text>
+                        )}
+                        {showPicker === vaccine && (
+                          <DateTimePicker
+                            mode="date"
+                            display="default"
+                            value={new Date()}
+                            onChange={(event, selectedDate) =>
+                              handleDateChange(
+                                event,
+                                selectedDate,
+                                setFieldValue,
+                                vaccine
+                              )
+                            }
+                            maximumDate={new Date()}
+                          />
                         )}
                       </>
                     )}
@@ -305,7 +249,7 @@ const Immunizations = () => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginTop: 12,
+                  marginTop: rMS(12),
                 }}>
                 <TouchableOpacity
                   onPress={() => resetForm()}

@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import NavigationBar from "../../components/NavigationBar";
 import { Ionicons } from "@expo/vector-icons";
+import { rMS, rS, rVS } from "../../styles/responsiveness";
 
 const ProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -56,21 +57,26 @@ const ProfileScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <View className="h-36" style={{ backgroundColor: Colors.gray2 }}>
+      <View
+        className=""
+        style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
         <TouchableOpacity
           onPress={() => navigation.navigate(route.params.screen || "Home")}
           className="mt-5 flex-row space-x-2 items-center ">
           <Ionicons
             name="arrow-back"
-            size={28}
+            size={rMS(28)}
             color={Colors.white}
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       </View>
+
       <View className="flex-1">
-        <View className="h-26" style={{ backgroundColor: Colors.gray2 }}></View>
-        <View
+        <View style={{ backgroundColor: Colors.gray2 }}></View>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           className=" bg-white  h-screen -mt-16"
           style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}>
           <View className="items-center justify-center mt-10">
@@ -80,7 +86,7 @@ const ProfileScreen = ({ route }) => {
                 width: 150,
                 height: 150,
                 borderRadius: 100,
-                marginBottom: 10,
+                marginBottom: rMS(10),
                 borderColor: Colors.primary,
                 borderWidth: 4,
               }}
@@ -98,7 +104,7 @@ const ProfileScreen = ({ route }) => {
                     screen: route.name,
                   })
                 }>
-                <Feather name="edit" size={16} color={Colors.primary} />
+                <Feather name="edit" size={rMS(22)} color={Colors.primary} />
               </TouchableOpacity>
             </View>
             <Text
@@ -122,9 +128,9 @@ const ProfileScreen = ({ route }) => {
                 </Text>
               </View>
             ))}
-            <View style={{ marginBottom: 300 }}></View>
+            <View style={{ marginBottom: rMS(40) }}></View>
           </ScrollView>
-        </View>
+        </ScrollView>
       </View>
     </>
   );

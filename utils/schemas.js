@@ -173,5 +173,101 @@ export const complaintSchema = Yup.object().shape({
 });
 
 export const textSchema = Yup.string()
-  .matches(/^[a-zA-Z0-9\s,'.;:]*$/, "Text must not contain special characters")
+  .matches(/^[a-zA-Z0-9\s,'.;/:]*$/, "Text must not contain special characters")
   .max(45, "Text must be at most 15 characters long");
+
+export const immuneValidationSchema = Yup.object({
+  tetanusLastVaccineYear: Yup.string().required(
+    "Year of last vaccine is required"
+  ),
+  covid: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+  hepatitisA: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+  hepatitisB: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+  pneumonia: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+  influenza: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+  hpv: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
+});

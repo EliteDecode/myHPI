@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 import { textSchema } from "../../utils/schemas";
 import RNPickerSelect from "react-native-picker-select";
+import { rMS, rVS } from "../../styles/responsiveness";
 
 const PastMedicalHistory = () => {
   const navigation = useNavigation();
@@ -30,9 +31,9 @@ const PastMedicalHistory = () => {
           }>
           <Ionicons
             name="arrow-back"
-            size={24}
+            size={rMS(24)}
             color="#478AFB"
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       ),
@@ -119,7 +120,7 @@ const PastMedicalHistory = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <IntakeFormTitle title="Past Medical History" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -137,16 +138,17 @@ const PastMedicalHistory = () => {
                   borderWidth: 1,
                   borderColor: "#ccc",
                   borderRadius: 12,
-                  padding: 12,
-                  marginBottom: 12,
-                  height: 60,
-                  width: "40%",
+                  padding: rMS(12),
+                  marginBottom: rMS(12),
+                  height: rVS(35),
                 }}
                 value={problem.problem}
                 onChangeText={(text) => handleProblemChange(problem.id, text)}
               />
             </View>
-            <View className="my-2 border rounded-lg border-[#ccc]">
+            <View
+              className="my-2 border  border-[#ccc]"
+              style={{ height: rVS(35), borderRadius: 12 }}>
               <RNPickerSelect
                 placeholder={{
                   label: "Select relative's type...",
@@ -155,10 +157,8 @@ const PastMedicalHistory = () => {
                 items={[
                   { label: "Father", value: "Father" },
                   { label: "Mother", value: "Mother" },
-                  { label: "Grand Father", value: "Grand Father" },
-                  { label: "Grand Mother", value: "Grand Mother" },
-                  { label: "Great Grand Father", value: "Great Grand Father" },
-                  { label: "Great Grand Mother", value: "Great Grand Mother" },
+                  { label: "Maternal", value: "Maternal" },
+                  { label: "Paternal", value: "Paternal" },
                   { label: "Sibling", value: "Sibling" },
                   { label: "Spouse", value: "Spouse" },
                   { label: "Others", value: "Other" },
@@ -172,13 +172,13 @@ const PastMedicalHistory = () => {
                 style={{
                   inputIOS: {
                     borderRadius: 10,
-                    paddingHorizontal: 13,
-                    paddingVertical: 16,
+                    paddingHorizontal: rMS(13),
+                    paddingVertical: rMS(16),
                   },
                   inputAndroid: {
                     borderRadius: 4,
-                    paddingHorizontal: 13,
-                    paddingVertical: 15,
+                    paddingHorizontal: rMS(13),
+                    paddingVertical: rMS(15),
                   },
                 }}
               />
@@ -188,7 +188,7 @@ const PastMedicalHistory = () => {
               className="">
               <MaterialIcons
                 name="delete-forever"
-                size={34}
+                size={rMS(27)}
                 color={Colors.red}
               />
             </TouchableOpacity>
@@ -201,9 +201,9 @@ const PastMedicalHistory = () => {
           onPress={addProblemField}
           style={{
             backgroundColor: "#478AFB",
-            padding: 10,
+            padding: rMS(10),
             borderRadius: 5,
-            marginBottom: 12,
+            marginBottom: rMS(12),
           }}>
           <Text
             style={{
@@ -223,9 +223,9 @@ const PastMedicalHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#ccc",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
-              marginRight: 8,
+              marginRight: rMS(8),
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>Reset</Text>
           </TouchableOpacity>
@@ -234,7 +234,7 @@ const PastMedicalHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#478AFB",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>
@@ -242,7 +242,7 @@ const PastMedicalHistory = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ marginBottom: 100 }} />
+        <View style={{ marginBottom: rMS(100) }} />
       </ScrollView>
       <BtnReturnIntakeForm />
     </View>

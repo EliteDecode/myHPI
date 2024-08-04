@@ -1,10 +1,4 @@
-import { View, Text } from "react-native";
-import React from "react";
-import {
-  CommonActions,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 import * as Clipboard from "expo-clipboard";
 import { useCopilot } from "react-native-copilot";
@@ -23,7 +17,6 @@ import {
   generateHtmlContent1,
   generatePlainHtmlContent2,
 } from "../utils/htmlcontent";
-import { get_complaint } from "../store/reducers/complaint/complaintSlice";
 
 const useHomeOperations = ({ route }) => {
   const navigation = useNavigation();
@@ -74,6 +67,7 @@ const useHomeOperations = ({ route }) => {
   const checkFirstLaunch = async () => {
     try {
       const value = await AsyncStorage.getItem("firstLaunchTour");
+
       if (value === null) {
         setModalVisible(true);
       } else {
@@ -190,6 +184,7 @@ const useHomeOperations = ({ route }) => {
     handleAddMedicalHistory,
     modalVisible,
     closeModal,
+    setFirstGuide,
     handleShareHistoryPress,
     user,
     form,

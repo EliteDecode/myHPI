@@ -14,11 +14,12 @@ import { deleteAccount, reset } from "../../store/reducers/auth/authSlice";
 import { useNavigation } from "@react-navigation/native";
 import { CommonActions } from "@react-navigation/native";
 import NavigationBar from "../../components/NavigationBar";
+import { rMS } from "../../styles/responsiveness";
 
 const DeleteAccountScreen = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
+  const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
@@ -105,22 +106,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 20,
+    paddingHorizontal: rMS(20),
   },
   warningText: {
-    fontSize: 16,
-    marginBottom: 20,
+    fontSize: rMS(16),
+    marginBottom: rMS(20),
     color: Colors.primary,
   },
   confirmButton: {
     backgroundColor: "red", // Change to your desired color
-    padding: 15,
+    padding: rMS(15),
     borderRadius: 8,
     alignItems: "center",
   },
   confirmButtonText: {
     color: Colors.white,
-    fontSize: 16,
+    fontSize: rMS(16),
     fontWeight: "bold",
   },
 });

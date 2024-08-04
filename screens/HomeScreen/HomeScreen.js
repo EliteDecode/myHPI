@@ -22,7 +22,7 @@ import NavigationBar from "../../components/NavigationBar";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import useHomeOperations from "../../hooks/useHomeOperations";
 import { styles } from "./style";
-import { rMS } from "../../styles/responsiveness";
+import { rMS, rS, rVS } from "../../styles/responsiveness";
 const { width, height } = Dimensions.get("window");
 const CopilotText = walkthroughable(Text);
 const CopilotView = walkthroughable(View);
@@ -50,9 +50,7 @@ const HomeScreen = ({ route }) => {
         onRequestClose={() => {}}>
         <View style={styles.modalContainer}>
           <View className="bg-white p-5 rounded-md">
-            <Text className="my-2" style={{}}>
-              Start your tour guide{" "}
-            </Text>
+            <Text className="my-2">Start your tour guide </Text>
             <Button title="Start" onPress={closeModal} />
           </View>
         </View>
@@ -90,7 +88,10 @@ const HomeScreen = ({ route }) => {
               style={{
                 resizeMode: "contain",
                 width: width,
-                height: Platform.OS === "ios" ? height * 0.35 : height * 0.323,
+                height:
+                  Platform.OS === "ios"
+                    ? rVS(height * 0.35)
+                    : rVS(height * 0.323),
               }}
             />
           </View>
@@ -103,11 +104,11 @@ const HomeScreen = ({ route }) => {
                   className="px-3 py-3 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
                   style={{
                     backgroundColor: Colors.primary,
-                    width: width * 0.75,
+                    width: rS(width * 0.75),
                   }}>
                   <Text
                     className="text-white font-bold"
-                    style={{ fontSize: 18 }}>
+                    style={{ fontSize: rMS(18) }}>
                     {" "}
                     Add new complaint
                   </Text>
@@ -140,7 +141,7 @@ const HomeScreen = ({ route }) => {
                 style={styles.image}
               />
               <CopilotStep
-                text="You can ask your assitstant KEMI, Coming soon."
+                text="You can ask your assitstant KEMI"
                 order={4}
                 name="kemi">
                 <CopilotText style={styles.text}>Ask KeMi</CopilotText>
@@ -161,8 +162,8 @@ const HomeScreen = ({ route }) => {
               </CopilotStep>
             </TouchableOpacity>
           </View>
-          <View
-            style={{ marginBottom: Platform.OS === "ios" ? 300 : 200 }}></View>
+          {/* <View
+            style={{ marginBottom: Platform.OS === "ios" ? 300 : 200 }}></View> */}
         </ScrollView>
       </SafeAreaView>
     </>

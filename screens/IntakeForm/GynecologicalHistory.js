@@ -9,6 +9,7 @@ import Colors from "../../helpers/Colors";
 import { useSelector } from "react-redux";
 import { TextInput } from "react-native-element-textinput";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { rMS, rVS } from "../../styles/responsiveness";
 
 const validationSchema = yup.object().shape({
   ageAtFirstPeriod: yup
@@ -51,9 +52,9 @@ const GynecologicalHistory = () => {
           }>
           <Ionicons
             name="arrow-back"
-            size={24}
+            size={rMS(24)}
             color="#478AFB"
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       ),
@@ -96,7 +97,7 @@ const GynecologicalHistory = () => {
     }
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -124,10 +125,10 @@ const GynecologicalHistory = () => {
           }) => (
             <>
               {Object.entries(values).map(([field, value]) => (
-                <View key={field} style={{ marginBottom: 12 }}>
+                <View key={field} style={{ marginBottom: rMS(12) }}>
                   <Text
                     style={{
-                      marginBottom: 8,
+                      marginBottom: rMS(8),
                       color: Colors.gray2,
                     }}>
                     {field === "ageAtFirstPeriod"
@@ -148,7 +149,8 @@ const GynecologicalHistory = () => {
                       borderWidth: 1,
                       borderColor: "#ccc",
                       borderRadius: 12,
-                      padding: 12,
+                      padding: rMS(12),
+                      height: rVS(35),
                     }}
                     value={initials ? initials[field] : value}
                     onChangeText={handleChange(field)}
@@ -163,16 +165,16 @@ const GynecologicalHistory = () => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginTop: 12,
+                  marginTop: rMS(12),
                 }}>
                 <TouchableOpacity
                   onPress={() => resetForm()}
                   style={{
                     flex: 1,
                     backgroundColor: "#ccc",
-                    padding: 10,
+                    padding: rMS(10),
                     borderRadius: 5,
-                    marginRight: 8,
+                    marginRight: rMS(8),
                   }}>
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Reset
@@ -183,7 +185,7 @@ const GynecologicalHistory = () => {
                   style={{
                     flex: 1,
                     backgroundColor: "#478AFB",
-                    padding: 10,
+                    padding: rMS(10),
                     borderRadius: 5,
                   }}>
                   <Text style={{ color: "white", textAlign: "center" }}>
@@ -194,7 +196,7 @@ const GynecologicalHistory = () => {
             </>
           )}
         </Formik>
-        <View style={{ marginBottom: 100 }} />
+        <View style={{ marginBottom: rMS(100) }} />
       </ScrollView>
       <BtnReturnIntakeForm />
     </View>

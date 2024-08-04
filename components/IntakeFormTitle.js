@@ -16,8 +16,7 @@ const IntakeFormTitle = ({ title }) => {
           ? "travel history for the past 4 weeks"
           : ""}{" "}
         one item per box, click the "Add Item" button to add more{" "}
-        <Text className="font-black">{title}.</Text> or enter null if no
-        response
+        <Text className="font-black">{title}</Text> or N/A if no response
       </Text>
     </View>
   );

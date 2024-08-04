@@ -7,6 +7,7 @@ import { Avatar } from "@rneui/base";
 import { useSelector } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MyStatusBar from "../helpers/MyStatusBar";
+import { rMS } from "../styles/responsiveness";
 
 const NavigationBar = ({ openControlPanel }) => {
   const { user } = useSelector((state) => state.auth);
@@ -35,7 +36,7 @@ const NavigationBar = ({ openControlPanel }) => {
             <View
               style={{
                 alignItems: "center",
-                marginTop: Platform.OS === "ios" ? 45 : 25,
+                marginTop: Platform.OS === "ios" ? rMS(30) : rMS(25),
               }}>
               <Feather name="menu" size={30} color={Colors.primary} />
             </View>
@@ -50,7 +51,7 @@ const NavigationBar = ({ openControlPanel }) => {
             style={{
               flexDirection: "row",
               position: "relative",
-              marginTop: Platform.OS === "ios" ? 45 : 25,
+              marginTop: Platform.OS === "ios" ? rMS(30) : rMS(25),
             }}>
             <Avatar
               size={30}

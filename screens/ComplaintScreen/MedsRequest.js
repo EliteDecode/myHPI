@@ -65,7 +65,7 @@ const MedsRequest = () => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+      <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
         <ScrollView
           className="space-y-4"
           showsHorizontalScrollIndicator={false}
@@ -155,7 +155,7 @@ const MedsRequest = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          <View style={{ marginBottom: 100 }} />
+          <View style={{ marginBottom: rMS(100) }} />
         </ScrollView>
       </View>
     </>

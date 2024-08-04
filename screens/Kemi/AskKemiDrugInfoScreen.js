@@ -54,8 +54,6 @@ const AskKemiDrugInfoScreen = ({ route }) => {
 
       if (response) {
         setInitial(false);
-
-        console.log(response.data);
         const newMessage = {
           text: message,
           time: new Date().toLocaleTimeString(),

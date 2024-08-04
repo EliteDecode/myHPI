@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import { rMS, rVS } from "../../styles/responsiveness";
 
 const SocialHistorySchema = Yup.object().shape({
   maritalStatus: Yup.string().required("Marital Status is required"),
@@ -81,9 +82,9 @@ const SocialHistory = () => {
           }>
           <Ionicons
             name="arrow-back"
-            size={24}
+            size={rMS(24)}
             color="#478AFB"
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       ),
@@ -106,7 +107,7 @@ const SocialHistory = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
@@ -133,13 +134,15 @@ const SocialHistory = () => {
                 <Text
                   style={{
                     color: Colors.gray2,
-                    marginBottom: 5,
+                    marginBottom: rMS(5),
                   }}>
                   Marital Status{" "}
                   {initialSocialHistory &&
                     `: ${initialSocialHistory?.maritalStatus}`}
                 </Text>
-                <View className="my-2 border rounded-lg border-[#ccc]">
+                <View
+                  className="my-2 border  border-[#ccc]"
+                  style={{ height: rVS(35), borderRadius: 12 }}>
                   <RNPickerSelect
                     placeholder={{
                       label: "Select Marital Status",
@@ -155,13 +158,13 @@ const SocialHistory = () => {
                     style={{
                       inputIOS: {
                         borderRadius: 10,
-                        paddingHorizontal: 13,
-                        paddingVertical: 16,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(16),
                       },
                       inputAndroid: {
                         borderRadius: 4,
-                        paddingHorizontal: 13,
-                        paddingVertical: 15,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(15),
                       },
                     }}
                   />
@@ -171,11 +174,11 @@ const SocialHistory = () => {
                 )}
               </View>
 
-              <View style={{ marginBottom: 16 }}>
+              <View style={{ marginBottom: rMS(16) }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-                    marginBottom: 5,
+                    marginBottom: rMS(5),
                   }}>
                   Profession
                 </Text>
@@ -185,8 +188,8 @@ const SocialHistory = () => {
                     borderWidth: 1,
                     borderColor: "#ccc",
                     borderRadius: 12,
-                    padding: 12,
-                    height: 60,
+                    padding: rMS(12),
+                    height: rVS(35),
                   }}
                   value={initialSocialHistory?.profession || values.profession}
                   onChangeText={handleChange("profession")}
@@ -196,17 +199,19 @@ const SocialHistory = () => {
                 )}
               </View>
 
-              <View style={{ marginBottom: 16 }}>
+              <View style={{ marginBottom: rMS(16) }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-                    marginBottom: 5,
+                    marginBottom: rMS(5),
                   }}>
                   Tobacco Use{" "}
                   {initialSocialHistory &&
                     `: ${initialSocialHistory?.tobaccoUse}`}
                 </Text>
-                <View className="my-2 border rounded-lg border-[#ccc]">
+                <View
+                  className="my-2  rounded-lg border-[#ccc]"
+                  style={{ height: rVS(35), borderRadius: 12 }}>
                   <RNPickerSelect
                     placeholder={{ label: "Select Tobacco Use", value: null }}
                     onValueChange={handleChange("tobaccoUse")}
@@ -219,15 +224,15 @@ const SocialHistory = () => {
                         borderWidth: 1,
                         borderColor: "#ccc",
                         borderRadius: 10,
-                        paddingHorizontal: 13,
-                        paddingVertical: 16,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(16),
                       },
                       inputAndroid: {
                         borderWidth: 1,
                         borderColor: "#ccc",
                         borderRadius: 4,
-                        paddingHorizontal: 13,
-                        paddingVertical: 15,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(15),
                       },
                     }}
                   />
@@ -238,11 +243,11 @@ const SocialHistory = () => {
               </View>
 
               {values.tobaccoUse == "Yes" && (
-                <View style={{ marginBottom: 16 }}>
+                <View style={{ marginBottom: rMS(16) }}>
                   <Text
                     style={{
                       color: Colors.gray2,
-                      marginBottom: 5,
+                      marginBottom: rMS(5),
                     }}>
                     Quantity
                   </Text>
@@ -250,8 +255,8 @@ const SocialHistory = () => {
                     placeholder="Enter Quantity"
                     style={{
                       borderRadius: 12,
-                      padding: 12,
-                      height: 60,
+                      padding: rMS(12),
+                      height: rVS(35),
                       borderWidth: 1,
                       borderColor: "#ccc",
                     }}
@@ -264,17 +269,19 @@ const SocialHistory = () => {
                 </View>
               )}
 
-              <View style={{ marginBottom: 16 }}>
+              <View style={{ marginBottom: rMS(16) }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-                    marginBottom: 5,
+                    marginBottom: rMS(5),
                   }}>
                   Recreational Drug Use{" "}
                   {initialSocialHistory &&
                     `: ${initialSocialHistory?.recreationalDrugUse}`}
                 </Text>
-                <View className="my-2 border rounded-lg border-[#ccc]">
+                <View
+                  className="my-2 border rounded-lg border-[#ccc]"
+                  style={{ height: rVS(35), borderRadius: 12 }}>
                   <RNPickerSelect
                     placeholder={{
                       label: "Select Recreational Drug Use",
@@ -288,13 +295,13 @@ const SocialHistory = () => {
                     style={{
                       inputIOS: {
                         borderRadius: 10,
-                        paddingHorizontal: 13,
-                        paddingVertical: 16,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(16),
                       },
                       inputAndroid: {
                         borderRadius: 4,
-                        paddingHorizontal: 13,
-                        paddingVertical: 15,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(15),
                       },
                     }}
                   />
@@ -306,11 +313,11 @@ const SocialHistory = () => {
                 )}
               </View>
 
-              <View style={{ marginBottom: 16 }}>
+              <View style={{ marginBottom: rMS(16) }}>
                 <Text
                   style={{
                     color: Colors.gray2,
-                    marginBottom: 5,
+                    marginBottom: rMS(5),
                   }}>
                   Sexual Partners{" "}
                   {initialSocialHistory &&
@@ -332,13 +339,13 @@ const SocialHistory = () => {
                     style={{
                       inputIOS: {
                         borderRadius: 10,
-                        paddingHorizontal: 13,
-                        paddingVertical: 16,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(16),
                       },
                       inputAndroid: {
                         borderRadius: 4,
-                        paddingHorizontal: 13,
-                        paddingVertical: 15,
+                        paddingHorizontal: rMS(13),
+                        paddingVertical: rMS(15),
                       },
                     }}
                   />
@@ -352,7 +359,7 @@ const SocialHistory = () => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginTop: 12,
+                  marginTop: rMS(12),
                 }}
                 className="space-x-4">
                 <TouchableOpacity
@@ -360,7 +367,7 @@ const SocialHistory = () => {
                   style={{
                     flex: 1,
                     backgroundColor: "#ccc",
-                    padding: 10,
+                    padding: rMS(10),
                     borderRadius: 5,
                   }}>
                   <Text style={{ color: "white", textAlign: "center" }}>
@@ -372,9 +379,9 @@ const SocialHistory = () => {
                   style={{
                     flex: 1,
                     backgroundColor: "#478AFB",
-                    padding: 10,
+                    padding: rMS(10),
                     borderRadius: 5,
-                    marginRight: 8,
+                    marginRight: rMS(8),
                   }}>
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Save & Continue
@@ -384,7 +391,7 @@ const SocialHistory = () => {
             </>
           )}
         </Formik>
-        <View style={{ marginBottom: 80 }} />
+        <View style={{ marginBottom: rMS(80) }} />
       </ScrollView>
       <BtnReturnIntakeForm />
     </View>

@@ -25,6 +25,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { reset, update } from "../../store/reducers/auth/authSlice";
 import NavigationBar from "../../components/NavigationBar";
 import RNPickerSelect from "react-native-picker-select";
+import { rMS, rS, rVS } from "../../styles/responsiveness";
 
 const UpdateProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -126,20 +127,22 @@ const UpdateProfileScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <View style={styles.container}>
         <ToastManager
-          textStyle={{ fontSize: 12 }}
-          height={50}
+          textStyle={{ fontSize: rMS(12) }}
+          height={rVS(50)}
           position="top"
-          width={400}
+          width={rS(400)}
         />
-        <View className="h-36" style={{ backgroundColor: Colors.gray2 }}>
+        <View
+          className=""
+          style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
           <TouchableOpacity
             onPress={() => navigation.navigate(route.params.screen || "Home")}
             className="mt-5 flex-row space-x-2 items-center ">
             <Ionicons
               name="arrow-back"
-              size={28}
+              size={rMS(28)}
               color={Colors.white}
-              style={{ marginLeft: 16 }}
+              style={{ marginLeft: rMS(16) }}
             />
           </TouchableOpacity>
         </View>
@@ -199,9 +202,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="user"
-                          size={20}
+                          size={rMS(20)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -219,9 +222,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="user"
-                          size={20}
+                          size={rMS(20)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -239,9 +242,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="user"
-                          size={20}
+                          size={rMS(20)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -264,9 +267,9 @@ const UpdateProfileScreen = ({ route }) => {
                           renderLeftIcon={() => (
                             <FontAwesome
                               name="calendar-plus-o"
-                              size={20}
+                              size={rMS(20)}
                               color={Colors.primary}
-                              style={{ width: "10%", opacity: 0.6 }}
+                              style={{ width: rS(25), opacity: 0.6 }}
                             />
                           )}
                         />
@@ -303,7 +306,7 @@ const UpdateProfileScreen = ({ route }) => {
                               style={{
                                 color: "white",
                                 fontFamily: "sen",
-                                fontSize: 16,
+                                fontSize: rMS(16),
                                 fontWeight: "bold",
                               }}>
                               Cancel
@@ -313,19 +316,19 @@ const UpdateProfileScreen = ({ route }) => {
                         <TouchableOpacity
                           className=" w-1/2"
                           onPress={ConfirmIosDate}
-                          style={{ marginBottom: 10, marginTop: 10 }}>
+                          style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
                           <View
                             style={{
                               backgroundColor: Colors.primary,
                               borderRadius: 30,
-                              paddingVertical: 12,
+                              paddingVertical: rMS(12),
                               alignItems: "center",
                             }}>
                             <Text
                               style={{
                                 color: "white",
                                 fontFamily: "sen",
-                                fontSize: 16,
+                                fontSize: rMS(16),
                                 fontWeight: "bold",
                               }}>
                               Confirm
@@ -340,61 +343,16 @@ const UpdateProfileScreen = ({ route }) => {
                     )}
                   </View>
 
-                  {/* {values.DOB && (
-                    <View style={styles.formGroup}>
-                      <Text style={styles.label}>AGE:</Text>
-                      <TextInput
-                        style={styles.input}
-                        showIcon={false}
-                        value={calculateAge(values.DOB)}
-                        editable={false}
-                        onChangeText={handleChange("Age")}
-                        keyboardType="numeric"
-                        renderLeftIcon={() => (
-                          <FontAwesome
-                            name="calendar-plus-o"
-                            size={20}
-                            color={Colors.primary}
-                            style={{ width: "10%", opacity: 0.6 }}
-                          />
-                        )}
-                      />
-                      {touched.Age && errors.Age && (
-                        <Text style={styles.errorText}>{errors.Age}</Text>
-                      )}
-                    </View>
-                  )} */}
-
-                  {/* <View style={styles.formGroup}>
-                    <Text style={styles.label}>SEX assigned at birth:</Text>
-                    <TextInput
-                      style={styles.input}
-                      value={user?.data?.Sex || values.Sex}
-                      onChangeText={handleChange("Sex")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="user-plus"
-                          size={19}
-                          color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Sex && errors.Sex && (
-                      <Text style={styles.errorText}>{errors.Sex}</Text>
-                    )}
-                  </View> */}
-
                   <View style={styles.formGroup}>
                     <Text style={styles.label}>SEX assigned at birth:</Text>
                     <View style={styles.input}>
                       <View className="flex-row items-center space-x-2">
                         <FontAwesome
                           name="user-plus"
-                          size={19}
+                          size={rMS(19)}
                           color={Colors.primary}
                           style={{
-                            width: "10%",
+                            width: rS(25),
                             opacity: 0.6,
                             marginTop: "5%",
                           }}
@@ -411,15 +369,13 @@ const UpdateProfileScreen = ({ route }) => {
                             style={{
                               inputIOS: {
                                 borderRadius: 10,
-                                marginTop: 15,
+                                marginTop: rMS(15),
                               },
                               inputAndroid: {
                                 borderRadius: 4,
                               },
                             }}
-                            value={
-                              user?.data?.Sex ? user?.data?.Sex : values.Sex
-                            }
+                            value={values.Sex}
                           />
                         </View>
                       </View>
@@ -438,9 +394,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="location-arrow"
-                          size={22}
+                          size={rMS(22)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -453,14 +409,16 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Mobile phone:</Text>
                     <TextInput
                       style={styles.input}
+                      mode="numeric"
+                      keyboardType="numeric"
                       value={user?.data?.Phone || values.Phone}
                       onChangeText={handleChange("Phone")}
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="phone"
-                          size={20}
+                          size={rMS(20)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -481,9 +439,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="user-md"
-                          size={20}
+                          size={rMS(20)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -509,9 +467,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="mobile-phone"
-                          size={23}
+                          size={rMS(23)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -539,9 +497,9 @@ const UpdateProfileScreen = ({ route }) => {
                       renderLeftIcon={() => (
                         <FontAwesome
                           name="users"
-                          size={18}
+                          size={rMS(18)}
                           color={Colors.primary}
-                          style={{ width: "10%", opacity: 0.6 }}
+                          style={{ width: rS(25), opacity: 0.6 }}
                         />
                       )}
                     />
@@ -554,19 +512,19 @@ const UpdateProfileScreen = ({ route }) => {
                   </View>
                   <TouchableOpacity
                     onPress={isLoading ? null : handleSubmit}
-                    style={{ marginBottom: 10, marginTop: 10 }}>
+                    style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
                     <View
                       style={{
                         backgroundColor: Colors.primary,
                         borderRadius: 30,
-                        paddingVertical: 18,
+                        paddingVertical: rMS(18),
                         alignItems: "center",
                       }}>
                       <Text
                         style={{
                           color: "white",
                           fontFamily: "sen",
-                          fontSize: 16,
+                          fontSize: rMS(16),
                           fontWeight: "bold",
                         }}>
                         {isLoading ? (
@@ -580,7 +538,7 @@ const UpdateProfileScreen = ({ route }) => {
                 </>
               )}
             </Formik>
-            <View style={{ marginBottom: 500 }} />
+            <View style={{ marginBottom: rMS(500) }} />
           </ScrollView>
         </View>
       </View>
@@ -594,39 +552,39 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   formGroup: {
-    marginBottom: 20,
+    marginBottom: rMS(20),
   },
   label: {
-    fontSize: 14,
-    marginBottom: 4,
-    marginLeft: 5,
+    fontSize: rMS(14),
+    marginBottom: rMS(4),
+    marginLeft: rMS(5),
   },
   input: {
-    height: 55,
-    paddingHorizontal: 18,
+    height: rVS(40),
+    paddingHorizontal: rMS(18),
     borderRadius: 30,
-    fontSize: 14,
+    fontSize: rMS(14),
     borderColor: Colors.gray,
     backgroundColor: Colors.gray,
   },
 
   input2: {},
-  placeholderStyle: { fontSize: 10, zIndex: 20, opacity: 0.8 },
+  placeholderStyle: { fontSize: rMS(10), zIndex: 20, opacity: 0.8 },
   errorText: {
     color: "red",
-    fontSize: 12,
-    marginLeft: 5,
+    fontSize: rMS(12),
+    marginLeft: rMS(5),
   },
   updateButton: {
     backgroundColor: "#478AFB",
-    padding: 12,
+    padding: rMS(12),
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: rMS(20),
   },
   updateButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: rMS(16),
   },
 });
 

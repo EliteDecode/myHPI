@@ -9,6 +9,7 @@ import {
 } from "react-native-confirmation-code-field";
 import BackButton from "../../components/BackButton";
 import { useNavigation } from "@react-navigation/native";
+import { rMS } from "../../styles/responsiveness";
 
 const ConfirmEmailChangeScreen = () => {
   const CELL_COUNT = 5; // You can adjust the number of cells as needed
@@ -70,17 +71,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 20,
+    paddingHorizontal: rMS(20),
   },
   header: {
-    fontSize: 24,
+    fontSize: rMS(24),
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: rMS(20),
     color: Colors.primary,
   },
   codeFieldRoot: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: rMS(20),
+    marginBottom: rMS(20),
   },
   cell: {
     width: 40,

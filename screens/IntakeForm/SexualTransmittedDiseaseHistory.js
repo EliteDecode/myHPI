@@ -10,6 +10,7 @@ import IntakeFormTitle from "../../components/IntakeFormTitle";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
 import { textSchema } from "../../utils/schemas";
+import { rMS, rVS } from "../../styles/responsiveness";
 
 const SexualTransmittedDiseaseHistory = () => {
   const navigation = useNavigation();
@@ -26,9 +27,9 @@ const SexualTransmittedDiseaseHistory = () => {
           }>
           <Ionicons
             name="arrow-back"
-            size={24}
+            size={rMS(24)}
             color="#478AFB"
-            style={{ marginLeft: 16 }}
+            style={{ marginLeft: rMS(16) }}
           />
         </TouchableOpacity>
       ),
@@ -116,7 +117,7 @@ const SexualTransmittedDiseaseHistory = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
       <IntakeFormTitle title="Sexually Transmitted Disease History" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -132,9 +133,9 @@ const SexualTransmittedDiseaseHistory = () => {
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 12,
-                padding: 12,
-                marginBottom: 12,
-                height: 60,
+                padding: rMS(12),
+                marginBottom: rMS(12),
+                height: rVS(35),
               }}
               value={problem.value}
               onChangeText={(text) => handleProblemChange(problem.id, text)}
@@ -144,8 +145,8 @@ const SexualTransmittedDiseaseHistory = () => {
               className="-mt-3">
               <MaterialIcons
                 name="delete-forever"
-                style={{ marginLeft: 8 }}
-                size={34}
+                style={{ marginLeft: rMS(8) }}
+                size={rMS(27)}
                 color={Colors.red}
               />
             </TouchableOpacity>
@@ -158,9 +159,9 @@ const SexualTransmittedDiseaseHistory = () => {
           onPress={addProblemField}
           style={{
             backgroundColor: "#478AFB",
-            padding: 10,
+            padding: rMS(10),
             borderRadius: 5,
-            marginBottom: 12,
+            marginBottom: rMS(12),
           }}>
           <Text
             style={{
@@ -176,9 +177,9 @@ const SexualTransmittedDiseaseHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#ccc",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
-              marginRight: 8,
+              marginRight: rMS(8),
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>Reset</Text>
           </TouchableOpacity>
@@ -187,7 +188,7 @@ const SexualTransmittedDiseaseHistory = () => {
             style={{
               flex: 1,
               backgroundColor: "#478AFB",
-              padding: 10,
+              padding: rMS(10),
               borderRadius: 5,
             }}>
             <Text style={{ color: "white", textAlign: "center" }}>
@@ -195,7 +196,7 @@ const SexualTransmittedDiseaseHistory = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ marginBottom: 100 }} />
+        <View style={{ marginBottom: rMS(100) }} />
       </ScrollView>
       <BtnReturnIntakeForm />
     </View>

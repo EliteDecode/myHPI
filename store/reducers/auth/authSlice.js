@@ -25,9 +25,7 @@ export const register = createAsyncThunk(
       return data;
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
       return thunkAPI.rejectWithValue(message);
@@ -40,7 +38,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     return await authService.login(user);
   } catch (error) {
     const message =
-      (error.response && error.response.data && error.response.data.message) ||
+      (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
     console.log(message);
@@ -56,7 +54,7 @@ export const update = createAsyncThunk("auth/upate", async (user, thunkAPI) => {
     return data;
   } catch (error) {
     const message =
-      (error.response && error.response.data && error.response.data.message) ||
+      (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
     return thunkAPI.rejectWithValue(message);
@@ -71,7 +69,7 @@ export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
     return data;
   } catch (error) {
     const message =
-      (error.response && error.response.data && error.response.data.message) ||
+      (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
     return thunkAPI.rejectWithValue(message);
@@ -85,9 +83,7 @@ export const verify = createAsyncThunk(
       return await authService.verify(data);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
       return thunkAPI.rejectWithValue(message);
@@ -102,9 +98,7 @@ export const forgotPassword = createAsyncThunk(
       return await authService.forgotPassword(data);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
 
@@ -122,9 +116,7 @@ export const updatePassword = createAsyncThunk(
       return await authService.updatePassword(data, userId, token);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
 
@@ -142,9 +134,7 @@ export const deleteAccount = createAsyncThunk(
       return await authService.deleteAccount(userId, token);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
 
