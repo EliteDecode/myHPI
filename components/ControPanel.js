@@ -23,11 +23,10 @@ const ControlPanel = ({ closeControlPanel }) => {
     closeControlPanel();
   };
   const handleLogout = async () => {
-    dispatch(logout());
-
     const logoutTime = new Date().getTime();
     await AsyncStorage.setItem("lastLoginTime", JSON.stringify(logoutTime));
     navigation.replace("Login");
+    dispatch(logout());
   };
 
   const controlPanelItems = [

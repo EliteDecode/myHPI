@@ -43,7 +43,7 @@ const NavigationBar = ({ openControlPanel }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Profile", {
+              navigation.navigate("Update Profile", {
                 screen: route.name,
               })
             }
