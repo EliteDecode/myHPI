@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import formService from "./intakeFormService";
 import { useEffect } from "react";
+import { logout } from "../auth/authSlice";
 
 const initialState = {
   form: null,
@@ -34,6 +35,9 @@ export const register_form = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -58,6 +62,9 @@ export const update_form = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -76,6 +83,9 @@ export const get_form = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }

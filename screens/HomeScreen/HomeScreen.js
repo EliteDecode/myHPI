@@ -88,10 +88,7 @@ const HomeScreen = ({ route }) => {
               style={{
                 resizeMode: "contain",
                 width: width,
-                height:
-                  Platform.OS === "ios"
-                    ? rVS(height * 0.35)
-                    : rVS(height * 0.323),
+                height: rVS(height * 0.3),
               }}
             />
           </View>

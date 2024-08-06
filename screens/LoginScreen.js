@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../store/reducers/auth/authSlice";
 const { width, height } = Dimensions.get("window");
 import ToastManager, { Toast } from "toastify-react-native";
+import { rS, rVS } from "../styles/responsiveness";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -78,9 +79,9 @@ const LoginScreen = () => {
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
       <Formik
         initialValues={initialValues}

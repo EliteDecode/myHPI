@@ -25,6 +25,7 @@ import {
 } from "../../store/reducers/complaint/complaintSlice";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import ToastManager, { Toast } from "toastify-react-native";
+import { rMS, rVS } from "../../styles/responsiveness";
 const { compile } = require("html-to-text");
 
 const NewComplaintScreen = ({ route }) => {
@@ -51,9 +52,9 @@ const NewComplaintScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
       <BackButton color={Colors.primary} content="My Concern" />
 
@@ -149,7 +150,7 @@ const NewComplaintScreen = ({ route }) => {
                 <View style={styles.formGroup}>
                   <Text style={styles.label}>Severity:</Text>
                   <Slider
-                    style={{ width: "100%", height: 20 }}
+                    style={{ width: "100%", height: rVS(20) }}
                     minimumTrackTintColor={Colors.primary}
                     maximumTrackTintColor="#000000"
                     minimumValue={1}
@@ -345,7 +346,7 @@ const NewComplaintScreen = ({ route }) => {
 
 const styles = {
   formGroup: {
-    marginBottom: 20,
+    marginBottom: rMS(20),
   },
   label: {
     fontSize: 15,
@@ -357,17 +358,16 @@ const styles = {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-
-    height: Platform.OS === "ios" ? 50 : 56,
+    padding: rMS(10),
+    fontSize: rMS(16),
+    height: rVS(40),
   },
   submitButton: {
     backgroundColor: "#478AFB",
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: rMS(20),
   },
   errorText: {
     color: "red",

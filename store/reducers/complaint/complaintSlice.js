@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import complaintService from "./complaintService";
 import { useEffect } from "react";
+import { logout } from "../auth/authSlice";
 
 const initialState = {
   complaint: null,
@@ -29,6 +30,9 @@ export const new_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -47,6 +51,9 @@ export const med_request = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -65,6 +72,9 @@ export const get_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -87,6 +97,9 @@ export const delete_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }

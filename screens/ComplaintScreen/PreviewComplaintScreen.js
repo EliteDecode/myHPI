@@ -35,6 +35,7 @@ import ConfirmComplaintModal from "./ConfirmComplaintModal";
 import { generatePlainHtmlContent } from "../../utils/htmlcontent";
 import * as Clipboard from "expo-clipboard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { rS, rVS } from "../../styles/responsiveness";
 
 const PreviewComplaintScreen = ({ route }) => {
   const { complaint, isLoading, isError, isSuccess, message } = useSelector(
@@ -191,9 +192,9 @@ const PreviewComplaintScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
       <View>
         <TouchableOpacity

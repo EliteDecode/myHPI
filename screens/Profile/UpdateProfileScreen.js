@@ -196,6 +196,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>First Name:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={user?.data?.Firstname || values.Firstname}
                       placeholder="Firstname"
                       onChangeText={handleChange("Firstname")}
@@ -217,6 +218,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Middle Name:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={user?.data?.Middlename || values.Middlename}
                       onChangeText={handleChange("Middlename")}
                       renderLeftIcon={() => (
@@ -237,6 +239,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Last/Surname Name:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={user?.data?.Lastname || values.Lastname}
                       onChangeText={handleChange("Lastname")}
                       renderLeftIcon={() => (
@@ -260,6 +263,7 @@ const UpdateProfileScreen = ({ route }) => {
                       <Pressable onPress={TogglePicker}>
                         <TextInput
                           style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
                           value={selectedDate.toDateString()}
                           showIcon={false}
                           editable={false}
@@ -345,7 +349,9 @@ const UpdateProfileScreen = ({ route }) => {
 
                   <View style={styles.formGroup}>
                     <Text style={styles.label}>SEX assigned at birth:</Text>
-                    <View style={styles.input}>
+                    <View
+                      style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}>
                       <View className="flex-row items-center space-x-2">
                         <FontAwesome
                           name="user-plus"
@@ -389,6 +395,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Address:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={user?.data?.Address || values.Address}
                       onChangeText={handleChange("Address")}
                       renderLeftIcon={() => (
@@ -409,6 +416,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Mobile phone:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       mode="numeric"
                       keyboardType="numeric"
                       value={user?.data?.Phone || values.Phone}
@@ -431,6 +439,7 @@ const UpdateProfileScreen = ({ route }) => {
                     <Text style={styles.label}>Name of emergency contact:</Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={
                         user?.data?.EmergencyContactName ||
                         values.EmergencyContactName
@@ -459,6 +468,7 @@ const UpdateProfileScreen = ({ route }) => {
                     </Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={
                         user?.data?.EmergencyContactPhone ||
                         values.EmergencyContactPhone
@@ -487,6 +497,7 @@ const UpdateProfileScreen = ({ route }) => {
                     </Text>
                     <TextInput
                       style={styles.input}
+                      inputStyle={{ fontSize: rMS(15) }}
                       value={
                         user?.data?.EmergencyContactRelationship ||
                         values.EmergencyContactRelationship
@@ -560,7 +571,7 @@ const styles = StyleSheet.create({
     marginLeft: rMS(5),
   },
   input: {
-    height: rVS(40),
+    height: rVS(43),
     paddingHorizontal: rMS(18),
     borderRadius: 30,
     fontSize: rMS(14),

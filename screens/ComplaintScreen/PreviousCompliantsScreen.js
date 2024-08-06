@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
+  Platform,
 } from "react-native";
 import Collapsible from "react-native-collapsible";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -27,6 +28,7 @@ import {
   get_complaint,
   reset,
 } from "../../store/reducers/complaint/complaintSlice";
+import { rS, rVS } from "../../styles/responsiveness";
 const { width, height } = Dimensions.get("window");
 
 const PreviousComplaintsScreen = ({ route }) => {
@@ -144,9 +146,9 @@ const PreviousComplaintsScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
 
       <View className="flex-1 bg-white">

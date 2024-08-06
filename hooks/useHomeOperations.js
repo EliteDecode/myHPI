@@ -1,12 +1,9 @@
 import { CommonActions, useNavigation } from "@react-navigation/native";
-
 import * as Clipboard from "expo-clipboard";
 import { useCopilot } from "react-native-copilot";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   fetchFormData,
   get_form,
@@ -32,7 +29,13 @@ const useHomeOperations = ({ route }) => {
     dispatch(get_form());
   }, []);
 
-  copilotEvents.on("stop", setFirstGuide);
+  useEffect(() => {
+    copilotEvents.on("stop", setFirstGuide);
+    return () => {
+      copilotEvents.off("stop", setFirstGuide);
+    };
+  }, [copilotEvents]);
+
   useEffect(() => {
     checkFirstLaunch();
   }, []);
@@ -41,7 +44,7 @@ const useHomeOperations = ({ route }) => {
     if (!form) {
       Alert.alert(
         "Info",
-        "Please update your history of medical illness before making a complaints",
+        "Please update your history of medical illness before making a complaint",
         [
           {
             text: "Cancel",
@@ -49,18 +52,13 @@ const useHomeOperations = ({ route }) => {
           },
           {
             text: "Update Medical History",
-            onPress: async () => {
-              navigation.navigate("IntakeForm", {
-                screen: route.name,
-              });
-            },
+            onPress: () =>
+              navigation.navigate("IntakeForm", { screen: route.name }),
           },
         ]
       );
     } else {
-      navigation.navigate("New Complaint", {
-        screen: route.name,
-      });
+      navigation.navigate("New Complaint", { screen: route.name });
     }
   };
 
@@ -68,11 +66,7 @@ const useHomeOperations = ({ route }) => {
     try {
       const value = await AsyncStorage.getItem("firstLaunchTour");
 
-      if (value === null) {
-        setModalVisible(true);
-      } else {
-        setModalVisible(false);
-      }
+      setModalVisible(value === null);
     } catch (error) {
       console.error("Error reading from AsyncStorage:", error);
     }
@@ -101,11 +95,8 @@ const useHomeOperations = ({ route }) => {
         [
           {
             text: "OK",
-            onPress: () => {
-              navigation.navigate("Update Profile", {
-                screen: route.name,
-              });
-            },
+            onPress: () =>
+              navigation.navigate("Update Profile", { screen: route.name }),
           },
         ],
         { cancelable: false }
@@ -124,37 +115,21 @@ const useHomeOperations = ({ route }) => {
       "Info",
       "Upload medical history to portal or email it by clicking below.",
       [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
-        },
+        { text: "Cancel", onPress: () => console.log("Ask me later pressed") },
         {
           text: "Paste Medical History",
           onPress: async () => {
             const data = generatePlainHtmlContent2(user.data, form);
-            const options = {
-              wordwrap: 130,
-            };
+            const options = { wordwrap: 130 };
             const compiledConvert = compile(options);
-
             const texts = data.map(compiledConvert);
-            const copy = await Clipboard.setStringAsync(texts.join("\n"));
-            if (copy) {
-              Alert.alert(
-                "Information",
-                "Congratulations your file have been copied",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      // navigation.navigate("Previous Complaints");
-                      // dispatch(reset());
-                    },
-                  },
-                ],
-                { cancelable: false }
-              );
-            }
+            await Clipboard.setStringAsync(texts.join("\n"));
+            Alert.alert(
+              "Information",
+              "Congratulations your file has been copied",
+              [{ text: "OK" }],
+              { cancelable: false }
+            );
           },
         },
         {
@@ -174,9 +149,7 @@ const useHomeOperations = ({ route }) => {
   };
 
   const handleAskKeMiPress = () => {
-    navigation.navigate("Ask KeMi", {
-      screen: route.name,
-    });
+    navigation.navigate("Ask KeMi", { screen: route.name });
   };
 
   return {

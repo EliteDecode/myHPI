@@ -57,6 +57,9 @@ export const update = createAsyncThunk("auth/upate", async (user, thunkAPI) => {
       (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
+    if (error?.response?.status === "401") {
+      thunkAPI.dispatch(logout());
+    }
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -72,6 +75,9 @@ export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
       (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
+    if (error?.response?.status === "401") {
+      thunkAPI.dispatch(logout());
+    }
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -119,6 +125,9 @@ export const updatePassword = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -137,7 +146,9 @@ export const deleteAccount = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-
+      if (error?.response?.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }

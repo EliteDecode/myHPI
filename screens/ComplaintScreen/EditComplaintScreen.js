@@ -27,15 +27,12 @@ import {
 import { ActivityIndicator } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { generatePlainHtmlContent } from "../../utils/htmlcontent";
+import { rMS, rS, rVS } from "../../styles/responsiveness";
 
 const EditComplaintScreen = ({ route }) => {
-  const {
-    complaint: complaints,
-    isLoading,
-    isError,
-    isSuccess,
-    message,
-  } = useSelector((state) => state.complaint);
+  const { complaint: complaints, isLoading } = useSelector(
+    (state) => state.complaint
+  );
 
   const navigation = useNavigation();
   const { openControlPanel } = route.params;
@@ -56,9 +53,9 @@ const EditComplaintScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
       <BackButton color={Colors.primary} content="Edit Previous Concern" />
       <View
@@ -288,10 +285,10 @@ const styles = {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
     fontFamily: "sen",
-    height: Platform.OS === "ios" ? 50 : 56,
+    padding: rMS(10),
+    fontSize: rMS(16),
+    height: rVS(40),
   },
   submitButton: {
     backgroundColor: "#478AFB",

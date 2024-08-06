@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../store/reducers/auth/authSlice";
 import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
+import { rS, rVS } from "../styles/responsiveness";
 
 const { width, height } = Dimensions.get("window");
 
@@ -109,9 +110,9 @@ const RegisterScreen = () => {
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
       <ToastManager
         textStyle={{ fontSize: 12 }}
-        height={50}
+        height={rVS(35)}
         position="top"
-        width={400}
+        width={rS(200)}
       />
 
       <KeyboardAvoidingView
