@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/forms/";
 // const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/forms/";
 
-const API_URL = "https://myhpibackend.uw.r.appspot.com/myhpi/api/v1/forms/";
+const API_URL = "https://myhpi-405813.wn.r.appspot.com/myhpi/api/v1/forms/";
 
 const register_form = async (form, userId, token) => {
   const config = {
@@ -40,7 +40,6 @@ const update_form = async (form, userId, token) => {
     },
   };
 
-  console.log(API_URL);
   const response = await axios.put(
     `${API_URL}${userId}/update_form`,
     form,

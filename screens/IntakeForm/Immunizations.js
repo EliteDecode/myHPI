@@ -1,25 +1,24 @@
-import React, { useLayoutEffect, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Platform,
-  Pressable,
-} from "react-native";
-import { Formik } from "formik";
-import RNPickerSelect from "react-native-picker-select";
-import Colors from "../../helpers/Colors";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Yup from "yup";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Formik } from "formik";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { TextInput } from "react-native-element-textinput";
+import RNPickerSelect from "react-native-picker-select";
 import { useSelector } from "react-redux";
 import BtnReturnIntakeForm from "../../components/BtnReturnIntakeForm";
+import Colors from "../../helpers/Colors";
 import { rMS, rVS } from "../../styles/responsiveness";
 import { immuneValidationSchema } from "../../utils/schemas";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput } from "react-native-element-textinput";
 
 const Immunizations = () => {
   const navigation = useNavigation();
@@ -29,13 +28,14 @@ const Immunizations = () => {
 
   const handleDateChange = (event, selectedDate, setFieldValue, vaccine) => {
     if (selectedDate) {
+      // You can format the date however you prefer
       setFieldValue(`${vaccine}.date`, selectedDate.toDateString());
     }
     setShowPicker(null);
   };
 
   const initialValues = {
-    tetanusLastVaccineYear: "",
+    tetanus: { selectedOption: null, date: "" },
     covid: { selectedOption: null, date: "" },
     hepatitisA: { selectedOption: null, date: "" },
     hepatitisB: { selectedOption: null, date: "" },
@@ -117,35 +117,9 @@ const Immunizations = () => {
             touched,
           }) => (
             <>
-              <View style={{ marginBottom: rMS(12) }}>
-                <Text style={{ color: Colors.gray2, marginBottom: rMS(5) }}>
-                  Tetanus (Year of Last Vaccine)
-                </Text>
-                <TextInput
-                  placeholder="Enter year of last vaccine"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#ccc",
-                    borderRadius: 12,
-                    padding: rMS(12),
-                    height: rVS(35),
-                  }}
-                  value={
-                    initialImmunization?.tetanusLastVaccineYear ||
-                    values.tetanusLastVaccineYear
-                  }
-                  onChangeText={handleChange("tetanusLastVaccineYear")}
-                />
-                {errors.tetanusLastVaccineYear &&
-                  touched.tetanusLastVaccineYear && (
-                    <Text style={{ color: "red" }}>
-                      {errors.tetanusLastVaccineYear}
-                    </Text>
-                  )}
-              </View>
-
               {/* Other immunizations */}
               {[
+                "tetanus",
                 "covid",
                 "hepatitisA",
                 "hepatitisB",
@@ -167,7 +141,10 @@ const Immunizations = () => {
                   </Text>
                   <View
                     className="my-2 border rounded-lg border-[#ccc]"
-                    style={{ height: rVS(35), borderRadius: 12 }}>
+                    style={{
+                      height: Platform.OS == "ios" ? 60 : 58,
+                      borderRadius: 12,
+                    }}>
                     <RNPickerSelect
                       placeholder={{ label: "Select", value: null }}
                       onValueChange={(value) =>
@@ -197,7 +174,7 @@ const Immunizations = () => {
                         {errors[vaccine]?.selectedOption}
                       </Text>
                     )}
-                    {values[vaccine].selectedOption === "Yes" && (
+                    {values[vaccine]?.selectedOption === "Yes" && (
                       <>
                         <Pressable
                           className=""
@@ -211,7 +188,7 @@ const Immunizations = () => {
                               borderColor: "#ccc",
                               borderRadius: 12,
                               padding: rMS(12),
-                              height: rVS(35),
+                              height: Platform.OS == "ios" ? 60 : 58,
                             }}
                             value={values[vaccine].date}
                             editable={false}
@@ -226,7 +203,11 @@ const Immunizations = () => {
                           <DateTimePicker
                             mode="date"
                             display="default"
-                            value={new Date()}
+                            value={
+                              values[vaccine].date
+                                ? new Date(values[vaccine].date)
+                                : new Date()
+                            }
                             onChange={(event, selectedDate) =>
                               handleDateChange(
                                 event,

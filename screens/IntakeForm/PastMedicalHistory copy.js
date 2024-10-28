@@ -19,7 +19,7 @@ import { textSchema } from "../../utils/schemas";
 import RNPickerSelect from "react-native-picker-select";
 import { rMS, rVS } from "../../styles/responsiveness";
 
-const FamilyHistory = () => {
+const PastMedicalHistory = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { user } = useSelector((state) => state.auth);
@@ -51,7 +51,7 @@ const FamilyHistory = () => {
       try {
         const loggedInUserId = user?.data?._id;
         const storedProblems = await AsyncStorage.getItem(
-          `familyHistoryProblems_${loggedInUserId}`
+          `pastMedicalProblems_${loggedInUserId}`
         );
 
         if (storedProblems) {
@@ -112,7 +112,7 @@ const FamilyHistory = () => {
         );
 
         await AsyncStorage.setItem(
-          `familyHistoryProblems_${loggedInUserId}`,
+          `pastMedicalProblems_${loggedInUserId}`,
           JSON.stringify(filteredProblems)
         );
 
@@ -127,7 +127,7 @@ const FamilyHistory = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", padding: rMS(16) }}>
-      <IntakeFormTitle title="Family History" />
+      <IntakeFormTitle title="Past Medical History" />
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -138,7 +138,7 @@ const FamilyHistory = () => {
               key={problem.id}
               className="flex flex-row items-center justify-center">
               <TextInput
-                placeholder="Enter history here."
+                placeholder="Enter problem here."
                 style={{
                   flex: 1,
                   borderWidth: 1,
@@ -160,7 +160,7 @@ const FamilyHistory = () => {
               }}>
               <RNPickerSelect
                 placeholder={{
-                  label: "Select Family Member",
+                  label: "Select relative's type...",
                   value: null,
                 }}
                 items={[
@@ -272,4 +272,4 @@ const FamilyHistory = () => {
   );
 };
 
-export default FamilyHistory;
+export default PastMedicalHistory;

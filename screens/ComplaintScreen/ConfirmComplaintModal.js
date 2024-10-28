@@ -25,7 +25,6 @@ const ConfirmComplaintModal = ({
 
   const data = generatePlainHtmlContent(user.data, form, complaints);
 
-  console.log(data);
   const options = {
     wordwrap: 130,
   };

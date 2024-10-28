@@ -14,6 +14,7 @@ import {
   generateHtmlContent1,
   generatePlainHtmlContent2,
 } from "../utils/htmlcontent";
+import { Alert } from "react-native";
 
 const useHomeOperations = ({ route }) => {
   const navigation = useNavigation();
@@ -48,7 +49,7 @@ const useHomeOperations = ({ route }) => {
         [
           {
             text: "Cancel",
-            onPress: () => console.log("Ask me later pressed"),
+            onPress: () => {},
           },
           {
             text: "Update Medical History",
@@ -115,7 +116,7 @@ const useHomeOperations = ({ route }) => {
       "Info",
       "Upload medical history to portal or email it by clicking below.",
       [
-        { text: "Cancel", onPress: () => console.log("Ask me later pressed") },
+        { text: "Cancel", onPress: () => {} },
         {
           text: "Paste Medical History",
           onPress: async () => {

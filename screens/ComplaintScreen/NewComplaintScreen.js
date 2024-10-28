@@ -25,7 +25,7 @@ import {
 } from "../../store/reducers/complaint/complaintSlice";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import ToastManager, { Toast } from "toastify-react-native";
-import { rMS, rVS } from "../../styles/responsiveness";
+import { rMS, rVS, rS } from "../../styles/responsiveness";
 const { compile } = require("html-to-text");
 
 const NewComplaintScreen = ({ route }) => {
@@ -34,10 +34,9 @@ const NewComplaintScreen = ({ route }) => {
   );
   const { user } = useSelector((state) => state.auth);
   const { form } = useSelector((state) => state.form);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
-
-  const dispatch = useDispatch();
 
   const saveComplaint = (values, resetForm) => {
     navigation.navigate("Preview Complaint", {
@@ -303,13 +302,7 @@ const NewComplaintScreen = ({ route }) => {
                 </View> */}
 
                 <TouchableOpacity
-                  onPress={
-                    isLoading
-                      ? () => {
-                          console.log("");
-                        }
-                      : handleSubmit
-                  }
+                  onPress={isLoading ? () => {} : handleSubmit}
                   style={{ marginBottom: 10, marginTop: 10 }}>
                   <View
                     style={{
@@ -360,7 +353,7 @@ const styles = {
     borderRadius: 8,
     padding: rMS(10),
     fontSize: rMS(16),
-    height: rVS(40),
+    height: Platform.OS == "ios" ? 60 : 58,
   },
   submitButton: {
     backgroundColor: "#478AFB",

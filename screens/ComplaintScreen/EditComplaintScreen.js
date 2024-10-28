@@ -288,7 +288,7 @@ const styles = {
     fontFamily: "sen",
     padding: rMS(10),
     fontSize: rMS(16),
-    height: rVS(40),
+    height: Platform.OS == "ios" ? 60 : 58,
   },
   submitButton: {
     backgroundColor: "#478AFB",

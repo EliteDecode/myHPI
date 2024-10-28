@@ -2,7 +2,7 @@
   "expo": {
     "name": "myHPI",
     "slug": "myhpi",
-    "version": "1.0.0",
+    "version": "1.3.3",
     "scheme": "myhpi",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myhpi.app",
@@ -51,8 +49,6 @@
     "updates": {
       "url": "https://u.expo.dev/7d0cbaa8-facc-4397-b360-83d3bb005ec8"
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "plugins": ["expo-font"]
   }
 }

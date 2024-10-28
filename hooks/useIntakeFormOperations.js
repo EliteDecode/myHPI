@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -55,17 +55,105 @@ const useIntakeFormOperations = ({ route }) => {
   };
 
   useEffect(() => {
-    fetchForms();
-    // dispatch(get_form());
-    // resetLocalStorage();
-    setLoading(true);
-    turnOff();
-    dispatch(reset());
+    const initializeForm = async () => {
+      await fetchForms(); // First check local storage
+      dispatch(get_form()); // Then fetch from online DB
+      setLoading(true);
+      turnOff();
+      dispatch(reset());
+    };
+
+    initializeForm();
   }, [route?.params]);
 
+  // Handle online form data
   useEffect(() => {
-    dispatch(fetchFormData(user?.data?._id));
-  }, []);
+    if (form) {
+      const syncFormToLocalStorage = async () => {
+        const fieldToStorageKey = {
+          travelHistory: ["travelHistories", "Travel History"],
+          surgicalHistory: ["surgicalHistoryProblems", "Surgical History"],
+          socialHistory: ["socialHistory", "Social History"],
+          sexualTransmittedDiseaseHistory: [
+            "sexuallyTransmittedDiseaseHistory",
+            "Sexual Transmitted Disease History",
+          ],
+          pastMedicalHistory: ["pastMedicalProblems", "Past Medical History"],
+          medications: ["medications", "Medications"],
+          immunizations: ["immunizations", "Immunizations"],
+          obstericHistory: [
+            "gynecologicalHistory",
+            "Obstetric / Gynecological History",
+          ],
+          familyHistory: ["familyHistoryProblems", "Family History"],
+          allergies: ["allergies", "Allergies"],
+          activeMedicalProblems: [
+            "activeMedicalProblems",
+            "Active Medical Problems",
+          ],
+        };
+
+        try {
+          for (const [formField, [storageKey, category]] of Object.entries(
+            fieldToStorageKey
+          )) {
+            if (form[formField]) {
+              await AsyncStorage.setItem(
+                `${storageKey}_${loggedInUserId}`,
+                JSON.stringify(form[formField])
+              );
+
+              // Update the local state
+              switch (storageKey) {
+                case "travelHistories":
+                  setTravelHistory(form[formField]);
+                  break;
+                case "surgicalHistoryProblems":
+                  setSurgicalHistory(form[formField]);
+                  break;
+                case "socialHistory":
+                  setSocialHistory(form[formField]);
+                  break;
+                case "sexuallyTransmittedDiseaseHistory":
+                  setSexualTransmittedDiseaseHistory(form[formField]);
+                  break;
+                case "pastMedicalProblems":
+                  setPastMedicalHistory(form[formField]);
+                  break;
+                case "medications":
+                  setMedications(form[formField]);
+                  break;
+                case "immunizations":
+                  setImmunizations(form[formField]);
+                  break;
+                case "gynecologicalHistory":
+                  setObstericHistory(form[formField]);
+                  break;
+                case "familyHistoryProblems":
+                  setFamilyHistory(form[formField]);
+                  break;
+                case "allergies":
+                  setAllergies(form[formField]);
+                  break;
+                case "activeMedicalProblems":
+                  setActiveMedicalProblems(form[formField]);
+                  break;
+              }
+
+              // Update completed categories
+              if (!completedCategories.includes(category)) {
+                setCompletedCategories((prev) => [...prev, category]);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error syncing form data to local storage:", error);
+        }
+      };
+
+      syncFormToLocalStorage();
+    }
+  }, [form]);
 
   useEffect(() => {
     if (
@@ -83,23 +171,6 @@ const useIntakeFormOperations = ({ route }) => {
         },
       ]);
     }
-
-    // if (isError && message) {
-    //   console.log(message);
-    //   Alert.alert(
-    //     "Information",
-    //     "Something went wrong",
-    //     [
-    //       {
-    //         text: "OK",
-    //         onPress: () => {
-    //           dispatch(reset());
-    //         },
-    //       },
-    //     ],
-    //     { cancelable: false }
-    //   );
-    // }
 
     if (isSuccess && message) {
       dispatch(reset());
@@ -142,7 +213,6 @@ const useIntakeFormOperations = ({ route }) => {
   }
 
   const resetLocalStorage = async () => {
-    // Define the mappings between form fields and AsyncStorage keys
     const fieldToStorageKey = {
       travelHistory: "travelHistories",
       surgicalHistory: "surgicalHistoryProblems",
@@ -160,14 +230,12 @@ const useIntakeFormOperations = ({ route }) => {
     for (const [field, storageKey] of Object.entries(fieldToStorageKey)) {
       const value = form?.[field];
 
-      // Check if the value is not null before setting it in AsyncStorage
       if (value !== null && value !== undefined) {
         await AsyncStorage.setItem(
           `${storageKey}_${loggedInUserId}`,
           JSON.stringify(value)
         );
       } else {
-        // If the value is null, remove the corresponding item from AsyncStorage
         await AsyncStorage.removeItem(`${storageKey}_${loggedInUserId}`);
       }
     }
@@ -260,7 +328,7 @@ const useIntakeFormOperations = ({ route }) => {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
+          onPress: () => {},
         },
         {
           text: "Proceed",

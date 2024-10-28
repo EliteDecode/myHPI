@@ -19,7 +19,6 @@ const ChangeEmailScreen = () => {
 
   // Function to handle the email change
   const handleChangeEmail = () => {
-    console.log("Email changed to:", newEmail);
     navigation.navigate("Confirm Email", {
       screen: route.name,
     });

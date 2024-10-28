@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import BackButton from "../../components/BackButton";
+import { rMS } from "../../styles/responsiveness";
 
 const AskKemiScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const AskKemiScreen = ({ route }) => {
       icon: (
         <MaterialIcons
           name="medical-services"
-          size={22}
+          size={rMS(18)}
           color={Colors.primary}
         />
       ),
@@ -36,7 +37,7 @@ const AskKemiScreen = ({ route }) => {
     {
       link: "Drug Info Request",
       title: "Medication Lookup",
-      icon: <Fontisto name="pills" size={22} color={Colors.primary} />,
+      icon: <Fontisto name="pills" size={rMS(18)} color={Colors.primary} />,
     },
     // {
     //   title: "Lab Test Request",
@@ -81,7 +82,7 @@ const AskKemiScreen = ({ route }) => {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  paddingVertical: 12,
+                  paddingVertical: rMS(8),
                 }}>
                 <View className="flex-row items-center justify-center space-x-2">
                   <View className=" px-1.5 py-1.5 rounded-full bg-white">

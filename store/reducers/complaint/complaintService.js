@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // const API_URL = "http://192.168.1.185:5000/myhpi/api/v1/complaints/";
-const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/complaints/";
-const API_URL2 =
-  "https://myhpibackend.uw.r.appspot.com/myhpi/api/v1/complaints/";
+// const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/complaints/";
+const API_URL =
+  "https://myhpi-405813.wn.r.appspot.com/myhpi/api/v1/complaints/";
 
 const new_complaint = async (complaint, userId, token) => {
   const config = {
@@ -28,7 +28,7 @@ const get_complaints = async (userId, token) => {
     },
   };
 
-  const response = await axios.get(`${API_URL2}complaint/${userId}`, config);
+  const response = await axios.get(`${API_URL}complaint/${userId}`, config);
 
   return response.data;
 };
@@ -41,7 +41,7 @@ const delete_complaints = async (userId, complaintId, token) => {
   };
 
   const response = await axios.delete(
-    `${API_URL2}complaint/${userId}/${complaintId}`,
+    `${API_URL}complaint/${userId}/${complaintId}`,
     config
   );
 

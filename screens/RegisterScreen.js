@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../store/reducers/auth/authSlice";
 import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
-import { rS, rVS } from "../styles/responsiveness";
+import { rMS, rS, rVS } from "../styles/responsiveness";
 
 const { width, height } = Dimensions.get("window");
 
@@ -130,13 +130,13 @@ const RegisterScreen = () => {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: Platform.OS === "ios" ? 50 : 40,
+              marginTop: Platform.OS === "ios" ? rMS(50) : rMS(40),
             }}>
             <Image
               source={require("../assets/images/onboarding/onBoarding1.png")}
               style={{
-                width: width / 1.4,
-                height: height / 4,
+                width: rS(width / 1.4),
+                height: rVS(height / 6),
                 resizeMode: "contain",
               }}
             />
@@ -238,34 +238,23 @@ const RegisterScreen = () => {
                     </View>
 
                     <View className=" mt-5 rounded-full flex flex-col items-center justify-center">
-                      {isLoading ? (
-                        <TouchableOpacity
-                          className="p-4 rounded-full flex flex-col items-center justify-center mt-2"
-                          style={{
-                            backgroundColor: Colors.primary,
-                            width: width / 2,
-                          }}>
-                          <Text
-                            className="text-white font-ca font-bold"
-                            style={{ fontFamily: "sen" }}>
+                      <TouchableOpacity
+                        onPress={isLoading ? null : handleSubmit}
+                        className="p-4 rounded-full flex flex-col items-center justify-center mt-2"
+                        style={{
+                          backgroundColor: Colors.primary,
+                          width: rS(width / 2),
+                        }}>
+                        <Text
+                          className="text-white font-ca font-bold"
+                          style={{ fontFamily: "sen" }}>
+                          {isLoading ? (
                             <ActivityIndicator size="small" color="#fff" />
-                          </Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          onPress={handleSubmit}
-                          className="p-4 rounded-full flex flex-col items-center justify-center mt-2"
-                          style={{
-                            backgroundColor: Colors.primary,
-                            width: width / 2,
-                          }}>
-                          <Text
-                            className="text-white font-ca font-bold"
-                            style={{ fontFamily: "sen" }}>
-                            Complete Registration
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                          ) : (
+                            "Complete Registration"
+                          )}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </>
@@ -296,20 +285,17 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   input: {
-    height: 55,
+    height: Platform.OS == "ios" ? rVS(42) : rVS(45),
     paddingHorizontal: 18,
     borderRadius: 30,
-
     borderColor: Colors.gray,
     backgroundColor: Colors.gray,
-
     marginTop: 8,
   },
   inputStyle: { fontSize: 14 },
   labelStyle: {
     fontSize: 12,
     position: "absolute",
-
     top: -8,
     paddingHorizontal: 8,
     marginLeft: -4,

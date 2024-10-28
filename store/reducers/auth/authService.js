@@ -2,10 +2,9 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const API_URL = "http://172.20.10.2:5000/myhpi/api/v1/users/";
-
 // const API_URL = "https://myhpi.onrender.com/myhpi/api/v1/users/";
 
-const API_URL = "https://myhpibackend.uw.r.appspot.com/myhpi/api/v1/users/";
+const API_URL = "https://myhpi-405813.wn.r.appspot.com/myhpi/api/v1/users/";
 //Register user
 const register = async (user) => {
   const response = await axios.post(`${API_URL}register`, user);
@@ -52,7 +51,6 @@ const login = async (user) => {
 //update
 
 const update = async (user, userId, token) => {
-  console.log(user);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -80,8 +78,6 @@ const getUser = async (userId, token) => {
   };
 
   const response = await axios.get(`${API_URL}${userId}`, config);
-
-  console.log(response.data);
 
   if (response.data) {
     await AsyncStorage.setItem("userData", JSON.stringify(response.data));
@@ -113,7 +109,6 @@ const Verify_update = async (userData) => {
       userData
     );
     await AsyncStorage.setItem("userData", JSON.stringify(data));
-    console.log(data);
 
     if (data.message.includes("verified")) {
       await AsyncStorage.setItem("userData", JSON.stringify(data));
@@ -129,7 +124,7 @@ const Verify_update = async (userData) => {
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-    console.log(message);
+
     return message;
   }
 };

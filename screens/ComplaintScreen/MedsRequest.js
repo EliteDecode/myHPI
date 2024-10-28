@@ -44,7 +44,6 @@ const MedsRequest = () => {
       })
       .catch((error) => {
         setError(error);
-        console.log(error);
       });
   };
   const removeProblemField = (id) => {
@@ -58,9 +57,7 @@ const MedsRequest = () => {
 
   const { openControlPanel } = route.params;
 
-  const handleSubmit = () => {
-    console.log(problems);
-  };
+  const handleSubmit = () => {};
 
   return (
     <>

@@ -141,7 +141,7 @@ const PreviewComplaintScreen = ({ route }) => {
           },
           {
             text: "Cancel",
-            onPress: () => console.log("Ask me later pressed"),
+            onPress: () => {},
           },
         ]
       );
@@ -181,7 +181,7 @@ const PreviewComplaintScreen = ({ route }) => {
 
         {
           text: "Cancel",
-          onPress: () => console.log("Ask me later pressed"),
+          onPress: () => {},
         },
       ]
     );
@@ -300,13 +300,7 @@ const PreviewComplaintScreen = ({ route }) => {
             <View className="mt-5 grid grid-cols-2 border-t-2 border-gray-200 py-5">
               {!copy && (
                 <TouchableOpacity
-                  onPress={
-                    isLoading && email
-                      ? () => {
-                          console.log("");
-                        }
-                      : handleSubmit
-                  }
+                  onPress={isLoading && email ? () => {} : handleSubmit}
                   style={{
                     marginBottom: 10,
                     marginTop: 10,
@@ -337,13 +331,7 @@ const PreviewComplaintScreen = ({ route }) => {
 
               {!send && (
                 <TouchableOpacity
-                  onPress={
-                    isLoading
-                      ? () => {
-                          console.log("");
-                        }
-                      : handleCopy
-                  }
+                  onPress={isLoading ? () => {} : handleCopy}
                   style={{
                     marginBottom: 10,
                     marginTop: 10,

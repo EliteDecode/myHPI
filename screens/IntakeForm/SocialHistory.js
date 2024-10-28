@@ -1,5 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { TextInput } from "react-native-element-textinput";
@@ -24,14 +30,15 @@ const SocialHistorySchema = Yup.object().shape({
     .required("Profession is required"),
   tobaccoUse: Yup.string().required("Tobacco Use is required"),
   quantity: Yup.string().when("tobaccoUse", {
-    is: "Yes",
-    then: Yup.string()
-      .required("Quantity is required when Tobacco Use is Yes")
-      .matches(
-        /^[a-zA-Z0-9\s,.';:]*$/,
-        "Text must not contain special characters"
-      )
-      .max(10, "Text must be at most 10 characters long"),
+    is: (value) => value === "Yes",
+    then: (schema) =>
+      schema
+        .required("Quantity is required when Tobacco Use is Yes")
+        .matches(
+          /^[a-zA-Z0-9\s,.';:]*$/,
+          "Text must not contain special characters"
+        )
+        .max(10, "Text must be at most 10 characters long"),
   }),
   recreationalDrugUse: Yup.string().required(
     "Recreational Drug Use is required"
@@ -142,7 +149,10 @@ const SocialHistory = () => {
                 </Text>
                 <View
                   className="my-2 border  border-[#ccc]"
-                  style={{ height: rVS(35), borderRadius: 12 }}>
+                  style={{
+                    height: Platform.OS == "ios" ? 60 : 58,
+                    borderRadius: 12,
+                  }}>
                   <RNPickerSelect
                     placeholder={{
                       label: "Select Marital Status",
@@ -189,7 +199,7 @@ const SocialHistory = () => {
                     borderColor: "#ccc",
                     borderRadius: 12,
                     padding: rMS(12),
-                    height: rVS(35),
+                    height: Platform.OS == "ios" ? 60 : 58,
                   }}
                   value={initialSocialHistory?.profession || values.profession}
                   onChangeText={handleChange("profession")}
@@ -210,8 +220,11 @@ const SocialHistory = () => {
                     `: ${initialSocialHistory?.tobaccoUse}`}
                 </Text>
                 <View
-                  className="my-2  rounded-lg border-[#ccc]"
-                  style={{ height: rVS(35), borderRadius: 12 }}>
+                  className="my-2 border rounded-lg border-[#ccc]"
+                  style={{
+                    height: Platform.OS == "ios" ? 60 : 58,
+                    borderRadius: 12,
+                  }}>
                   <RNPickerSelect
                     placeholder={{ label: "Select Tobacco Use", value: null }}
                     onValueChange={handleChange("tobaccoUse")}
@@ -221,8 +234,6 @@ const SocialHistory = () => {
                     ]}
                     style={{
                       inputIOS: {
-                        borderWidth: 1,
-                        borderColor: "#ccc",
                         borderRadius: 10,
                         paddingHorizontal: rMS(13),
                         paddingVertical: rMS(16),
@@ -256,7 +267,7 @@ const SocialHistory = () => {
                     style={{
                       borderRadius: 12,
                       padding: rMS(12),
-                      height: rVS(35),
+                      height: Platform.OS == "ios" ? 60 : 58,
                       borderWidth: 1,
                       borderColor: "#ccc",
                     }}
@@ -281,7 +292,10 @@ const SocialHistory = () => {
                 </Text>
                 <View
                   className="my-2 border rounded-lg border-[#ccc]"
-                  style={{ height: rVS(35), borderRadius: 12 }}>
+                  style={{
+                    height: Platform.OS == "ios" ? 60 : 58,
+                    borderRadius: 12,
+                  }}>
                   <RNPickerSelect
                     placeholder={{
                       label: "Select Recreational Drug Use",
@@ -323,7 +337,12 @@ const SocialHistory = () => {
                   {initialSocialHistory &&
                     `: ${initialSocialHistory?.sexualPartners}`}
                 </Text>
-                <View className="my-2 border rounded-lg border-[#ccc]">
+                <View
+                  className="my-2 border rounded-lg border-[#ccc]"
+                  style={{
+                    height: Platform.OS == "ios" ? 60 : 58,
+                    borderRadius: 12,
+                  }}>
                   <RNPickerSelect
                     placeholder={{
                       label: "Select Sexual Partners",

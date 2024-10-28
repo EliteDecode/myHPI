@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import formService from "./intakeFormService";
-import { useEffect } from "react";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { logout } from "../auth/authSlice";
+import formService from "./intakeFormService";
 
 const initialState = {
   form: null,
@@ -35,8 +34,10 @@ export const register_form = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }
@@ -62,8 +63,10 @@ export const update_form = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }
@@ -77,14 +80,17 @@ export const get_form = createAsyncThunk(
       const userId = thunkAPI.getState().auth.user.data._id;
       const token = thunkAPI.getState().auth.user.data.token;
       const data = await formService.get_form(userId, token);
+
       return data;
     } catch (error) {
       const message =
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }

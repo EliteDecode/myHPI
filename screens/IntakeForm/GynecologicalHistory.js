@@ -1,5 +1,11 @@
 import React, { useLayoutEffect, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -150,7 +156,7 @@ const GynecologicalHistory = () => {
                       borderColor: "#ccc",
                       borderRadius: 12,
                       padding: rMS(12),
-                      height: rVS(35),
+                      height: Platform.OS == "ios" ? 60 : 58,
                     }}
                     value={initials ? initials[field] : value}
                     onChangeText={handleChange(field)}

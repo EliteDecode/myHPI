@@ -59,7 +59,7 @@ const PreviousComplaintsScreen = ({ route }) => {
         {
           text: "Cancel",
           style: "cancel",
-          onPress: () => console.log("Edit Cancelled"),
+          onPress: () => {},
         },
         {
           text: "Proceed",
@@ -93,7 +93,7 @@ const PreviousComplaintsScreen = ({ route }) => {
         {
           text: "Cancel",
           style: "cancel",
-          onPress: () => console.log("delete Cancelled"),
+          onPress: () => {},
         },
         {
           text: "Proceed",
@@ -162,153 +162,160 @@ const PreviousComplaintsScreen = ({ route }) => {
           <>
             <BackButton color={Colors.primary} content="Previous Complaints" />
 
-            <ScrollView
-              style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
-              {accordions &&
-                accordions?.map((complaint) => (
-                  <View key={complaint._id} style={styles.accordionContainer}>
-                    <TouchableOpacity
-                      style={styles.accordionHeader}
-                      onPress={() => toggleAccordion(complaint._id)}>
-                      <View>
-                        <Text style={styles.accordionHeaderText}>
-                          {new Date(complaint?.createdAt).toLocaleDateString(
-                            "en-US",
-                            { day: "numeric", month: "short", year: "numeric" }
-                          )}
-                        </Text>
-                        <Text
-                          className="text-[14px]"
-                          style={{ color: Colors.gray, fontFamily: "sen" }}>
-                          BodyPart: {complaint.bodyPart}
-                        </Text>
-                      </View>
-                      <Icon
-                        name={
-                          activeAccordion === complaint._id
-                            ? "chevron-up"
-                            : "chevron-down"
-                        }
-                        size={24}
-                        color={Colors.white}
-                      />
-                    </TouchableOpacity>
-                    <Collapsible collapsed={activeAccordion !== complaint._id}>
-                      <View
-                        style={styles.accordionContent}
-                        className="p-5 space-y-4">
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>Location:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.bodyPart}
-                            </Text>
-                          </View>
-                          <View style={styles.gridItemEnd}>
-                            <Text style={styles.labelText}>Duration:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.duration}
-                            </Text>
-                          </View>
+            {complaint?.length > 0 && (
+              <ScrollView
+                style={{ flex: 1, backgroundColor: "white", padding: 16 }}>
+                {accordions &&
+                  accordions?.map((complaint) => (
+                    <View key={complaint._id} style={styles.accordionContainer}>
+                      <TouchableOpacity
+                        style={styles.accordionHeader}
+                        onPress={() => toggleAccordion(complaint._id)}>
+                        <View>
+                          <Text style={styles.accordionHeaderText}>
+                            {new Date(complaint?.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
+                          </Text>
+                          <Text
+                            className="text-[14px]"
+                            style={{ color: Colors.gray, fontFamily: "sen" }}>
+                            BodyPart: {complaint.bodyPart}
+                          </Text>
                         </View>
+                        <Icon
+                          name={
+                            activeAccordion === complaint._id
+                              ? "chevron-up"
+                              : "chevron-down"
+                          }
+                          size={24}
+                          color={Colors.white}
+                        />
+                      </TouchableOpacity>
+                      <Collapsible
+                        collapsed={activeAccordion !== complaint._id}>
+                        <View
+                          style={styles.accordionContent}
+                          className="p-5 space-y-4">
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>Location:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.bodyPart}
+                              </Text>
+                            </View>
+                            <View style={styles.gridItemEnd}>
+                              <Text style={styles.labelText}>Duration:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.duration}
+                              </Text>
+                            </View>
+                          </View>
 
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>Quality:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.quality}
-                            </Text>
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>Quality:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.quality}
+                              </Text>
+                            </View>
+                            <View style={styles.gridItemEnd}>
+                              <Text style={styles.labelText}>Severity:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.severity}
+                              </Text>
+                            </View>
                           </View>
-                          <View style={styles.gridItemEnd}>
-                            <Text style={styles.labelText}>Severity:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.severity}
-                            </Text>
-                          </View>
-                        </View>
 
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>Timing:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.timing}
-                            </Text>
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>Timing:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.timing}
+                              </Text>
+                            </View>
+                            <View style={styles.gridItemEnd}>
+                              <Text style={styles.labelText}>
+                                Modifying Factors(What eases the pain):
+                              </Text>
+                              <Text style={styles.detailText}>
+                                {complaint.modifyingFactors}
+                              </Text>
+                            </View>
                           </View>
-                          <View style={styles.gridItemEnd}>
-                            <Text style={styles.labelText}>
-                              Modifying Factors(What eases the pain):
-                            </Text>
-                            <Text style={styles.detailText}>
-                              {complaint.modifyingFactors}
-                            </Text>
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>Timing:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.timing}
+                              </Text>
+                            </View>
+                            <View style={styles.gridItemEnd}>
+                              <Text style={styles.labelText}>
+                                Modifying Factors(what makes the pain worse):
+                              </Text>
+                              <Text style={styles.detailText}>
+                                {complaint.modifyingFactorsWorse}
+                              </Text>
+                            </View>
                           </View>
-                        </View>
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>Timing:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.timing}
-                            </Text>
-                          </View>
-                          <View style={styles.gridItemEnd}>
-                            <Text style={styles.labelText}>
-                              Modifying Factors(what makes the pain worse):
-                            </Text>
-                            <Text style={styles.detailText}>
-                              {complaint.modifyingFactorsWorse}
-                            </Text>
-                          </View>
-                        </View>
 
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>
-                              Associated Symptoms:
-                            </Text>
-                            <Text style={styles.detailText}>
-                              {complaint.associatedSymptoms}
-                            </Text>
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>
+                                Associated Symptoms:
+                              </Text>
+                              <Text style={styles.detailText}>
+                                {complaint.associatedSymptoms}
+                              </Text>
+                            </View>
+                            <View style={styles.gridItemEnd}>
+                              <Text style={styles.labelText}>Context:</Text>
+                              <Text style={styles.detailText}>
+                                {complaint.context}
+                              </Text>
+                            </View>
                           </View>
-                          <View style={styles.gridItemEnd}>
-                            <Text style={styles.labelText}>Context:</Text>
-                            <Text style={styles.detailText}>
-                              {complaint.context}
-                            </Text>
-                          </View>
-                        </View>
 
-                        <View style={styles.gridContainer}>
-                          <View style={styles.gridItemStart}>
-                            <Text style={styles.labelText}>
-                              Recipient Email
-                            </Text>
-                            <Text style={styles.detailText}>
-                              {complaint.recipientEmail}
-                            </Text>
+                          <View style={styles.gridContainer}>
+                            <View style={styles.gridItemStart}>
+                              <Text style={styles.labelText}>
+                                Recipient Email
+                              </Text>
+                              <Text style={styles.detailText}>
+                                {complaint.recipientEmail}
+                              </Text>
+                            </View>
+                          </View>
+                          <View className="flex-row justify-between space-x-2">
+                            <MaterialIcons
+                              name="delete-forever"
+                              className="cursor-pointer"
+                              size={27}
+                              color={Colors.red}
+                              onPress={() => handleDelete(complaint._id)}
+                            />
+                            <MaterialIcons
+                              name="edit"
+                              size={27}
+                              color={Colors.primary}
+                              className="cursor-pointer"
+                              onPress={() => handleEdit(complaint._id)}
+                            />
                           </View>
                         </View>
-                        <View className="flex-row justify-between space-x-2">
-                          <MaterialIcons
-                            name="delete-forever"
-                            className="cursor-pointer"
-                            size={27}
-                            color={Colors.red}
-                            onPress={() => handleDelete(complaint._id)}
-                          />
-                          <MaterialIcons
-                            name="edit"
-                            size={27}
-                            color={Colors.primary}
-                            className="cursor-pointer"
-                            onPress={() => handleEdit(complaint._id)}
-                          />
-                        </View>
-                      </View>
-                    </Collapsible>
-                  </View>
-                ))}
-              <View style={{ marginBottom: 200 }} />
-            </ScrollView>
+                      </Collapsible>
+                    </View>
+                  ))}
+                <View style={{ marginBottom: 200 }} />
+              </ScrollView>
+            )}
           </>
         ) : !isLoading && isSuccess && complaint?.length === 0 ? (
           <>

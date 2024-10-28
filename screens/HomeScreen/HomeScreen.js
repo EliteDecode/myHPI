@@ -1,28 +1,25 @@
+import { FontAwesome, MaterialIcons, Octicons } from "@expo/vector-icons";
+import React from "react";
 import {
-  View,
+  Button,
+  Dimensions,
+  Image,
+  Modal,
+  SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
-  SafeAreaView,
-  Image,
-  Dimensions,
-  StyleSheet,
-  Button,
-  Modal,
-  Platform,
-  ScrollView,
+  View,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import React, { useEffect } from "react";
-import Colors from "../../helpers/Colors";
 import { CopilotStep, walkthroughable } from "react-native-copilot";
-const { compile } = require("html-to-text");
-import { MaterialIcons } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
 import NavigationBar from "../../components/NavigationBar";
+import Colors from "../../helpers/Colors";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import useHomeOperations from "../../hooks/useHomeOperations";
-import { styles } from "./style";
 import { rMS, rS, rVS } from "../../styles/responsiveness";
+import { styles } from "./style";
+import useIntakeFormOperations from "../../hooks/useIntakeFormOperations";
+const { compile } = require("html-to-text");
 const { width, height } = Dimensions.get("window");
 const CopilotText = walkthroughable(Text);
 const CopilotView = walkthroughable(View);
@@ -38,6 +35,8 @@ const HomeScreen = ({ route }) => {
     openControlPanel,
     user,
   } = useHomeOperations({ route });
+
+  const { loading } = useIntakeFormOperations({ route });
 
   return (
     <>
@@ -92,75 +91,86 @@ const HomeScreen = ({ route }) => {
               }}
             />
           </View>
-          <View className=" mt-1 rounded-full flex flex-col items-center justify-center">
-            <CopilotStep order={2} text="Add new complaints" name="form">
-              <CopilotView className="">
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={handleAddComplaint}
-                  className="px-3 py-3 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
-                  style={{
-                    backgroundColor: Colors.primary,
-                    width: rS(width * 0.75),
-                  }}>
-                  <Text
-                    className="text-white font-bold"
-                    style={{ fontSize: rMS(18) }}>
-                    {" "}
-                    Add new complaint
-                  </Text>
-                  <FontAwesome name="wpforms" size={20} color="#fff" />
-                </TouchableOpacity>
-              </CopilotView>
-            </CopilotStep>
-          </View>
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-              onPress={handleShareHistoryPress}>
-              <Image
-                source={require("../../assets/images/data-sharing.png")}
-                style={styles.image}
-              />
-              <CopilotStep
-                text="You can share your records"
-                order={3}
-                name="share">
-                <CopilotText style={styles.text}>Share Records</CopilotText>
-              </CopilotStep>
-            </TouchableOpacity>
+          <View>
+            <View className=" mt-1 rounded-full flex flex-col items-center justify-center">
+              <CopilotStep order={2} text="Add new complaints" name="form">
+                <CopilotView className="">
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={loading ? () => {} : handleAddComplaint}
+                    className="px-3 py-4 m-2 rounded-lg shadow-lg flex flex-row space-x-4 items-center justify-center mt-2"
+                    style={{
+                      backgroundColor: loading ? "#ccc" : Colors.primary,
+                      width: rS(width * 0.75),
+                    }}>
+                    <Text
+                      className="text-white font-bold"
+                      style={{ fontSize: rMS(18) }}>
+                      {" "}
+                      Add new complaint
+                    </Text>
 
-            <TouchableOpacity
-              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-              onPress={handleAskKeMiPress}>
-              <Image
-                source={require("../../assets/images/confusion.png")}
-                style={styles.image}
-              />
-              <CopilotStep
-                text="You can ask your assitstant KEMI"
-                order={4}
-                name="kemi">
-                <CopilotText style={styles.text}>Ask KeMi</CopilotText>
+                    {loading ? (
+                      <FontAwesome
+                        name="spinner"
+                        size={20}
+                        color={Colors.white}
+                      />
+                    ) : (
+                      <FontAwesome name="plus" size={20} color={Colors.white} />
+                    )}
+                  </TouchableOpacity>
+                </CopilotView>
               </CopilotStep>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.box, { backgroundColor: "#EAEAEA" }]}
-              onPress={handleAddMedicalHistory}>
-              <Image
-                source={require("../../assets/images/profile.png")}
-                style={styles.image}
-              />
-              <CopilotStep
-                text="Please update your medical history"
-                order={1}
-                name="profile">
-                <CopilotText style={styles.text}>Medical History </CopilotText>
-              </CopilotStep>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+                onPress={handleShareHistoryPress}>
+                <Image
+                  source={require("../../assets/images/data-sharing.png")}
+                  style={styles.image}
+                />
+                <CopilotStep
+                  text="You can share your records"
+                  order={3}
+                  name="share">
+                  <CopilotText style={styles.text}>Share Records</CopilotText>
+                </CopilotStep>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+                onPress={handleAskKeMiPress}>
+                <Image
+                  source={require("../../assets/images/confusion.png")}
+                  style={styles.image}
+                />
+                <CopilotStep
+                  text="You can ask your assitstant KEMI"
+                  order={4}
+                  name="kemi">
+                  <CopilotText style={styles.text}>Ask KeMi</CopilotText>
+                </CopilotStep>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.box, { backgroundColor: "#EAEAEA" }]}
+                onPress={handleAddMedicalHistory}>
+                <Image
+                  source={require("../../assets/images/profile.png")}
+                  style={styles.image}
+                />
+                <CopilotStep
+                  text="Please update your medical history"
+                  order={1}
+                  name="profile">
+                  <CopilotText style={styles.text}>
+                    Medical History{" "}
+                  </CopilotText>
+                </CopilotStep>
+              </TouchableOpacity>
+            </View>
           </View>
-          {/* <View
-            style={{ marginBottom: Platform.OS === "ios" ? 300 : 200 }}></View> */}
         </ScrollView>
       </SafeAreaView>
     </>

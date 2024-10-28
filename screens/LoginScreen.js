@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../store/reducers/auth/authSlice";
 const { width, height } = Dimensions.get("window");
 import ToastManager, { Toast } from "toastify-react-native";
-import { rS, rVS } from "../styles/responsiveness";
+import { rMS, rS, rVS } from "../styles/responsiveness";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -117,14 +117,14 @@ const LoginScreen = () => {
                 <Image
                   source={require("../assets/images/onboarding/onBoarding2.png")}
                   style={{
-                    width: width / 1.4,
-                    height: height / 4,
+                    width: rS(width / 1.4),
+                    height: rVS(height / 6),
                     resizeMode: "contain",
                   }}
                 />
                 <Text
                   style={{
-                    fontSize: 30,
+                    fontSize: rMS(30),
                     fontWeight: "bold",
                     color: Colors.dark,
                   }}>
@@ -138,7 +138,7 @@ const LoginScreen = () => {
               <View style={styles.container}>
                 <TextInput
                   value={values.Email}
-                  showIcon={false}
+                  showIcon={true}
                   onChangeText={handleChange("Email")}
                   onBlur={handleBlur("Email")}
                   style={styles.input}
@@ -168,7 +168,7 @@ const LoginScreen = () => {
 
                 <TextInput
                   value={values.Password}
-                  showIcon={false}
+                  showIcon={true}
                   onChangeText={handleChange("Password")}
                   onBlur={handleBlur("Password")}
                   style={styles.input}
@@ -259,11 +259,11 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    marginTop: 15,
+    padding: rMS(15),
+    marginTop: rMS(15),
   },
   input: {
-    height: 55,
+    height: Platform.OS == "ios" ? rVS(42) : rVS(45),
     paddingHorizontal: 18,
     borderRadius: 30,
     fontSize: 14,

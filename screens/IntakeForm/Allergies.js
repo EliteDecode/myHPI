@@ -1,5 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native-element-textinput";
 import { Ionicons } from "@expo/vector-icons";
@@ -129,7 +135,7 @@ const Allergies = () => {
                 borderRadius: 12,
                 padding: rMS(12),
                 marginBottom: rMS(12),
-                height: rVS(35),
+                height: Platform.OS == "ios" ? 60 : 58,
               }}
               value={problem.value}
               onChangeText={(text) => handleProblemChange(problem.id, text)}

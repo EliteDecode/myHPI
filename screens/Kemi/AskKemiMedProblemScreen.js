@@ -50,7 +50,6 @@ const AskKemiMedProblemScreen = ({ route }) => {
 
   const fetchMedicalProblem = async (code) => {
     setLoading(true);
-    console.log(code);
 
     try {
       const response = await axios.get(
@@ -61,7 +60,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
         setLoading(false);
         setMedicalProblem(response.data);
         scrollViewRef.current.scrollToEnd({ animated: true });
-        console.log(response.data);
+
         await AsyncStorage.setItem(
           `kemiMedicalProblem_${user?.data?._id}`,
           JSON.stringify(response.data)
@@ -69,7 +68,6 @@ const AskKemiMedProblemScreen = ({ route }) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -193,7 +191,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                           <View className="w-[80%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
@@ -206,7 +204,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                           <View className="w-[80%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
@@ -220,7 +218,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                           <View className="w-[80%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text
@@ -259,7 +257,7 @@ const AskKemiMedProblemScreen = ({ route }) => {
                 <View className="w-[80%] flex p-4">
                   <TouchableOpacity
                     className="rounded-t-xl rounded-r-xl"
-                    onPress={() => console.log(``)}
+                    onPress={() => {}}
                     style={styles.tagContainer2}>
                     <TouchableOpacity
                       className=" my-2 border-white shadow-lg rounded-xl p-3 bg-white"

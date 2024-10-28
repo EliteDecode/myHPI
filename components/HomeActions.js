@@ -1,20 +1,15 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
   Image,
-  StyleSheet,
-  TouchableOpacity,
   Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import {
-  TourGuideProvider,
-  TourGuideZone,
-  TourGuideZoneByPosition,
-  useTourGuideController,
-} from "rn-tourguide";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 const HomeActions = () => {
   // Use Hooks to control!
@@ -26,9 +21,9 @@ const HomeActions = () => {
     }
   }, [canStart]);
 
-  const handleOnStart = () => console.log("start");
-  const handleOnStop = () => console.log("stop");
-  const handleOnStepChange = () => console.log(`stepChange`);
+  const handleOnStart = () => {};
+  const handleOnStop = () => {};
+  const handleOnStepChange = () => {};
 
   React.useEffect(() => {
     eventEmitter.on("start", handleOnStart);

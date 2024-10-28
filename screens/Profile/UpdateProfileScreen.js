@@ -10,6 +10,7 @@ import {
   Pressable,
   Platform,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Formik } from "formik";
 import { TextInput } from "react-native-element-textinput";
@@ -26,6 +27,7 @@ import { reset, update } from "../../store/reducers/auth/authSlice";
 import NavigationBar from "../../components/NavigationBar";
 import RNPickerSelect from "react-native-picker-select";
 import { rMS, rS, rVS } from "../../styles/responsiveness";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const UpdateProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -35,8 +37,11 @@ const UpdateProfileScreen = ({ route }) => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  const [selectedDate, setSelectedDate] = useState(new Date(user?.data?.DOB));
-  const [dateInput, setDateInput] = useState();
+  const [selectedDate, setSelectedDate] = useState(
+    user?.data?.DOB ? new Date(user.data.DOB) : new Date()
+  );
+
+  const [dateInput, setDateInput] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
 
   const handleDateChange = ({ type }, selected) => {
@@ -125,434 +130,895 @@ const UpdateProfileScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <View style={styles.container}>
-        <ToastManager
-          textStyle={{ fontSize: rMS(12) }}
-          height={rVS(50)}
-          position="top"
-          width={rS(400)}
-        />
-        <View
-          className=""
-          style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(route.params.screen || "Home")}
-            className="mt-5 flex-row space-x-2 items-center ">
-            <Ionicons
-              name="arrow-back"
-              size={rMS(28)}
-              color={Colors.white}
-              style={{ marginLeft: rMS(16) }}
+      {Platform.OS == "ios" ? (
+        <KeyboardAwareScrollView>
+          <View style={styles.container}>
+            <ToastManager
+              textStyle={{ fontSize: rMS(12) }}
+              height={rVS(35)}
+              position="top"
+              width={rS(300)}
             />
-          </TouchableOpacity>
-        </View>
-        <View
-          className=" bg-white py-3  h-screen -mt-16"
-          style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}>
-          <ScrollView
-            className="py-5 px-5"
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
-            <View className="items-center justify-center mt-10 mb-5">
-              <Image
-                source={require("../../assets/images/confirm.jpg")}
-                style={{
-                  width: 150,
-                  height: 150,
-                  borderRadius: 100,
-                  marginBottom: 10,
-                  borderColor: Colors.primary,
-                  borderWidth: 4,
-                }}
-              />
-              <View className="flex-row space-x-2">
-                <Text
-                  className="font-bold text-[19px] "
-                  style={{ fontFamily: "ca", color: Colors.gray2 }}>
-                  {user?.data?.Firstname} {user?.data?.Lastname}
-                </Text>
-              </View>
-              <Text
-                className="mt-0.5"
-                style={{ fontFamily: "sen", color: Colors.gray2 }}>
-                {user?.data?.Email}
-              </Text>
+            <View
+              className=""
+              style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(route.params.screen || "Home")
+                }
+                className="mt-5 flex-row space-x-2 items-center ">
+                <Ionicons
+                  name="arrow-back"
+                  size={rMS(28)}
+                  color={Colors.white}
+                  style={{ marginLeft: rMS(16) }}
+                />
+              </TouchableOpacity>
             </View>
-            <Formik
-              initialValues={initialValues}
-              enableReinitialize={true}
-              validationSchema={updateProfileSchema}
-              onSubmit={onSubmit}>
-              {({
-                values,
-                handleChange,
-                handleSubmit,
-                errors,
-                touched,
-                setFieldValue,
-              }) => (
-                <>
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>First Name:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={user?.data?.Firstname || values.Firstname}
-                      placeholder="Firstname"
-                      onChangeText={handleChange("Firstname")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="user"
-                          size={rMS(20)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Firstname && errors.Firstname && (
-                      <Text style={styles.errorText}>{errors.Firstname}</Text>
-                    )}
+            <View
+              className=" bg-white py-3  h-screen -mt-16"
+              style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}>
+              <ScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+                keyboardShouldPersistTaps="handled"
+                className="py-5 px-5"
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}>
+                <View className="items-center justify-center mt-10 mb-5">
+                  <Image
+                    source={require("../../assets/images/confirm.jpg")}
+                    style={{
+                      width: 150,
+                      height: 150,
+                      borderRadius: 100,
+                      marginBottom: 10,
+                      borderColor: Colors.primary,
+                      borderWidth: 4,
+                    }}
+                  />
+                  <View className="flex-row space-x-2">
+                    <Text
+                      className="font-bold text-[19px] "
+                      style={{ fontFamily: "ca", color: Colors.gray2 }}>
+                      {user?.data?.Firstname} {user?.data?.Lastname}
+                    </Text>
                   </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>Middle Name:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={user?.data?.Middlename || values.Middlename}
-                      onChangeText={handleChange("Middlename")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="user"
-                          size={rMS(20)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Middlename && errors.Middlename && (
-                      <Text style={styles.errorText}>{errors.Middlename}</Text>
-                    )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>Last/Surname Name:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={user?.data?.Lastname || values.Lastname}
-                      onChangeText={handleChange("Lastname")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="user"
-                          size={rMS(20)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Lastname && errors.Lastname && (
-                      <Text style={styles.errorText}>{errors.Lastname}</Text>
-                    )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>DOB:</Text>
-
-                    {!showPicker && (
-                      <Pressable onPress={TogglePicker}>
+                  <Text
+                    className="mt-0.5"
+                    style={{ fontFamily: "sen", color: Colors.gray2 }}>
+                    {user?.data?.Email}
+                  </Text>
+                </View>
+                <Formik
+                  initialValues={initialValues}
+                  enableReinitialize={true}
+                  validationSchema={updateProfileSchema}
+                  onSubmit={onSubmit}>
+                  {({
+                    values,
+                    handleChange,
+                    handleSubmit,
+                    errors,
+                    touched,
+                    setFieldValue,
+                  }) => (
+                    <>
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>First Name:</Text>
                         <TextInput
                           style={styles.input}
                           inputStyle={{ fontSize: rMS(15) }}
-                          value={selectedDate.toDateString()}
-                          showIcon={false}
-                          editable={false}
-                          onPressIn={TogglePicker}
+                          value={user?.data?.Firstname || values.Firstname}
+                          placeholder="Firstname"
+                          onChangeText={handleChange("Firstname")}
                           renderLeftIcon={() => (
                             <FontAwesome
-                              name="calendar-plus-o"
+                              name="user"
                               size={rMS(20)}
                               color={Colors.primary}
                               style={{ width: rS(25), opacity: 0.6 }}
                             />
                           )}
                         />
-                      </Pressable>
-                    )}
-
-                    {showPicker && (
-                      <DateTimePicker
-                        style={styles.input2}
-                        mode="date"
-                        display="inline"
-                        value={selectedDate}
-                        onChange={(event, selectedDate) =>
-                          handleDateChange(event, selectedDate, setFieldValue)
-                        }
-                        maximumDate={new Date()}
-                      />
-                    )}
-
-                    {showPicker && Platform.OS === "ios" && (
-                      <View className="flex items-center flex-row justify-around space-x-4">
-                        <TouchableOpacity
-                          className=" w-1/2"
-                          onPress={TogglePicker}
-                          style={{ marginBottom: 10, marginTop: 10 }}>
-                          <View
-                            style={{
-                              backgroundColor: Colors.dark,
-                              borderRadius: 30,
-                              paddingVertical: 12,
-                              alignItems: "center",
-                            }}>
-                            <Text
-                              style={{
-                                color: "white",
-                                fontFamily: "sen",
-                                fontSize: rMS(16),
-                                fontWeight: "bold",
-                              }}>
-                              Cancel
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          className=" w-1/2"
-                          onPress={ConfirmIosDate}
-                          style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
-                          <View
-                            style={{
-                              backgroundColor: Colors.primary,
-                              borderRadius: 30,
-                              paddingVertical: rMS(12),
-                              alignItems: "center",
-                            }}>
-                            <Text
-                              style={{
-                                color: "white",
-                                fontFamily: "sen",
-                                fontSize: rMS(16),
-                                fontWeight: "bold",
-                              }}>
-                              Confirm
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
+                        {touched.Firstname && errors.Firstname && (
+                          <Text style={styles.errorText}>
+                            {errors.Firstname}
+                          </Text>
+                        )}
                       </View>
-                    )}
 
-                    {touched.DOB && errors.DOB && (
-                      <Text style={styles.errorText}>{errors.DOB}</Text>
-                    )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>SEX assigned at birth:</Text>
-                    <View
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}>
-                      <View className="flex-row items-center space-x-2">
-                        <FontAwesome
-                          name="user-plus"
-                          size={rMS(19)}
-                          color={Colors.primary}
-                          style={{
-                            width: rS(25),
-                            opacity: 0.6,
-                            marginTop: "5%",
-                          }}
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>Middle Name:</Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={user?.data?.Middlename || values.Middlename}
+                          onChangeText={handleChange("Middlename")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="user"
+                              size={rMS(20)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
                         />
-                        <View className="w-[98%] ">
-                          <RNPickerSelect
-                            placeholder={{ label: "Select", value: null }}
-                            onValueChange={handleChange("Sex")}
-                            items={[
-                              { label: "Male", value: "Male" },
-                              { label: "Female", value: "Female" },
-                              { label: "Others", value: "Others" },
-                            ]}
-                            style={{
-                              inputIOS: {
-                                borderRadius: 10,
-                                marginTop: rMS(15),
-                              },
-                              inputAndroid: {
-                                borderRadius: 4,
-                              },
-                            }}
-                            value={values.Sex}
+                        {touched.Middlename && errors.Middlename && (
+                          <Text style={styles.errorText}>
+                            {errors.Middlename}
+                          </Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>Last/Surname Name:</Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={user?.data?.Lastname || values.Lastname}
+                          onChangeText={handleChange("Lastname")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="user"
+                              size={rMS(20)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.Lastname && errors.Lastname && (
+                          <Text style={styles.errorText}>
+                            {errors.Lastname}
+                          </Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>DOB:</Text>
+
+                        {!showPicker && (
+                          <Pressable onPress={TogglePicker}>
+                            <TextInput
+                              style={styles.input}
+                              inputStyle={{ fontSize: rMS(15) }}
+                              value={selectedDate.toDateString()}
+                              showIcon={false}
+                              editable={false}
+                              onPressIn={TogglePicker}
+                              renderLeftIcon={() => (
+                                <FontAwesome
+                                  name="calendar-plus-o"
+                                  size={rMS(20)}
+                                  color={Colors.primary}
+                                  style={{ width: rS(25), opacity: 0.6 }}
+                                />
+                              )}
+                            />
+                          </Pressable>
+                        )}
+
+                        {showPicker && (
+                          <DateTimePicker
+                            style={styles.input2}
+                            mode="date"
+                            display="inline"
+                            value={selectedDate}
+                            onChange={(event, selectedDate) =>
+                              handleDateChange(
+                                event,
+                                selectedDate,
+                                setFieldValue
+                              )
+                            }
+                            maximumDate={new Date()}
                           />
+                        )}
+
+                        {showPicker && Platform.OS === "ios" && (
+                          <View className="flex items-center flex-row justify-around space-x-4">
+                            <TouchableOpacity
+                              className=" w-1/2"
+                              onPress={TogglePicker}
+                              style={{ marginBottom: 10, marginTop: 10 }}>
+                              <View
+                                style={{
+                                  backgroundColor: Colors.dark,
+                                  borderRadius: 30,
+                                  paddingVertical: 12,
+                                  alignItems: "center",
+                                }}>
+                                <Text
+                                  style={{
+                                    color: "white",
+                                    fontFamily: "sen",
+                                    fontSize: rMS(16),
+                                    fontWeight: "bold",
+                                  }}>
+                                  Cancel
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              className=" w-1/2"
+                              onPress={ConfirmIosDate}
+                              style={{
+                                marginBottom: rMS(10),
+                                marginTop: rMS(10),
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: Colors.primary,
+                                  borderRadius: 30,
+                                  paddingVertical: rMS(12),
+                                  alignItems: "center",
+                                }}>
+                                <Text
+                                  style={{
+                                    color: "white",
+                                    fontFamily: "sen",
+                                    fontSize: rMS(16),
+                                    fontWeight: "bold",
+                                  }}>
+                                  Confirm
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        )}
+
+                        {touched.DOB && errors.DOB && (
+                          <Text style={styles.errorText}>{errors.DOB}</Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>SEX assigned at birth:</Text>
+                        <View
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}>
+                          <View className="flex-row items-center space-x-2">
+                            <FontAwesome
+                              name="user-plus"
+                              size={rMS(19)}
+                              color={Colors.primary}
+                              style={{
+                                width: rS(25),
+                                opacity: 0.6,
+                                marginTop: "5%",
+                              }}
+                            />
+                            <View className="w-[98%] ">
+                              <RNPickerSelect
+                                placeholder={{ label: "Select", value: null }}
+                                onValueChange={handleChange("Sex")}
+                                items={[
+                                  { label: "Male", value: "Male" },
+                                  { label: "Female", value: "Female" },
+                                  { label: "Others", value: "Others" },
+                                ]}
+                                style={{
+                                  inputIOS: {
+                                    borderRadius: 10,
+                                    marginTop: rMS(15),
+                                  },
+                                  inputAndroid: {
+                                    borderRadius: 4,
+                                  },
+                                }}
+                                value={values.Sex}
+                              />
+                            </View>
+                          </View>
+                        </View>
+                        {touched.Sex && errors.Sex && (
+                          <Text style={{ color: "red" }}>{errors.Sex}</Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>Address:</Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={user?.data?.Address || values.Address}
+                          onChangeText={handleChange("Address")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="location-arrow"
+                              size={rMS(22)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.Address && errors.Address && (
+                          <Text style={styles.errorText}>{errors.Address}</Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>Mobile phone:</Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          keyboardType="numeric"
+                          value={user?.data?.Phone || values.Phone}
+                          onChangeText={handleChange("Phone")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="phone"
+                              size={rMS(20)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.Phone && errors.Phone && (
+                          <Text style={styles.errorText}>{errors.Phone}</Text>
+                        )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>
+                          Name of emergency contact:
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={
+                            user?.data?.EmergencyContactName ||
+                            values.EmergencyContactName
+                          }
+                          onChangeText={handleChange("EmergencyContactName")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="user-md"
+                              size={rMS(20)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.EmergencyContactName &&
+                          errors.EmergencyContactName && (
+                            <Text style={styles.errorText}>
+                              {errors.EmergencyContactName}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>
+                          Emergency contact mobile phone:
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          keyboardType="numeric"
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={
+                            user?.data?.EmergencyContactPhone ||
+                            values.EmergencyContactPhone
+                          }
+                          onChangeText={handleChange("EmergencyContactPhone")}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="mobile-phone"
+                              size={rMS(23)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.EmergencyContactPhone &&
+                          errors.EmergencyContactPhone && (
+                            <Text style={styles.errorText}>
+                              {errors.EmergencyContactPhone}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View style={styles.formGroup}>
+                        <Text style={styles.label}>
+                          Relationship to Emergency Contact:
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          inputStyle={{ fontSize: rMS(15) }}
+                          value={
+                            user?.data?.EmergencyContactRelationship ||
+                            values.EmergencyContactRelationship
+                          }
+                          onChangeText={handleChange(
+                            "EmergencyContactRelationship"
+                          )}
+                          renderLeftIcon={() => (
+                            <FontAwesome
+                              name="users"
+                              size={rMS(18)}
+                              color={Colors.primary}
+                              style={{ width: rS(25), opacity: 0.6 }}
+                            />
+                          )}
+                        />
+                        {touched.EmergencyContactRelationship &&
+                          errors.EmergencyContactRelationship && (
+                            <Text style={styles.errorText}>
+                              {errors.EmergencyContactRelationship}
+                            </Text>
+                          )}
+                      </View>
+                      <TouchableOpacity
+                        onPress={isLoading ? null : handleSubmit}
+                        style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
+                        <View
+                          style={{
+                            backgroundColor: Colors.primary,
+                            borderRadius: 30,
+                            paddingVertical: rMS(18),
+                            alignItems: "center",
+                          }}>
+                          <Text
+                            style={{
+                              color: "white",
+                              fontFamily: "sen",
+                              fontSize: rMS(16),
+                              fontWeight: "bold",
+                            }}>
+                            {isLoading ? (
+                              <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                              "Update Profile"
+                            )}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </Formik>
+                <View style={{ marginBottom: rMS(500) }} />
+              </ScrollView>
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+      ) : (
+        <View style={styles.container}>
+          <ToastManager
+            textStyle={{ fontSize: rMS(12) }}
+            height={rVS(35)}
+            position="top"
+            width={rS(300)}
+          />
+          <View
+            className=""
+            style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(route.params.screen || "Home")}
+              className="mt-5 flex-row space-x-2 items-center ">
+              <Ionicons
+                name="arrow-back"
+                size={rMS(28)}
+                color={Colors.white}
+                style={{ marginLeft: rMS(16) }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            className=" bg-white py-3  h-screen -mt-10"
+            style={{ borderTopEndRadius: 50, borderTopStartRadius: 50 }}>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+              className="py-5 px-5"
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}>
+              <View className="items-center justify-center mt-10 mb-5">
+                <Image
+                  source={require("../../assets/images/confirm.jpg")}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 100,
+                    marginBottom: 10,
+                    borderColor: Colors.primary,
+                    borderWidth: 4,
+                  }}
+                />
+                <View className="flex-row space-x-2">
+                  <Text
+                    className="font-bold text-[19px] "
+                    style={{ fontFamily: "ca", color: Colors.gray2 }}>
+                    {user?.data?.Firstname} {user?.data?.Lastname}
+                  </Text>
+                </View>
+                <Text
+                  className="mt-0.5"
+                  style={{ fontFamily: "sen", color: Colors.gray2 }}>
+                  {user?.data?.Email}
+                </Text>
+              </View>
+              <Formik
+                initialValues={initialValues}
+                enableReinitialize={true}
+                validationSchema={updateProfileSchema}
+                onSubmit={onSubmit}>
+                {({
+                  values,
+                  handleChange,
+                  handleSubmit,
+                  errors,
+                  touched,
+                  setFieldValue,
+                }) => (
+                  <>
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>First Name:</Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={user?.data?.Firstname || values.Firstname}
+                        placeholder="Firstname"
+                        onChangeText={handleChange("Firstname")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="user"
+                            size={rMS(20)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.Firstname && errors.Firstname && (
+                        <Text style={styles.errorText}>{errors.Firstname}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>Middle Name:</Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={user?.data?.Middlename || values.Middlename}
+                        onChangeText={handleChange("Middlename")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="user"
+                            size={rMS(20)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.Middlename && errors.Middlename && (
+                        <Text style={styles.errorText}>
+                          {errors.Middlename}
+                        </Text>
+                      )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>Last/Surname Name:</Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={user?.data?.Lastname || values.Lastname}
+                        onChangeText={handleChange("Lastname")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="user"
+                            size={rMS(20)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.Lastname && errors.Lastname && (
+                        <Text style={styles.errorText}>{errors.Lastname}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>DOB:</Text>
+
+                      {!showPicker && (
+                        <Pressable onPress={TogglePicker}>
+                          <TextInput
+                            style={styles.input}
+                            inputStyle={{ fontSize: rMS(15) }}
+                            value={selectedDate.toDateString()}
+                            showIcon={false}
+                            editable={false}
+                            onPressIn={TogglePicker}
+                            renderLeftIcon={() => (
+                              <FontAwesome
+                                name="calendar-plus-o"
+                                size={rMS(20)}
+                                color={Colors.primary}
+                                style={{ width: rS(25), opacity: 0.6 }}
+                              />
+                            )}
+                          />
+                        </Pressable>
+                      )}
+
+                      {showPicker && (
+                        <DateTimePicker
+                          style={styles.input2}
+                          mode="date"
+                          display="inline"
+                          value={selectedDate}
+                          onChange={(event, selectedDate) =>
+                            handleDateChange(event, selectedDate, setFieldValue)
+                          }
+                          maximumDate={new Date()}
+                        />
+                      )}
+
+                      {showPicker && Platform.OS === "ios" && (
+                        <View className="flex items-center flex-row justify-around space-x-4">
+                          <TouchableOpacity
+                            className=" w-1/2"
+                            onPress={TogglePicker}
+                            style={{ marginBottom: 10, marginTop: 10 }}>
+                            <View
+                              style={{
+                                backgroundColor: Colors.dark,
+                                borderRadius: 30,
+                                paddingVertical: 12,
+                                alignItems: "center",
+                              }}>
+                              <Text
+                                style={{
+                                  color: "white",
+                                  fontFamily: "sen",
+                                  fontSize: rMS(16),
+                                  fontWeight: "bold",
+                                }}>
+                                Cancel
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            className=" w-1/2"
+                            onPress={ConfirmIosDate}
+                            style={{
+                              marginBottom: rMS(10),
+                              marginTop: rMS(10),
+                            }}>
+                            <View
+                              style={{
+                                backgroundColor: Colors.primary,
+                                borderRadius: 30,
+                                paddingVertical: rMS(12),
+                                alignItems: "center",
+                              }}>
+                              <Text
+                                style={{
+                                  color: "white",
+                                  fontFamily: "sen",
+                                  fontSize: rMS(16),
+                                  fontWeight: "bold",
+                                }}>
+                                Confirm
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+
+                      {touched.DOB && errors.DOB && (
+                        <Text style={styles.errorText}>{errors.DOB}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>SEX assigned at birth:</Text>
+                      <View
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}>
+                        <View className="flex-row items-center space-x-2">
+                          <FontAwesome
+                            name="user-plus"
+                            size={rMS(19)}
+                            color={Colors.primary}
+                            style={{
+                              width: rS(25),
+                              opacity: 0.6,
+                              marginTop: "5%",
+                            }}
+                          />
+                          <View className="w-[98%] ">
+                            <RNPickerSelect
+                              placeholder={{ label: "Select", value: null }}
+                              onValueChange={handleChange("Sex")}
+                              items={[
+                                { label: "Male", value: "Male" },
+                                { label: "Female", value: "Female" },
+                                { label: "Others", value: "Others" },
+                              ]}
+                              style={{
+                                inputIOS: {
+                                  borderRadius: 10,
+                                  marginTop: rMS(15),
+                                },
+                                inputAndroid: {
+                                  borderRadius: 4,
+                                },
+                              }}
+                              value={values.Sex}
+                            />
+                          </View>
                         </View>
                       </View>
                       {touched.Sex && errors.Sex && (
                         <Text style={{ color: "red" }}>{errors.Sex}</Text>
                       )}
                     </View>
-                  </View>
 
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>Address:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={user?.data?.Address || values.Address}
-                      onChangeText={handleChange("Address")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="location-arrow"
-                          size={rMS(22)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Address && errors.Address && (
-                      <Text style={styles.errorText}>{errors.Address}</Text>
-                    )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>Mobile phone:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      mode="numeric"
-                      keyboardType="numeric"
-                      value={user?.data?.Phone || values.Phone}
-                      onChangeText={handleChange("Phone")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="phone"
-                          size={rMS(20)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.Phone && errors.Phone && (
-                      <Text style={styles.errorText}>{errors.Phone}</Text>
-                    )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>Name of emergency contact:</Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={
-                        user?.data?.EmergencyContactName ||
-                        values.EmergencyContactName
-                      }
-                      onChangeText={handleChange("EmergencyContactName")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="user-md"
-                          size={rMS(20)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.EmergencyContactName &&
-                      errors.EmergencyContactName && (
-                        <Text style={styles.errorText}>
-                          {errors.EmergencyContactName}
-                        </Text>
-                      )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>
-                      Emergency contact mobile phone:
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={
-                        user?.data?.EmergencyContactPhone ||
-                        values.EmergencyContactPhone
-                      }
-                      onChangeText={handleChange("EmergencyContactPhone")}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="mobile-phone"
-                          size={rMS(23)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.EmergencyContactPhone &&
-                      errors.EmergencyContactPhone && (
-                        <Text style={styles.errorText}>
-                          {errors.EmergencyContactPhone}
-                        </Text>
-                      )}
-                  </View>
-
-                  <View style={styles.formGroup}>
-                    <Text style={styles.label}>
-                      Relationship to Emergency Contact:
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      inputStyle={{ fontSize: rMS(15) }}
-                      value={
-                        user?.data?.EmergencyContactRelationship ||
-                        values.EmergencyContactRelationship
-                      }
-                      onChangeText={handleChange(
-                        "EmergencyContactRelationship"
-                      )}
-                      renderLeftIcon={() => (
-                        <FontAwesome
-                          name="users"
-                          size={rMS(18)}
-                          color={Colors.primary}
-                          style={{ width: rS(25), opacity: 0.6 }}
-                        />
-                      )}
-                    />
-                    {touched.EmergencyContactRelationship &&
-                      errors.EmergencyContactRelationship && (
-                        <Text style={styles.errorText}>
-                          {errors.EmergencyContactRelationship}
-                        </Text>
-                      )}
-                  </View>
-                  <TouchableOpacity
-                    onPress={isLoading ? null : handleSubmit}
-                    style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
-                    <View
-                      style={{
-                        backgroundColor: Colors.primary,
-                        borderRadius: 30,
-                        paddingVertical: rMS(18),
-                        alignItems: "center",
-                      }}>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontFamily: "sen",
-                          fontSize: rMS(16),
-                          fontWeight: "bold",
-                        }}>
-                        {isLoading ? (
-                          <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                          "Update Profile"
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>Address:</Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={user?.data?.Address || values.Address}
+                        onChangeText={handleChange("Address")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="location-arrow"
+                            size={rMS(22)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
                         )}
-                      </Text>
+                      />
+                      {touched.Address && errors.Address && (
+                        <Text style={styles.errorText}>{errors.Address}</Text>
+                      )}
                     </View>
-                  </TouchableOpacity>
-                </>
-              )}
-            </Formik>
-            <View style={{ marginBottom: rMS(500) }} />
-          </ScrollView>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>Mobile phone:</Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        keyboardType="numeric"
+                        value={user?.data?.Phone || values.Phone}
+                        onChangeText={handleChange("Phone")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="phone"
+                            size={rMS(20)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.Phone && errors.Phone && (
+                        <Text style={styles.errorText}>{errors.Phone}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>
+                        Name of emergency contact:
+                      </Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={
+                          user?.data?.EmergencyContactName ||
+                          values.EmergencyContactName
+                        }
+                        onChangeText={handleChange("EmergencyContactName")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="user-md"
+                            size={rMS(20)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.EmergencyContactName &&
+                        errors.EmergencyContactName && (
+                          <Text style={styles.errorText}>
+                            {errors.EmergencyContactName}
+                          </Text>
+                        )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>
+                        Emergency contact mobile phone:
+                      </Text>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={
+                          user?.data?.EmergencyContactPhone ||
+                          values.EmergencyContactPhone
+                        }
+                        onChangeText={handleChange("EmergencyContactPhone")}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="mobile-phone"
+                            size={rMS(23)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.EmergencyContactPhone &&
+                        errors.EmergencyContactPhone && (
+                          <Text style={styles.errorText}>
+                            {errors.EmergencyContactPhone}
+                          </Text>
+                        )}
+                    </View>
+
+                    <View style={styles.formGroup}>
+                      <Text style={styles.label}>
+                        Relationship to Emergency Contact:
+                      </Text>
+                      <TextInput
+                        style={styles.input}
+                        inputStyle={{ fontSize: rMS(15) }}
+                        value={
+                          user?.data?.EmergencyContactRelationship ||
+                          values.EmergencyContactRelationship
+                        }
+                        onChangeText={handleChange(
+                          "EmergencyContactRelationship"
+                        )}
+                        renderLeftIcon={() => (
+                          <FontAwesome
+                            name="users"
+                            size={rMS(18)}
+                            color={Colors.primary}
+                            style={{ width: rS(25), opacity: 0.6 }}
+                          />
+                        )}
+                      />
+                      {touched.EmergencyContactRelationship &&
+                        errors.EmergencyContactRelationship && (
+                          <Text style={styles.errorText}>
+                            {errors.EmergencyContactRelationship}
+                          </Text>
+                        )}
+                    </View>
+                    <TouchableOpacity
+                      onPress={isLoading ? null : handleSubmit}
+                      style={{ marginBottom: rMS(10), marginTop: rMS(10) }}>
+                      <View
+                        style={{
+                          backgroundColor: Colors.primary,
+                          borderRadius: 30,
+                          paddingVertical: rMS(18),
+                          alignItems: "center",
+                        }}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontFamily: "sen",
+                            fontSize: rMS(16),
+                            fontWeight: "bold",
+                          }}>
+                          {isLoading ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                          ) : (
+                            "Update Profile"
+                          )}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </Formik>
+              <View style={{ marginBottom: rMS(500) }} />
+            </ScrollView>
+          </View>
         </View>
-      </View>
+      )}
     </>
   );
 };

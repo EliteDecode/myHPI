@@ -30,8 +30,10 @@ export const new_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }
@@ -51,8 +53,10 @@ export const med_request = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }
@@ -72,8 +76,10 @@ export const get_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }
@@ -97,8 +103,10 @@ export const delete_complaint = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }

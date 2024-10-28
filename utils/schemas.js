@@ -177,9 +177,21 @@ export const textSchema = Yup.string()
   .max(45, "Text must be at most 15 characters long");
 
 export const immuneValidationSchema = Yup.object({
-  tetanusLastVaccineYear: Yup.string().required(
-    "Year of last vaccine is required"
-  ),
+  tetanus: Yup.object({
+    selectedOption: Yup.string().required("Please select Yes or No"),
+    date: Yup.string().when("selectedOption", {
+      is: (value) => value === "Yes",
+      then: (schema) =>
+        schema
+          .matches(
+            /^[a-zA-Z0-9\s,.';:]*$/,
+            "Date must not contain special characters"
+          )
+          .max(15, "Date must be at most 15 characters long")
+          .required("Date is required for selected option Yes"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }),
   covid: Yup.object({
     selectedOption: Yup.string().required("Please select Yes or No"),
     date: Yup.string().when("selectedOption", {

@@ -13,7 +13,7 @@ const initialState = {
 
 export const fetchUserData = createAsyncThunk("auth/userData", async () => {
   const userData = await AsyncStorage.getItem("userData");
-  console.log(userData);
+
   return JSON.parse(userData);
 });
 
@@ -41,7 +41,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
       (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
-    console.log(message);
+
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -57,8 +57,9 @@ export const update = createAsyncThunk("auth/upate", async (user, thunkAPI) => {
       (error.response && error.response.data.message) ||
       error.message ||
       error.toString();
-    if (error?.response?.status === "401") {
+    if (error.response && error.response.status === 401) {
       thunkAPI.dispatch(logout());
+      return thunkAPI.rejectWithValue("Unauthorized, logging out...");
     }
     return thunkAPI.rejectWithValue(message);
   }
@@ -125,8 +126,10 @@ export const updatePassword = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
 
       return thunkAPI.rejectWithValue(message);
@@ -146,8 +149,10 @@ export const deleteAccount = createAsyncThunk(
         (error.response && error.response.data.message) ||
         error.message ||
         error.toString();
-      if (error?.response?.status === "401") {
+      if (error.response && error.response.status === 401) {
+        // Dispatch logout and return early to prevent further execution
         thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue("Unauthorized, logging out...");
       }
       return thunkAPI.rejectWithValue(message);
     }

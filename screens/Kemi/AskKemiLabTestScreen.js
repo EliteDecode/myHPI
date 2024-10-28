@@ -180,7 +180,7 @@ const AskKemiLabTestScreen = ({ route }) => {
                           <View className="w-[70%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
@@ -193,7 +193,7 @@ const AskKemiLabTestScreen = ({ route }) => {
                           <View className="w-[70%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text style={styles.tagText} className="">
@@ -207,7 +207,7 @@ const AskKemiLabTestScreen = ({ route }) => {
                           <View className="w-[70%] flex p-4">
                             <TouchableOpacity
                               className="rounded-t-xl rounded-r-xl"
-                              onPress={() => console.log(``)}
+                              onPress={() => {}}
                               style={styles.tagContainer}>
                               {/* <Text style={styles.tagText}>{codes?.code}</Text> */}
                               <Text
@@ -246,7 +246,7 @@ const AskKemiLabTestScreen = ({ route }) => {
                 <View className="w-[70%] flex p-4">
                   <TouchableOpacity
                     className="rounded-t-xl rounded-r-xl"
-                    onPress={() => console.log(``)}
+                    onPress={() => {}}
                     style={styles.tagContainer2}>
                     <Text
                       style={styles.tagText}
