@@ -17,7 +17,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import MyStatusBar from "../helpers/MyStatusBar";
 import { registerFields } from "../utils/data";
 import { Formik } from "formik";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../utils/toast";
 import { registerSchema } from "../utils/schemas";
 import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../store/reducers/auth/authSlice";
@@ -108,12 +108,6 @@ const RegisterScreen = () => {
   return (
     <>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

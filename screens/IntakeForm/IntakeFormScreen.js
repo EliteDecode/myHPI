@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../../helpers/Colors";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import NavigationBar from "../../components/NavigationBar";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import useIntakeFormOperations from "../../hooks/useIntakeFormOperations";
@@ -38,12 +38,7 @@ const IntakeFormScreen = ({ route }) => {
       <NavigationBar openControlPanel={openControlPanel} />
       <MyStatusBar barStyle="dark-content" backgroundColor={Colors.primary} />
       <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <ToastManager
-          textStyle={{ fontSize: 12 }}
-          height={50}
-          position="top"
-          width={400}
-        />
+
         <View style={{ flex: 1 }}>
           {loading && (
             <View className="px-4 py-3 mb-3 items-center justify-center flex-1">

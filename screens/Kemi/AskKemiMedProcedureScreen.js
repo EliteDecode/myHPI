@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import NavigationBar from "../../components/NavigationBar";
 import Colors from "../../helpers/Colors";
-import AnimatedLoader from "react-native-animated-loader";
+import CustomLoader from "../../components/CustomLoader";
 import BackButton from "../../components/BackButton";
 
 const AskKemiMedProcedureScreen = ({ route }) => {
@@ -273,16 +273,13 @@ const AskKemiMedProcedureScreen = ({ route }) => {
                   </TouchableOpacity>
                 </View>
               )}
-              <AnimatedLoader
+              <CustomLoader
                 visible={loading}
-                source={require("./loader.json")}
-                overlayColor="rgba(255,255,255,0.75)"
-                animationStyle={styles.lottie}
-                speed={1}>
+                overlayColor="rgba(255,255,255,0.75)">
                 <Text className="font-bold">
                   Hey {user?.data?.Firstname}, please wait...
                 </Text>
-              </AnimatedLoader>
+              </CustomLoader>
             </View>
           </ScrollView>
           <View className={`px-4   bottom-2`}>

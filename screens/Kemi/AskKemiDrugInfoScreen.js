@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import NavigationBar from "../../components/NavigationBar";
 import Colors from "../../helpers/Colors";
-import AnimatedLoader from "react-native-animated-loader";
+import CustomLoader from "../../components/CustomLoader";
 import BackButton from "../../components/BackButton";
 
 const AskKemiDrugInfoScreen = ({ route }) => {

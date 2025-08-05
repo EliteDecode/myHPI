@@ -17,7 +17,7 @@ import Colors from "../../helpers/Colors";
 import MyStatusBar from "../../helpers/MyStatusBar";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import { forgotPassword, reset } from "../../store/reducers/auth/authSlice";
 import { rS, rVS } from "../../styles/responsiveness";
 
@@ -73,12 +73,7 @@ const ForgotPassword = () => {
   return (
     <>
       <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
+
       <View style={styles.container}>
         <Formik
           initialValues={{ email: "" }}

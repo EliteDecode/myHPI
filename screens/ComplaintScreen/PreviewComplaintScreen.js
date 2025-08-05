@@ -29,7 +29,7 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 const { compile } = require("html-to-text");
 import ConfirmComplaintModal from "./ConfirmComplaintModal";
 import { generatePlainHtmlContent } from "../../utils/htmlcontent";
@@ -190,12 +190,7 @@ const PreviewComplaintScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
+
       <View>
         <TouchableOpacity
           onPress={() => navigation.navigate("New Complaint")}

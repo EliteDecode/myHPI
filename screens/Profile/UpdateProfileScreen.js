@@ -19,7 +19,7 @@ import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
 import { Ionicons } from "@expo/vector-icons";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import { updateProfileSchema } from "../../utils/schemas";
 import { useDispatch, useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -27,7 +27,6 @@ import { reset, update } from "../../store/reducers/auth/authSlice";
 import NavigationBar from "../../components/NavigationBar";
 import RNPickerSelect from "react-native-picker-select";
 import { rMS, rS, rVS } from "../../styles/responsiveness";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const UpdateProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -131,14 +130,8 @@ const UpdateProfileScreen = ({ route }) => {
     <>
       <NavigationBar openControlPanel={openControlPanel} />
       {Platform.OS == "ios" ? (
-        <KeyboardAwareScrollView>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={styles.container}>
-            <ToastManager
-              textStyle={{ fontSize: rMS(12) }}
-              height={rVS(35)}
-              position="top"
-              width={rS(300)}
-            />
             <View
               className=""
               style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>
@@ -579,15 +572,9 @@ const UpdateProfileScreen = ({ route }) => {
               </ScrollView>
             </View>
           </View>
-        </KeyboardAwareScrollView>
+        </KeyboardAvoidingView>
       ) : (
         <View style={styles.container}>
-          <ToastManager
-            textStyle={{ fontSize: rMS(12) }}
-            height={rVS(35)}
-            position="top"
-            width={rS(300)}
-          />
           <View
             className=""
             style={{ backgroundColor: Colors.gray2, height: rVS(110) }}>

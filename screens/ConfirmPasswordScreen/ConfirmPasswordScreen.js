@@ -20,7 +20,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import styles from "./style";
 import Colors from "../../helpers/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -139,7 +139,7 @@ const ConfirmPasswordScreen = () => {
 
   return (
     <View style={styles.container} className="bg-white">
-      <ToastManager textStyle={{ fontSize: 12 }} height={50} position="top" />
+
       <ImageBackground
         source={require("../../assets/images/confirm.jpg")} // Replace with your image source
         style={styles.backgroundImage}

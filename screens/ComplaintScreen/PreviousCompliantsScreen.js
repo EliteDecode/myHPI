@@ -22,7 +22,7 @@ import {
 } from "@react-navigation/native";
 import NavigationBar from "../../components/NavigationBar";
 import { useDispatch, useSelector } from "react-redux";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import {
   delete_complaint,
   get_complaint,
@@ -144,12 +144,7 @@ const PreviousComplaintsScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
+
 
       <View className="flex-1 bg-white">
         {isLoading && (

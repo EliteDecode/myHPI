@@ -3,12 +3,11 @@ import { Platform, SafeAreaView, TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { Avatar } from "@rneui/base";
-import Drawer from "react-native-drawer";
+import CustomAvatar from "./CustomAvatar";
 import Colors from "../helpers/Colors";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
-import ControlPanel from "./ControPanel";
+import ControlPanelModal from "./ControlPanelModal";
 import IntakeFormScreen from "../screens/IntakeForm/IntakeFormScreen";
 import MyStatusBar from "../helpers/MyStatusBar";
 import ActiveMedicalProblemsScreens from "../screens/IntakeForm/ActiveMedicalProblemsScreens";
@@ -53,16 +52,11 @@ import MedsRequest from "../screens/ComplaintScreen/MedsRequest";
 
 const Tab = createBottomTabNavigator();
 
-const drawerStyles = {
-  drawer: { shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 3 },
-  main: { paddingLeft: 3 },
-};
-
 const BottomTab = () => {
   const { user } = useSelector((state) => state.auth);
   const { form, isSuccess } = useSelector((state) => state.form);
   const loggedInUserId = user?.data?._id;
-  const drawerRef = useRef(null);
+  const [controlPanelVisible, setControlPanelVisible] = useState(false);
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
@@ -71,295 +65,290 @@ const BottomTab = () => {
     // dispatch(get_form());
   }, []);
 
+  const openControlPanel = () => {
+    setControlPanelVisible(true);
+  };
+
   const closeControlPanel = () => {
-    drawerRef.current.close();
+    setControlPanelVisible(false);
   };
 
   return (
     <>
-      <Drawer
-        type="overlay"
-        content={<ControlPanel closeControlPanel={closeControlPanel} />}
-        tapToClose={true}
-        openDrawerOffset={0.2} // 20% gap on the right side of drawer
-        panCloseMask={0.2}
-        closedDrawerOffset={-3}
-        ref={drawerRef}
-        styles={drawerStyles}
-        tweenHandler={(ratio) => ({
-          main: { opacity: (2 - ratio) / 2 },
-        })}>
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarActiveTintColor: Colors.primary,
-              tabBarInactiveTintColor: Colors.gray2,
+      <ControlPanelModal
+        visible={controlPanelVisible}
+        onClose={closeControlPanel}
+      />
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarActiveTintColor: Colors.primary,
+            tabBarInactiveTintColor: Colors.gray2,
 
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-                if (route.name === "Home") {
-                  iconName = focused ? "home" : "home-outline";
-                } else if (route.name === "Complaints") {
-                  iconName = focused ? "alert-circle" : "alert-circle-outline";
-                } else if (route.name === "Appointments") {
-                  iconName = focused ? "calendar" : "calendar-outline";
-                } else if (route.name === "Settings") {
-                  iconName = focused ? "settings" : "settings-outline";
-                }
+              if (route.name === "Home") {
+                iconName = focused ? "home" : "home-outline";
+              } else if (route.name === "Complaints") {
+                iconName = focused ? "alert-circle" : "alert-circle-outline";
+              } else if (route.name === "Appointments") {
+                iconName = focused ? "calendar" : "calendar-outline";
+              } else if (route.name === "Settings") {
+                iconName = focused ? "settings" : "settings-outline";
+              }
 
-                return <Icon name={iconName} size={size} color={color} />;
-              },
-            })}>
-            <Tab.Screen
-              name="Home"
-              component={HomeScreen}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen
-              name="Complaints"
-              component={ComplaintsScreen}
-              options={{ headerShown: false }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Appointments"
-              component={AppointmentScreen}
-              options={{ headerShown: false }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Settings"
-              component={SettingsScreen}
-              options={{ headerShown: false }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+              return <Icon name={iconName} size={size} color={color} />;
+            },
+          })}>
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="Complaints"
+            component={ComplaintsScreen}
+            options={{ headerShown: false }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Appointments"
+            component={AppointmentScreen}
+            options={{ headerShown: false }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{ headerShown: false }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Change Email"
-              component={ChangeEmailScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Confirm Email"
-              component={ConfirmEmailChangeScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Change Email"
+            component={ChangeEmailScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Confirm Email"
+            component={ConfirmEmailChangeScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Change Password"
-              component={ChangePasswordScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Change Password"
+            component={ChangePasswordScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Ask KeMi"
-              component={AskKeMiScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Ask KeMi"
+            component={AskKeMiScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Medical Diagnosis (Problems)"
-              component={AskKemiMedProblemScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Drug Info Request"
-              component={AskKemiDrugInfoScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Lab Test Request"
-              component={AskKemiLabTestScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Medical Diagnosis (Problems)"
+            component={AskKemiMedProblemScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Drug Info Request"
+            component={AskKemiDrugInfoScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Lab Test Request"
+            component={AskKemiLabTestScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Medical Procedure Request"
-              component={AskKemiMedProcedureScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Medical Procedure Request"
+            component={AskKemiMedProcedureScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="Delete Account"
-              component={DeleteAccountScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
+          <Tab.Screen
+            name="Delete Account"
+            component={DeleteAccountScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
 
-            <Tab.Screen
-              name="New Complaint"
-              component={NewComplaintScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Preview Complaint"
-              component={PreviewComplaintScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="New Appointment"
-              component={NewAppointments}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            {/* <Tab.Screen
+          <Tab.Screen
+            name="New Complaint"
+            component={NewComplaintScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Preview Complaint"
+            component={PreviewComplaintScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="New Appointment"
+            component={NewAppointments}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          {/* <Tab.Screen
               name="Meds Request"
               component={MedsRequest}
               options={{ headerShown: false, tabBarButton: () => null }}
               initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
+                openControlPanel: openControlPanel,
               }}
             /> */}
-            <Tab.Screen
-              name="Previous Complaints"
-              component={PreviousComplaintsScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Edit Complaints"
-              component={EditComplaintScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Previous Appointments"
-              component={PreviousAppointmentsScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="IntakeForm"
-              component={IntakeFormScreen}
-              options={{ headerShown: false, tabBarButton: () => null }}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-            />
-            <Tab.Screen
-              name="Active Medical Problems Form"
-              component={ActiveMedicalProblemsScreens}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Past Medical History Form"
-              component={PastMedicalHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Sexual Transmitted Disease History Form"
-              component={SexualTransmittedDiseaseHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Obstetric / Gynecological History Form"
-              component={GynecologicalHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Surgical History Form"
-              component={SurgicalHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Family History Form"
-              component={FamilyHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Social History Form"
-              component={SocialHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Allergies Form"
-              component={Allergies}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Medications Form"
-              component={Medications}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Immunizations Form"
-              component={Immunizations}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Travel History Form"
-              component={TravelHistory}
-              options={{ tabBarButton: () => null }}
-            />
-            <Tab.Screen
-              name="Profile"
-              component={ProfileScreen}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-              options={{ tabBarButton: () => null, headerShown: false }}
-            />
-            <Tab.Screen
-              name="Update Profile"
-              component={UpdateProfileScreen}
-              initialParams={{
-                openControlPanel: () => drawerRef.current.open(),
-              }}
-              options={{ tabBarButton: () => null, headerShown: false }}
-            />
-          </Tab.Navigator>
-        </View>
-      </Drawer>
+          <Tab.Screen
+            name="Previous Complaints"
+            component={PreviousComplaintsScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Edit Complaints"
+            component={EditComplaintScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Previous Appointments"
+            component={PreviousAppointmentsScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="IntakeForm"
+            component={IntakeFormScreen}
+            options={{ headerShown: false, tabBarButton: () => null }}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+          />
+          <Tab.Screen
+            name="Active Medical Problems Form"
+            component={ActiveMedicalProblemsScreens}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Past Medical History Form"
+            component={PastMedicalHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Sexual Transmitted Disease History Form"
+            component={SexualTransmittedDiseaseHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Obstetric / Gynecological History Form"
+            component={GynecologicalHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Surgical History Form"
+            component={SurgicalHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Family History Form"
+            component={FamilyHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Social History Form"
+            component={SocialHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Allergies Form"
+            component={Allergies}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Medications Form"
+            component={Medications}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Immunizations Form"
+            component={Immunizations}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Travel History Form"
+            component={TravelHistory}
+            options={{ tabBarButton: () => null }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+            options={{ tabBarButton: () => null, headerShown: false }}
+          />
+          <Tab.Screen
+            name="Update Profile"
+            component={UpdateProfileScreen}
+            initialParams={{
+              openControlPanel: openControlPanel,
+            }}
+            options={{ tabBarButton: () => null, headerShown: false }}
+          />
+        </Tab.Navigator>
+      </View>
     </>
   );
 };

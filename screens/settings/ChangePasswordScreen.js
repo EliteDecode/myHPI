@@ -16,7 +16,7 @@ import { changePassword } from "../../utils/schemas";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
 import { useDispatch, useSelector } from "react-redux";
 import { reset, updatePassword } from "../../store/reducers/auth/authSlice";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import { CommonActions } from "@react-navigation/native";
 import NavigationBar from "../../components/NavigationBar";
 
@@ -81,12 +81,7 @@ const ChangePasswordScreen = ({ route }) => {
     <>
       <NavigationBar openControlPanel={openControlPanel} />
       <BackButton color={Colors.primary} />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={50}
-        position="bottom"
-        width={400}
-      />
+
       <View style={styles.container}>
         <Formik
           initialValues={{

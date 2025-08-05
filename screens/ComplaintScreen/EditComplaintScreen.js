@@ -19,7 +19,7 @@ import {
 } from "@react-navigation/native";
 import NavigationBar from "../../components/NavigationBar";
 import { useDispatch, useSelector } from "react-redux";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import {
   new_complaint,
   reset,
@@ -51,12 +51,7 @@ const EditComplaintScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
+
       <BackButton color={Colors.primary} content="Edit Previous Concern" />
       <View
         style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 16 }}>

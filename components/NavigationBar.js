@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Colors from "../helpers/Colors";
 import { TouchableOpacity } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { Avatar } from "@rneui/base";
+import CustomAvatar from "./CustomAvatar";
 import { useSelector } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MyStatusBar from "../helpers/MyStatusBar";
@@ -53,7 +53,7 @@ const NavigationBar = ({ openControlPanel }) => {
               position: "relative",
               marginTop: Platform.OS === "ios" ? rMS(30) : rMS(25),
             }}>
-            <Avatar
+            <CustomAvatar
               size={30}
               rounded
               title={`${user?.data?.Firstname?.charAt(0) || ""}${

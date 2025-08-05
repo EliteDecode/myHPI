@@ -24,7 +24,7 @@ import {
   reset,
 } from "../../store/reducers/complaint/complaintSlice";
 import { CommonActions, useNavigation } from "@react-navigation/native";
-import ToastManager, { Toast } from "toastify-react-native";
+import Toast from "../../utils/toast";
 import { rMS, rVS, rS } from "../../styles/responsiveness";
 const { compile } = require("html-to-text");
 
@@ -49,12 +49,7 @@ const NewComplaintScreen = ({ route }) => {
   return (
     <>
       <NavigationBar openControlPanel={openControlPanel} />
-      <ToastManager
-        textStyle={{ fontSize: 12 }}
-        height={rVS(35)}
-        position="top"
-        width={rS(200)}
-      />
+
       <BackButton color={Colors.primary} content="My Concern" />
 
       <View
